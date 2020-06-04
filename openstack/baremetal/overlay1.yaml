@@ -1,0 +1,20 @@
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: nova
+  name: nova
+spec:
+  values:
+    conf:
+      nova:
+        DEFAULT:
+          scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter
+    labels:
+      agent:
+        compute_ironic:
+          node_selector_key: openstack-control-plane
+          node_selector_value: enabled
+    manifests:
+      statefulset_compute_ironic: true

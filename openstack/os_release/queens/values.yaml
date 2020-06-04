@@ -1,0 +1,8 @@
+# contains all variables determined as a site environment.
+
+apiVersion: kustomize.config.k8s.io/v1
+kind: Values
+metadata:
+  name: openstack
+spec:
+  version: queens

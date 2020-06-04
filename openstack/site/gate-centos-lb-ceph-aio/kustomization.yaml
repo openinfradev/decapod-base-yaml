@@ -1,0 +1,9 @@
+resources:
+- ../../base
+- ../../os_release/stein
+- ../../storage/ceph
+
+patchesStrategicMerge:
+- ./../../storage/ceph/overlay1.yaml
+- ./../../network/linuxbridge-flat-vlan-vxlan/overlay1.yaml
+- ./site-values.yaml
