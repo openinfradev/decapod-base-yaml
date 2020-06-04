@@ -1,0 +1,173 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: ceph-provisioners
+  name: ceph-provisioners
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra
+    path: ceph-provisioners
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: ceph-provisioners
+  targetNamespace: openstack
+  values:
+    conf:
+      ceph:
+        global:
+          mon_host: $(Values.site.spec.storage.ceph_mon_host)
+    deployment:
+      ceph: false
+      cephfs_provisioner: false
+      client_secrets: true
+      rbd_provisioner: false
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        ceph_bootstrap: $(Values.site.spec.docker_registry)/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_cephfs_provisioner: $(Values.site.spec.docker_registry)/openstackhelm/ceph-cephfs-provisioner:latest-ubuntu_xenial
+        ceph_config_helper: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.ceph_config_helper)
+        ceph_rbd_provisioner: $(Values.site.spec.docker_registry)/openstackhelm/ceph-rbd-provisioner:latest-ubuntu_xenial
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+    manifests:
+      configmap_bin: false
+      configmap_bin_common: false
+      configmap_etc: true
+      deployment_cephfs_provisioner: false
+      deployment_rbd_provisioner: false
+      helm_tests: false
+      job_bootstrap: false
+      job_cephfs_client_key: false
+      job_image_repo_sync: false
+      job_namespace_client_key: false
+      job_namespace_client_key_cleaner: false
+      storageclass_cephfs: false
+      storageclass_rbd: false
+    storageclass:
+      cephfs:
+        provision_storage_class: false
+      rbd:
+        provision_storage_class: false
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: cinder
+  name: cinder
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm
+    path: cinder
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: cinder
+  targetNamespace: openstack
+  values:
+    conf:
+      backends:
+        rbd1:
+          rbd_pool: volumes
+          rbd_secret_uuid: 582393ff-9a5c-4a2e-ae0d-86ec18c36afc
+      ceph:
+        admin_keyring: $(Values.site.spec.storage.ceph_admin_keyring)
+        enabled: true
+        pools:
+          volumes:
+            app_name: cinder-volume
+            chunk_size: 128
+            crush_rule: replicated_rule
+            replication: 3
+      cinder:
+        DEFAULT:
+          backup_ceph_pool: backups
+          backup_ceph_user: cinder-backup
+          backup_driver: cinder.backup.drivers.ceph.CephBackupDriver
+      logging:
+        logger_cinder:
+          level: DEBUG
+        logger_oslo_service:
+          handlers: stderr
+          level: DEBUG
+          qualname: oslo_service
+        loggers:
+          keys:
+          - root
+          - cinder
+          - oslo_service
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          cinder:
+            password: password
+            username: cinder
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          cinder:
+            password: password
+            username: cinder
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          cinder:
+            password: password
+            username: cinder
+        statefulset: null
+      volume:
+        path:
+          default: /v2/%(tenant_id)s
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        cinder_api: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-cinder-api:$(Values.openstack.spec.tag)
+        cinder_backup: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-cinder-backup:$(Values.openstack.spec.tag)
+        cinder_backup_storage_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.cinder_backup_storage_init)
+        cinder_db_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-cinder-api:$(Values.openstack.spec.tag)
+        cinder_scheduler: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-cinder-scheduler:$(Values.openstack.spec.tag)
+        cinder_storage_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.cinder_storage_init)
+        cinder_volume: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-cinder-volume:$(Values.openstack.spec.tag)
+        cinder_volume_usage_audit: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-cinder-volume:$(Values.openstack.spec.tag)
+        db_drop: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        ks_endpoints: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_service: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_user: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        rabbit_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.rabbit_init)
+        test: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.cinder_test)
+    pod:
+      replicas:
+        api: 3
+        backup: 1
+        scheduler: 3
+        volume: 1
+      security_context:
+        cinder:
+          pod:
+            runAsUser: 42407
+        cinder_api:
+          pod:
+            runAsUser: 42407
+        cinder_backup:
+          pod:
+            runAsUser: 42407
+        cinder_scheduler:
+          pod:
+            runAsUser: 42407
+        cinder_volume:
+          pod:
+            runAsUser: 42407
+  wait: true

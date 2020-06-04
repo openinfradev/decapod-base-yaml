@@ -1,0 +1,44 @@
+# contains all variables determined as a site environment.
+
+apiVersion: kustomize.config.k8s.io/v1
+kind: Values
+metadata:
+  name: site
+spec:
+  # branch or tag name of helm charts
+  chart_ref: master
+  # external ip for nova vnc, public ip, image ip and so on
+  external_ip: taco-aio
+  docker_registry: registry.cicd.stg.taco
+  compute:
+    host_interface: em1
+
+  ########################################################################
+  # Network Configuration
+  ########################################################################
+  network:
+    network_backend: linuxbridge # available values: linuxbridge, openvswitch, onos
+    global_physnet_mtu: 1500
+    # If the network_backend is set to openvswitch, this value is defined as a bridge_mappings.
+    # If the network_backned is set to linuxbridge, this value is defied as a physical_interface_mappings.
+    interface_mappings: ""
+    tunnel_interface: null # need to set this value if vxlan type used
+    auto_bridge_add_interface: null # need to set this value if the network_backend is openvswitch
+
+  ########################################################################
+  # Storage Configuration
+  ########################################################################
+  storage:
+    storage_class_name: rbd
+    mariadb_volume_size: 5Gi
+    rabbitmq_volume_size: 256Mi
+    # address of ceph monitors
+    ceph_mon_host: "" 
+    ceph_admin_keyring: ""
+  baremetal:
+    public_endpoint_ip: ""
+    pxe_device: ""
+    neutron_subnet_alloc_start: ""
+    neutron_subnet_alloc_end: ""
+    neutron_subnet_cidr: ""
+    neutron_subnet_gateway: ""

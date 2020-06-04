@@ -1,0 +1,921 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: glance
+  name: glance
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: glance
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: glance
+  targetNamespace: openstack
+  values:
+    bootstrap:
+      enabled: true
+      structured:
+        images:
+          cirros:
+            id: 201084fc-c276-4744-8504-cb974dbb3610
+            image_file: cirros-0.4.0-x86_64-disk.img
+            name: Cirros 0.4.0 64-bit
+            private: false
+            source_url: http://download.cirros-cloud.net/0.4.0/
+    conf:
+      ceph:
+        admin_keyring: $(Values.site.spec.storage.ceph_admin_keyring)
+        enabled: true
+      glance:
+        DEFAULT:
+          show_image_direct_url: true
+          show_multiple_locations: true
+        glance_store:
+          rbd_store_pool: images
+          rbd_store_user: glance
+      logging:
+        logger_glance:
+          level: DEBUG
+      rally_tests:
+        run_tempest: false
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          glance:
+            password: password
+            username: glance
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          glance:
+            password: password
+            username: glance
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          glance:
+            password: password
+            username: glance
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_drop: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        glance_api: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-glance-api:$(Values.openstack.spec.tag)
+        glance_db_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-glance-api:$(Values.openstack.spec.tag)
+        glance_metadefs_load: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-glance-api:$(Values.openstack.spec.tag)
+        glance_registry: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-glance-registry:$(Values.openstack.spec.tag)
+        glance_storage_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.glance_storage_init)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        ks_endpoints: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_service: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_user: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        rabbit_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.rabbit_init)
+        test: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-rally:$(Values.openstack.spec.tag)
+    manifests:
+      pod_rally_test: false
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-body-size: 102400M
+    pod:
+      replicas:
+        api: 3
+        registry: 1
+      security_context:
+        glance:
+          pod:
+            runAsUser: 42415
+    storage: rbd
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: heat
+  name: heat
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: heat
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: heat
+  targetNamespace: openstack
+  values:
+    bootstrap:
+      enabled: true
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          heat:
+            password: password
+            username: heat
+          heat_stack_user:
+            password: password
+            username: heat-domain
+          heat_trustee:
+            password: password
+            username: heat-trust
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          heat:
+            password: password
+            username: heat
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          heat:
+            password: password
+            username: heat
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_drop: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        heat_api: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-api:$(Values.openstack.spec.tag)
+        heat_cfn: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-api:$(Values.openstack.spec.tag)
+        heat_cloudwatch: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-api:$(Values.openstack.spec.tag)
+        heat_db_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-api:$(Values.openstack.spec.tag)
+        heat_engine: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        heat_engine_cleaner: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        heat_purge_deleted: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.heat_purge_deleted)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        ks_endpoints: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_service: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_user: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        rabbit_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.rabbit_init)
+        test: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-rally:$(Values.openstack.spec.tag)
+    pod:
+      replicas:
+        api: 3
+        cfn: 3
+        cloudwatch: 3
+        engine: 3
+      security_context:
+        heat:
+          pod:
+            runAsUser: 42418
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: horizon
+  name: horizon
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: horizon
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: horizon
+  targetNamespace: openstack
+  values:
+    conf:
+      horizon:
+        apache: |
+          Listen 0.0.0.0:{{ tuple "dashboard" "internal" "web" . | include "helm-toolkit.endpoints.endpoint_port_lookup" }}
+
+          LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+          LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" proxy
+
+          SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
+          CustomLog /dev/stdout combined env=!forwarded
+          CustomLog /dev/stdout proxy env=forwarded
+
+          <VirtualHost *:{{ tuple "dashboard" "internal" "web" . | include "helm-toolkit.endpoints.endpoint_port_lookup" }}>
+              WSGIScriptReloading On
+              WSGIDaemonProcess horizon-http processes=5 threads=1 user=horizon group=horizon display-name=%{GROUP} python-path=/var/lib/kolla/venv/lib/python2.7/site-packages
+              WSGIProcessGroup horizon-http
+              WSGIScriptAlias / /var/www/cgi-bin/horizon/django.wsgi
+              WSGIPassAuthorization On
+              RewriteEngine on
+              RewriteCond %{REQUEST_METHOD} !^(POST|PUT|GET|DELETE)
+              RewriteRule .* - [F]
+
+              <Location "/">
+                  Require all granted
+              </Location>
+
+              Alias /static /var/www/html/horizon
+              <Location "/static">
+                  SetHandler None
+              </Location>
+
+              <IfVersion >= 2.4>
+                ErrorLogFormat "%{cu}t %M"
+              </IfVersion>
+              ErrorLog /dev/stdout
+              TransferLog /dev/stdout
+
+              SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
+              CustomLog /dev/stdout combined env=!forwarded
+              CustomLog /dev/stdout proxy env=forwarded
+          </Virtualhost>
+        local_settings:
+          config:
+            openstack_neutron_network:
+              enable_distributed_router: "False"
+              enable_fip_topology_check: "True"
+              enable_firewall: "False"
+              enable_ha_router: "True"
+              enable_ipv6: "False"
+              enable_lb: "True"
+              enable_quotas: "True"
+              enable_router: "True"
+              enable_vpn: "False"
+      software:
+        apache2:
+          site_dir: /etc/apache2/sites-enabled
+    endpoints:
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          horizon:
+            password: password
+            username: horizon
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        db_drop: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-horizon:$(Values.openstack.spec.tag)
+        db_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-horizon:$(Values.openstack.spec.tag)
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        horizon: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-horizon:$(Values.openstack.spec.tag)
+        horizon_db_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-horizon:$(Values.openstack.spec.tag)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        test: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.test)
+    network:
+      node_port:
+        enabled: true
+        port: 31000
+    pod:
+      replicas:
+        server: 3
+      security_context:
+        horizon:
+          pod:
+            runAsUser: 42420
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: ingress
+  name: ingress
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: ingress
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: ingress
+  targetNamespace: openstack
+  values:
+    conf:
+      ingress:
+        bind-address: 0.0.0.0
+    config:
+      worker-processes: 8
+    endpoints:
+      ingress:
+        port:
+          server:
+            default: 28080
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        entrypoint: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.entrypoint)
+        error_pages: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.error_pages)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        ingress: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.ingress)
+        ingress_module_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-server:$(Values.openstack.spec.tag)
+        ingress_routed_vip: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-server:$(Values.openstack.spec.tag)
+        keepalived: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.keepalived)
+    monitoring:
+      prometheus:
+        config:
+          worker-processes: 8
+        enabled: true
+        ingress_exporter:
+          scrape: true
+    network:
+      host_namespace: true
+    pod:
+      replicas:
+        error_page: 1
+        ingress: 3
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: keystone
+  name: keystone
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: keystone
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: keystone
+  targetNamespace: openstack
+  values:
+    conf:
+      keystone:
+        DEFAULT:
+          debug: true
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          keystone:
+            password: password
+            username: keystone
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          keystone:
+            password: password
+            username: keystone
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_drop: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        keystone_api: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-keystone:$(Values.openstack.spec.tag)
+        keystone_credential_cleanup: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.keystone_credential_cleanup)
+        keystone_credential_rotate: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-keystone:$(Values.openstack.spec.tag)
+        keystone_credential_setup: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-keystone:$(Values.openstack.spec.tag)
+        keystone_db_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-keystone:$(Values.openstack.spec.tag)
+        keystone_domain_manage: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-keystone:$(Values.openstack.spec.tag)
+        keystone_fernet_rotate: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-keystone:$(Values.openstack.spec.tag)
+        keystone_fernet_setup: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-keystone:$(Values.openstack.spec.tag)
+        ks_user: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        rabbit_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.rabbit_init)
+        test: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-rally:$(Values.openstack.spec.tag)
+    pod:
+      replicas:
+        api: 3
+      security_context:
+        keystone:
+          pod:
+            runAsUser: 42425
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: libvirt
+  name: libvirt
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: libvirt
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: libvirt
+  targetNamespace: openstack
+  values:
+    conf:
+      ceph:
+        admin_keyring: $(Values.site.spec.storage.ceph_admin_keyring)
+        cinder:
+          keyring: AQAin8tU0CFgEhAATb7sYgtWsh+S5HEbg6MrGg==
+          secret_uuid: 582393ff-9a5c-4a2e-ae0d-86ec18c36afc
+          user: cinder
+        enabled: true
+      libvirt:
+        listen_addr: 0.0.0.0
+        log_level: 3
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        libvirt: $(Values.site.spec.docker_registry)/stein/ubuntu-source-nova-libvirt:$(Values.openstack.spec.tag)
+    manifests:
+      configmap_bin: true
+      configmap_etc: true
+      daemonset_libvirt: true
+    network:
+      backend:
+      - $(Values.site.spec.network.network_backend)
+    release_group: null
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: mariadb
+  name: mariadb
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: mariadb
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: mariadb
+  targetNamespace: openstack
+  values:
+    endpoints:
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        error_pages: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.error_pages)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        ingress: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.mariadb_ingress)
+        mariadb: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.mariadb)
+        mariadb_backup: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.mariadb_backup)
+        prometheus_create_mysql_user: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.prometheus_create_mysql_user)
+        prometheus_mysql_exporter: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.prometheus_mysql_exporter)
+        prometheus_mysql_exporter_helm_tests: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        scripted_test: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.mariadb_scripted_test)
+    monitoring:
+      prometheus:
+        enabled: true
+        mysqld_exporter:
+          scrape: true
+    pod:
+      replicas:
+        server: 3
+    volume:
+      backup:
+        class_name: $(Values.site.spec.storage.storage_class_name)
+        enabled: false
+        size: $(Values.storage.spec.storage.mariadb_volume_size)
+      class_name: $(Values.site.spec.storage.storage_class_name)
+      enabled: true
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: memcached
+  name: memcached
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: memcached
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: memcached
+  targetNamespace: openstack
+  values:
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        memcached: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.memcached)
+        prometheus_memcached_exporter: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.prometheus_memcached_exporter)
+    monitoring:
+      prometheus:
+        enabled: true
+        memcached_exporter:
+          scrape: true
+    pod:
+      replicas:
+        server: 1
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: neutron
+  name: neutron
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: neutron
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: neutron
+  targetNamespace: openstack
+  values:
+    conf:
+      neutron:
+        DEFAULT:
+          core_plugin: ml2
+          global_physnet_mtu: $(Values.site.spec.network.global_physnet_mtu)
+        agent:
+          root_helper: sudo /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
+      neutron_sudoers: |
+        # This sudoers file supports rootwrap-daemon for both Kolla and LOCI Images.
+        Defaults !requiretty
+        Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/var/lib/openstack/bin:/var/lib/kolla/venv/bin"
+        neutron ALL = (root) NOPASSWD: /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf *, /var/lib/openstack/bin/neutron-rootwrap /etc/neutron/rootwrap.conf *, /var/lib/kolla/venv/bin/neutron-rootwrap-daemon /etc/neutron/rootwrap.conf, /var/lib/openstack/bin/neutron-rootwrap-daemon /etc/neutron/rootwrap.conf
+      paste:
+        composite:neutronapi_v2_0:
+          keystone: cors http_proxy_to_wsgi request_id catch_errors authtoken keystonecontext
+            extensions neutronapiapp_v2_0
+      plugins:
+        linuxbridge_agent:
+          securitygroup:
+            firewall_driver: iptables
+        ml2_conf:
+          ml2:
+            mechanism_drivers: $(Values.site.spec.network.network_backend)
+        openvswitch_agent:
+          securitygroup:
+            firewall_driver: openvswitch
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          neutron:
+            password: password
+            username: neutron
+          nova:
+            password: password
+            username: nova
+        name: keystone
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          neutron:
+            password: password
+            username: neutron
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          neutron:
+            password: password
+            username: neutron
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_drop: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        ks_endpoints: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_service: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_user: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        neutron_bagpipe_bgp: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-server:$(Values.openstack.spec.tag)
+        neutron_db_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-server:$(Values.openstack.spec.tag)
+        neutron_dhcp: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-dhcp-agent:$(Values.openstack.spec.tag)
+        neutron_ironic_agent: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-server:$(Values.openstack.spec.tag)
+        neutron_l2gw: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-server:$(Values.openstack.spec.tag)
+        neutron_l3: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-l3-agent:$(Values.openstack.spec.tag)
+        neutron_linuxbridge_agent: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-linuxbridge-agent:$(Values.openstack.spec.tag)
+        neutron_metadata: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-metadata-agent:$(Values.openstack.spec.tag)
+        neutron_openvswitch_agent: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-openvswitch-agent:$(Values.openstack.spec.tag)
+        neutron_server: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-server:$(Values.openstack.spec.tag)
+        neutron_sriov_agent: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-sriov-agent:$(Values.openstack.spec.tag)
+        neutron_sriov_agent_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-neutron-sriov-agent:$(Values.openstack.spec.tag)
+        purge_test: $(Values.site.spec.docker_registry)/openstackhelm/ospurge:latest
+        rabbit_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.rabbit_init)
+        test: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.neutron_test)
+    pod:
+      replicas:
+        server: 3
+      security_context:
+        neutron:
+          pod:
+            runAsUser: 42435
+        neutron_bagpipe_bgp:
+          pod:
+            runAsUser: 42435
+        neutron_dhcp_agent:
+          pod:
+            runAsUser: 42435
+        neutron_l2gw_agent:
+          pod:
+            runAsUser: 42435
+        neutron_l3_agent:
+          pod:
+            runAsUser: 42435
+        neutron_lb_agent:
+          pod:
+            runAsUser: 42435
+        neutron_metadata_agent:
+          pod:
+            runAsUser: 42435
+        neutron_ovs_agent:
+          pod:
+            runAsUser: 42435
+        neutron_server:
+          pod:
+            runAsUser: 42435
+        neutron_sriov_agent:
+          pod:
+            runAsUser: 42435
+      user:
+        neutron:
+          uid: 42435
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: nova
+  name: nova
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: nova
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: nova
+  targetNamespace: openstack
+  values:
+    bootstrap:
+      structured:
+        flavors:
+          enabled: true
+          options:
+            m1_tiny:
+              id: 0c84e220-a258-439f-a6ff-f8e9fd980025
+    conf:
+      ceph:
+        admin_keyring: $(Values.site.spec.storage.ceph_admin_keyring)
+        cinder:
+          keyring: AQAin8tU0CFgEhAATb7sYgtWsh+S5HEbg6MrGg==
+          user: cinder
+        enabled: true
+      hypervisor:
+        host_interface: $(Values.site.spec.compute.host_interface)
+      libvirt:
+        live_migration_interface: $(Values.site.spec.compute.host_interface)
+      logging:
+        logger_nova:
+          level: DEBUG
+      nova:
+        DEFAULT:
+          config_drive_cdrom: true
+          config_drive_format: iso9660
+          debug: true
+          force_config_drive: false
+          scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,RamFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter
+        libvirt:
+          images_type: rbd
+          rbd_secret_uuid: 582393ff-9a5c-4a2e-ae0d-86ec18c36afc
+          rbd_user: cinder
+          virt_type: kvm
+        scheduler:
+          discover_hosts_in_cells_interval: 60
+        vnc:
+          novncproxy_base_url: http://$(Values.site.spec.external_ip):30608/vnc_auto.html
+      rootwrap_filters: null
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          ironic:
+            password: password
+            username: ironic
+          neutron:
+            password: password
+            username: neutron
+          nova:
+            password: password
+            username: nova
+          placement:
+            password: password
+            username: placement
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          nova:
+            password: password
+            username: nova
+      oslo_db_api:
+        auth:
+          admin:
+            password: password
+            username: root
+          nova:
+            password: password
+            username: nova
+      oslo_db_cell0:
+        auth:
+          admin:
+            password: password
+            username: root
+          nova:
+            password: password
+            username: nova
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          nova:
+            password: password
+            username: nova
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_drop: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        db_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        ks_endpoints: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_service: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        ks_user: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        nova_api: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-api:$(Values.openstack.spec.tag)
+        nova_cell_setup: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-api:$(Values.openstack.spec.tag)
+        nova_cell_setup_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        nova_compute: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-compute:$(Values.openstack.spec.tag)
+        nova_compute_ironic: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-compute-ironic:$(Values.openstack.spec.tag)
+        nova_compute_ssh: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-ssh:$(Values.openstack.spec.tag)
+        nova_conductor: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-conductor:$(Values.openstack.spec.tag)
+        nova_consoleauth: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-consoleauth:$(Values.openstack.spec.tag)
+        nova_db_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-api:$(Values.openstack.spec.tag)
+        nova_novncproxy: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-novncproxy:$(Values.openstack.spec.tag)
+        nova_novncproxy_assets: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-novncproxy:$(Values.openstack.spec.tag)
+        nova_placement: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-placement-api:$(Values.openstack.spec.tag)
+        nova_scheduler: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-scheduler:$(Values.openstack.spec.tag)
+        nova_service_cleaner: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.nova_service_cleaner)
+        nova_spiceproxy: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-spicehtml5proxy:$(Values.openstack.spec.tag)
+        nova_spiceproxy_assets: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-nova-spicehtml5proxy:$(Values.openstack.spec.tag)
+        rabbit_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.rabbit_init)
+        test: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-rally:$(Values.openstack.spec.tag)
+    network:
+      backend:
+      - $(Values.site.spec.network.network_backend)
+      novncproxy:
+        name: nova-novncproxy
+        node_port:
+          enabled: true
+          port: 30608
+        port: 6080
+        targetPort: 6080
+    pod:
+      mandatory_access_control:
+        type: null
+      replicas:
+        api_metadata: 3
+        conductor: 3
+        consoleauth: 3
+        novncproxy: 3
+        osapi: 3
+        placement: 3
+        scheduler: 3
+      security_context:
+        nova:
+          pod:
+            runAsUser: 42436
+      user:
+        nova:
+          uid: 42436
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: prometheus-openstack-exporter
+  name: prometheus-openstack-exporter
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: prometheus-openstack-exporter
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: prometheus-openstack-exporter
+  targetNamespace: openstack
+  values:
+    dummy: dummy
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            project_domain_name: default
+            project_name: admin
+            region_name: RegionOne
+            user_domain_name: default
+            username: admin
+          user:
+            password: password
+            project_domain_name: default
+            project_name: service
+            region_name: RegionOne
+            role: admin
+            user_domain_name: default
+            username: prometheus-openstack-exporter
+        name: keystone
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        ks_user: $(Values.site.spec.docker_registry)/stein/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        prometheus_openstack_exporter: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.prometheus_openstack_exporter)
+    pod:
+      mandatory_access_control:
+        type: null
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: rabbitmq
+  name: rabbitmq
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: rabbitmq
+    ref: $(Values.site.spec.chart_ref)
+    skipDepUpdate: true
+  releaseName: rabbitmq
+  targetNamespace: openstack
+  values:
+    endpoints:
+      oslo_messaging:
+        auth:
+          user:
+            password: password
+            username: rabbitmq
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.dep_check)
+        image_repo_sync: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.image_repo_sync)
+        prometheus_rabbitmq_exporter: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.prometheus_rabbitmq_exporter)
+        prometheus_rabbitmq_exporter_helm_tests: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        rabbitmq: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.rabbitmq)
+        rabbitmq_init: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.version)/ubuntu-source-heat-engine:$(Values.openstack.spec.tag)
+        scripted_test: $(Values.site.spec.docker_registry)/$(Values.openstack.spec.images.rabbitmq_scripted_test)
+    monitoring:
+      prometheus:
+        enabled: true
+        rabbitmq_exporter:
+          scrape: true
+    pod:
+      replicas:
+        server: 3
+    volume:
+      class_name: $(Values.site.spec.storage.storage_class_name)
+      size: $(Values.site.spec.storage.rabbitmq_volume_size)
+  wait: true

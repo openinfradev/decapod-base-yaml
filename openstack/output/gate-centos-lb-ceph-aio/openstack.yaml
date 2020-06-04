@@ -1,0 +1,1125 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: glance
+  name: glance
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: glance
+    ref: master
+    skipDepUpdate: true
+  releaseName: glance
+  targetNamespace: openstack
+  values:
+    bootstrap:
+      enabled: true
+      structured:
+        images:
+          cirros:
+            id: 201084fc-c276-4744-8504-cb974dbb3610
+            image_file: cirros-0.4.0-x86_64-disk.img
+            name: Cirros 0.4.0 64-bit
+            private: false
+            source_url: http://download.cirros-cloud.net/0.4.0/
+    conf:
+      ceph:
+        admin_keyring: ""
+        enabled: true
+      glance:
+        DEFAULT:
+          show_image_direct_url: true
+          show_multiple_locations: true
+        glance_store:
+          rbd_store_pool: images
+          rbd_store_user: glance
+      logging:
+        logger_glance:
+          level: DEBUG
+      rally_tests:
+        run_tempest: false
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          glance:
+            password: password
+            username: glance
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          glance:
+            password: password
+            username: glance
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          glance:
+            password: password
+            username: glance
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_drop: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_init: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        glance_api: registry.cicd.stg.taco/stein/ubuntu-source-glance-api:taco-0.1.0
+        glance_db_sync: registry.cicd.stg.taco/stein/ubuntu-source-glance-api:taco-0.1.0
+        glance_metadefs_load: registry.cicd.stg.taco/stein/ubuntu-source-glance-api:taco-0.1.0
+        glance_registry: registry.cicd.stg.taco/stein/ubuntu-source-glance-registry:taco-0.1.0
+        glance_storage_init: registry.cicd.stg.taco/port/ceph-config-helper:v1.14.3
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        ks_endpoints: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_service: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_user: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        rabbit_init: registry.cicd.stg.taco/rabbitmq:3.7-management
+        test: registry.cicd.stg.taco/stein/ubuntu-source-rally:taco-0.1.0
+    manifests:
+      pod_rally_test: false
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/proxy-body-size: 102400M
+    pod:
+      replicas:
+        api: 3
+        registry: 1
+      security_context:
+        glance:
+          pod:
+            runAsUser: 42415
+    storage: rbd
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: heat
+  name: heat
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: heat
+    ref: master
+    skipDepUpdate: true
+  releaseName: heat
+  targetNamespace: openstack
+  values:
+    bootstrap:
+      enabled: true
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          heat:
+            password: password
+            username: heat
+          heat_stack_user:
+            password: password
+            username: heat-domain
+          heat_trustee:
+            password: password
+            username: heat-trust
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          heat:
+            password: password
+            username: heat
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          heat:
+            password: password
+            username: heat
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_drop: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_init: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        heat_api: registry.cicd.stg.taco/stein/ubuntu-source-heat-api:taco-0.1.0
+        heat_cfn: registry.cicd.stg.taco/stein/ubuntu-source-heat-api:taco-0.1.0
+        heat_cloudwatch: registry.cicd.stg.taco/stein/ubuntu-source-heat-api:taco-0.1.0
+        heat_db_sync: registry.cicd.stg.taco/stein/ubuntu-source-heat-api:taco-0.1.0
+        heat_engine: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        heat_engine_cleaner: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        heat_purge_deleted: registry.cicd.stg.taco/openstackhelm/heat:ocata-ubuntu_xenial
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        ks_endpoints: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_service: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_user: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        rabbit_init: registry.cicd.stg.taco/rabbitmq:3.7-management
+        test: registry.cicd.stg.taco/stein/ubuntu-source-rally:taco-0.1.0
+    pod:
+      replicas:
+        api: 3
+        cfn: 3
+        cloudwatch: 3
+        engine: 3
+      security_context:
+        heat:
+          pod:
+            runAsUser: 42418
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: horizon
+  name: horizon
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: horizon
+    ref: master
+    skipDepUpdate: true
+  releaseName: horizon
+  targetNamespace: openstack
+  values:
+    conf:
+      horizon:
+        apache: |
+          Listen 0.0.0.0:{{ tuple "dashboard" "internal" "web" . | include "helm-toolkit.endpoints.endpoint_port_lookup" }}
+
+          LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+          LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" proxy
+
+          SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
+          CustomLog /dev/stdout combined env=!forwarded
+          CustomLog /dev/stdout proxy env=forwarded
+
+          <VirtualHost *:{{ tuple "dashboard" "internal" "web" . | include "helm-toolkit.endpoints.endpoint_port_lookup" }}>
+              WSGIScriptReloading On
+              WSGIDaemonProcess horizon-http processes=5 threads=1 user=horizon group=horizon display-name=%{GROUP} python-path=/var/lib/kolla/venv/lib/python2.7/site-packages
+              WSGIProcessGroup horizon-http
+              WSGIScriptAlias / /var/www/cgi-bin/horizon/django.wsgi
+              WSGIPassAuthorization On
+              RewriteEngine on
+              RewriteCond %{REQUEST_METHOD} !^(POST|PUT|GET|DELETE)
+              RewriteRule .* - [F]
+
+              <Location "/">
+                  Require all granted
+              </Location>
+
+              Alias /static /var/www/html/horizon
+              <Location "/static">
+                  SetHandler None
+              </Location>
+
+              <IfVersion >= 2.4>
+                ErrorLogFormat "%{cu}t %M"
+              </IfVersion>
+              ErrorLog /dev/stdout
+              TransferLog /dev/stdout
+
+              SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" forwarded
+              CustomLog /dev/stdout combined env=!forwarded
+              CustomLog /dev/stdout proxy env=forwarded
+          </Virtualhost>
+        local_settings:
+          config:
+            openstack_neutron_network:
+              enable_distributed_router: "False"
+              enable_fip_topology_check: "True"
+              enable_firewall: "False"
+              enable_ha_router: "True"
+              enable_ipv6: "False"
+              enable_lb: "True"
+              enable_quotas: "True"
+              enable_router: "True"
+              enable_vpn: "False"
+      software:
+        apache2:
+          site_dir: /etc/apache2/sites-enabled
+    endpoints:
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          horizon:
+            password: password
+            username: horizon
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        db_drop: registry.cicd.stg.taco/stein/ubuntu-source-horizon:taco-0.1.0
+        db_init: registry.cicd.stg.taco/stein/ubuntu-source-horizon:taco-0.1.0
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        horizon: registry.cicd.stg.taco/stein/ubuntu-source-horizon:taco-0.1.0
+        horizon_db_sync: registry.cicd.stg.taco/stein/ubuntu-source-horizon:taco-0.1.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        test: registry.cicd.stg.taco/openstackhelm/osh-selenium:latest-ubuntu_bionic
+    network:
+      node_port:
+        enabled: true
+        port: 31000
+    pod:
+      replicas:
+        server: 3
+      security_context:
+        horizon:
+          pod:
+            runAsUser: 42420
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: ingress
+  name: ingress
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: ingress
+    ref: master
+    skipDepUpdate: true
+  releaseName: ingress
+  targetNamespace: openstack
+  values:
+    conf:
+      ingress:
+        bind-address: 0.0.0.0
+    config:
+      worker-processes: 8
+    endpoints:
+      ingress:
+        port:
+          server:
+            default: 28080
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        entrypoint: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        error_pages: registry.cicd.stg.taco/google_containers/defaultbackend:1.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        ingress: registry.cicd.stg.taco/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
+        ingress_module_init: registry.cicd.stg.taco/stein/ubuntu-source-neutron-server:taco-0.1.0
+        ingress_routed_vip: registry.cicd.stg.taco/stein/ubuntu-source-neutron-server:taco-0.1.0
+        keepalived: registry.cicd.stg.taco/osixia/keepalived:1.4.5
+    monitoring:
+      prometheus:
+        config:
+          worker-processes: 8
+        enabled: true
+        ingress_exporter:
+          scrape: true
+    network:
+      host_namespace: true
+    pod:
+      replicas:
+        error_page: 1
+        ingress: 3
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: keystone
+  name: keystone
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: keystone
+    ref: master
+    skipDepUpdate: true
+  releaseName: keystone
+  targetNamespace: openstack
+  values:
+    conf:
+      keystone:
+        DEFAULT:
+          debug: true
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          keystone:
+            password: password
+            username: keystone
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          keystone:
+            password: password
+            username: keystone
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_drop: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_init: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        keystone_api: registry.cicd.stg.taco/stein/ubuntu-source-keystone:taco-0.1.0
+        keystone_credential_cleanup: registry.cicd.stg.taco/openstackhelm/heat:ocata-ubuntu_xenial
+        keystone_credential_rotate: registry.cicd.stg.taco/stein/ubuntu-source-keystone:taco-0.1.0
+        keystone_credential_setup: registry.cicd.stg.taco/stein/ubuntu-source-keystone:taco-0.1.0
+        keystone_db_sync: registry.cicd.stg.taco/stein/ubuntu-source-keystone:taco-0.1.0
+        keystone_domain_manage: registry.cicd.stg.taco/stein/ubuntu-source-keystone:taco-0.1.0
+        keystone_fernet_rotate: registry.cicd.stg.taco/stein/ubuntu-source-keystone:taco-0.1.0
+        keystone_fernet_setup: registry.cicd.stg.taco/stein/ubuntu-source-keystone:taco-0.1.0
+        ks_user: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        rabbit_init: registry.cicd.stg.taco/rabbitmq:3.7-management
+        test: registry.cicd.stg.taco/stein/ubuntu-source-rally:taco-0.1.0
+    pod:
+      replicas:
+        api: 3
+      security_context:
+        keystone:
+          pod:
+            runAsUser: 42425
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: libvirt
+  name: libvirt
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: libvirt
+    ref: master
+    skipDepUpdate: true
+  releaseName: libvirt
+  targetNamespace: openstack
+  values:
+    conf:
+      ceph:
+        admin_keyring: ""
+        cinder:
+          keyring: AQAin8tU0CFgEhAATb7sYgtWsh+S5HEbg6MrGg==
+          secret_uuid: 582393ff-9a5c-4a2e-ae0d-86ec18c36afc
+          user: cinder
+        enabled: true
+        enalbed: true
+      libvirt:
+        listen_addr: 0.0.0.0
+        log_level: 3
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        libvirt: registry.cicd.stg.taco/stein/ubuntu-source-nova-libvirt:taco-0.1.0
+    manifests:
+      configmap_bin: true
+      configmap_etc: true
+      daemonset_libvirt: true
+    network:
+      backend:
+      - linuxbridge
+    release_group: null
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: mariadb
+  name: mariadb
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: mariadb
+    ref: master
+    skipDepUpdate: true
+  releaseName: mariadb
+  targetNamespace: openstack
+  values:
+    endpoints:
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        error_pages: registry.cicd.stg.taco/google_containers/defaultbackend:1.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        ingress: registry.cicd.stg.taco/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
+        mariadb: registry.cicd.stg.taco/openstackhelm/mariadb:10.2.18
+        mariadb_backup: registry.cicd.stg.taco/openstackhelm/mariadb:latest-ubuntu_xenial
+        prometheus_create_mysql_user: registry.cicd.stg.taco/mariadb:10.2.13
+        prometheus_mysql_exporter: registry.cicd.stg.taco/prom/mysqld-exporter:v0.10.0
+        prometheus_mysql_exporter_helm_tests: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        scripted_test: registry.cicd.stg.taco/openstackhelm/mariadb:latest-ubuntu_xenial
+    monitoring:
+      prometheus:
+        enabled: true
+        mysqld_exporter:
+          scrape: true
+    pod:
+      replicas:
+        server: 3
+    volume:
+      backup:
+        class_name: rbd
+        enabled: false
+        size: $(Values.storage.spec.storage.mariadb_volume_size)
+      class_name: rbd
+      enabled: true
+      use_local_path_for_single_pod_cluster:
+        enabled: false
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: memcached
+  name: memcached
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: memcached
+    ref: master
+    skipDepUpdate: true
+  releaseName: memcached
+  targetNamespace: openstack
+  values:
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        memcached: registry.cicd.stg.taco/memcached:1.5.5
+        prometheus_memcached_exporter: registry.cicd.stg.taco/prom/memcached-exporter:v0.4.1
+    monitoring:
+      prometheus:
+        enabled: true
+        memcached_exporter:
+          scrape: true
+    pod:
+      replicas:
+        server: 1
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: neutron
+  name: neutron
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: neutron
+    ref: master
+    skipDepUpdate: true
+  releaseName: neutron
+  targetNamespace: openstack
+  values:
+    conf:
+      neutron:
+        DEFAULT:
+          core_plugin: ml2
+          global_physnet_mtu: 1500
+          l3_ha: false
+          service_plugins: router
+        agent:
+          root_helper: sudo /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
+      neutron_sudoers: |
+        # This sudoers file supports rootwrap-daemon for both Kolla and LOCI Images.
+        Defaults !requiretty
+        Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/var/lib/openstack/bin:/var/lib/kolla/venv/bin"
+        neutron ALL = (root) NOPASSWD: /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf *, /var/lib/openstack/bin/neutron-rootwrap /etc/neutron/rootwrap.conf *, /var/lib/kolla/venv/bin/neutron-rootwrap-daemon /etc/neutron/rootwrap.conf, /var/lib/openstack/bin/neutron-rootwrap-daemon /etc/neutron/rootwrap.conf
+      paste:
+        composite:neutronapi_v2_0:
+          keystone: cors http_proxy_to_wsgi request_id catch_errors authtoken keystonecontext
+            extensions neutronapiapp_v2_0
+      plugins:
+        linuxbridge_agent:
+          linux_bridge:
+            bridge_mappings: ""
+            physical_interface_mappings: provider:eth1
+          securitygroup:
+            firewall_driver: iptables
+        ml2_conf:
+          ml2:
+            mechanism_drivers: linuxbridge
+            tenant_network_types: vxlan
+            type_drivers: flat,vlan,vxlan
+          ml2_type_flat:
+            flat_networks: '*'
+          ml2_type_vlan:
+            network_vlan_ranges: provider
+        openvswitch_agent:
+          ovs:
+            bridge_mappings: ""
+          securitygroup:
+            firewall_driver: openvswitch
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          neutron:
+            password: password
+            username: neutron
+          nova:
+            password: password
+            username: nova
+        name: keystone
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          neutron:
+            password: password
+            username: neutron
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          neutron:
+            password: password
+            username: neutron
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_drop: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_init: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        ks_endpoints: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_service: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_user: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        neutron_bagpipe_bgp: registry.cicd.stg.taco/stein/ubuntu-source-neutron-server:taco-0.1.0
+        neutron_db_sync: registry.cicd.stg.taco/stein/ubuntu-source-neutron-server:taco-0.1.0
+        neutron_dhcp: registry.cicd.stg.taco/stein/ubuntu-source-neutron-dhcp-agent:taco-0.1.0
+        neutron_ironic_agent: registry.cicd.stg.taco/stein/ubuntu-source-neutron-server:taco-0.1.0
+        neutron_l2gw: registry.cicd.stg.taco/stein/ubuntu-source-neutron-server:taco-0.1.0
+        neutron_l3: registry.cicd.stg.taco/stein/ubuntu-source-neutron-l3-agent:taco-0.1.0
+        neutron_linuxbridge_agent: registry.cicd.stg.taco/stein/ubuntu-source-neutron-linuxbridge-agent:taco-0.1.0
+        neutron_metadata: registry.cicd.stg.taco/stein/ubuntu-source-neutron-metadata-agent:taco-0.1.0
+        neutron_openvswitch_agent: registry.cicd.stg.taco/stein/ubuntu-source-neutron-openvswitch-agent:taco-0.1.0
+        neutron_server: registry.cicd.stg.taco/stein/ubuntu-source-neutron-server:taco-0.1.0
+        neutron_sriov_agent: registry.cicd.stg.taco/stein/ubuntu-source-neutron-sriov-agent:taco-0.1.0
+        neutron_sriov_agent_init: registry.cicd.stg.taco/stein/ubuntu-source-neutron-sriov-agent:taco-0.1.0
+        purge_test: registry.cicd.stg.taco/openstackhelm/ospurge:latest
+        rabbit_init: registry.cicd.stg.taco/rabbitmq:3.7-management
+        test: registry.cicd.stg.taco/xrally/xrally-openstack:1.5.0
+    manifests:
+      daemonset_dhcp_agent: true
+      daemonset_l3_agent: true
+      daemonset_lb_agent: true
+      daemonset_metadata_agent: true
+      daemonset_ovs_agent: false
+      daemonset_sriov_agent: false
+    network:
+      backend:
+      - linuxbridge
+      interface:
+        tunnel: eth2
+      share_namespaces: true
+    pod:
+      replicas:
+        server: 3
+      security_context:
+        neutron:
+          pod:
+            runAsUser: 42435
+        neutron_bagpipe_bgp:
+          pod:
+            runAsUser: 42435
+        neutron_dhcp_agent:
+          pod:
+            runAsUser: 42435
+        neutron_l2gw_agent:
+          pod:
+            runAsUser: 42435
+        neutron_l3_agent:
+          pod:
+            runAsUser: 42435
+        neutron_lb_agent:
+          pod:
+            runAsUser: 42435
+        neutron_metadata_agent:
+          pod:
+            runAsUser: 42435
+        neutron_ovs_agent:
+          pod:
+            runAsUser: 42435
+        neutron_server:
+          pod:
+            runAsUser: 42435
+        neutron_sriov_agent:
+          pod:
+            runAsUser: 42435
+      user:
+        neutron:
+          uid: 42435
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: nova
+  name: nova
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm.git
+    path: nova
+    ref: master
+    skipDepUpdate: true
+  releaseName: nova
+  targetNamespace: openstack
+  values:
+    bootstrap:
+      structured:
+        flavors:
+          enabled: true
+          options:
+            m1_tiny:
+              id: 0c84e220-a258-439f-a6ff-f8e9fd980025
+    conf:
+      ceph:
+        admin_keyring: ""
+        cinder:
+          keyring: AQAin8tU0CFgEhAATb7sYgtWsh+S5HEbg6MrGg==
+          user: cinder
+        enabled: true
+        enalbed: true
+      hypervisor:
+        host_interface: em1
+      libvirt:
+        live_migration_interface: em1
+      logging:
+        logger_nova:
+          level: DEBUG
+      nova:
+        DEFAULT:
+          config_drive_cdrom: true
+          config_drive_format: iso9660
+          debug: true
+          force_config_drive: false
+          scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,RamFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter
+        libvirt:
+          images_type: rbd
+          rbd_secret_uuid: 582393ff-9a5c-4a2e-ae0d-86ec18c36afc
+          rbd_user: cinder
+          virt_type: kvm
+        scheduler:
+          discover_hosts_in_cells_interval: 60
+        vnc:
+          novncproxy_base_url: http://192.168.99.100:30608/vnc_auto.html
+      rootwrap_filters: null
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          ironic:
+            password: password
+            username: ironic
+          neutron:
+            password: password
+            username: neutron
+          nova:
+            password: password
+            username: nova
+          placement:
+            password: password
+            username: placement
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          nova:
+            password: password
+            username: nova
+      oslo_db_api:
+        auth:
+          admin:
+            password: password
+            username: root
+          nova:
+            password: password
+            username: nova
+      oslo_db_cell0:
+        auth:
+          admin:
+            password: password
+            username: root
+          nova:
+            password: password
+            username: nova
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          nova:
+            password: password
+            username: nova
+        statefulset: null
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_drop: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_init: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        ks_endpoints: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_service: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_user: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        nova_api: registry.cicd.stg.taco/stein/ubuntu-source-nova-api:taco-0.1.0
+        nova_cell_setup: registry.cicd.stg.taco/stein/ubuntu-source-nova-api:taco-0.1.0
+        nova_cell_setup_init: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        nova_compute: registry.cicd.stg.taco/stein/ubuntu-source-nova-compute:taco-0.1.0
+        nova_compute_ironic: registry.cicd.stg.taco/stein/ubuntu-source-nova-compute-ironic:taco-0.1.0
+        nova_compute_ssh: registry.cicd.stg.taco/stein/ubuntu-source-nova-ssh:taco-0.1.0
+        nova_conductor: registry.cicd.stg.taco/stein/ubuntu-source-nova-conductor:taco-0.1.0
+        nova_consoleauth: registry.cicd.stg.taco/stein/ubuntu-source-nova-consoleauth:taco-0.1.0
+        nova_db_sync: registry.cicd.stg.taco/stein/ubuntu-source-nova-api:taco-0.1.0
+        nova_novncproxy: registry.cicd.stg.taco/stein/ubuntu-source-nova-novncproxy:taco-0.1.0
+        nova_novncproxy_assets: registry.cicd.stg.taco/stein/ubuntu-source-nova-novncproxy:taco-0.1.0
+        nova_placement: registry.cicd.stg.taco/stein/ubuntu-source-nova-placement-api:taco-0.1.0
+        nova_scheduler: registry.cicd.stg.taco/stein/ubuntu-source-nova-scheduler:taco-0.1.0
+        nova_service_cleaner: registry.cicd.stg.taco/ceph-config-helper:v1.14.3
+        nova_spiceproxy: registry.cicd.stg.taco/stein/ubuntu-source-nova-spicehtml5proxy:taco-0.1.0
+        nova_spiceproxy_assets: registry.cicd.stg.taco/stein/ubuntu-source-nova-spicehtml5proxy:taco-0.1.0
+        rabbit_init: registry.cicd.stg.taco/rabbitmq:3.7-management
+        test: registry.cicd.stg.taco/stein/ubuntu-source-rally:taco-0.1.0
+    network:
+      backend:
+      - linuxbridge
+      novncproxy:
+        name: nova-novncproxy
+        node_port:
+          enabled: true
+          port: 30608
+        port: 6080
+        targetPort: 6080
+    pod:
+      mandatory_access_control:
+        type: null
+      replicas:
+        api_metadata: 3
+        conductor: 3
+        consoleauth: 3
+        novncproxy: 3
+        osapi: 3
+        placement: 3
+        scheduler: 3
+      security_context:
+        nova:
+          pod:
+            runAsUser: 42436
+      user:
+        nova:
+          uid: 42436
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: prometheus-openstack-exporter
+  name: prometheus-openstack-exporter
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: prometheus-openstack-exporter
+    ref: master
+    skipDepUpdate: true
+  releaseName: prometheus-openstack-exporter
+  targetNamespace: openstack
+  values:
+    dummy: dummy
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            project_domain_name: default
+            project_name: admin
+            region_name: RegionOne
+            user_domain_name: default
+            username: admin
+          user:
+            password: password
+            project_domain_name: default
+            project_name: service
+            region_name: RegionOne
+            role: admin
+            user_domain_name: default
+            username: prometheus-openstack-exporter
+        name: keystone
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        ks_user: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        prometheus_openstack_exporter: registry.cicd.stg.taco/openstackhelm/prometheus-openstack-exporter:ubuntu_bionic-20191017
+    pod:
+      mandatory_access_control:
+        type: null
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: rabbitmq
+  name: rabbitmq
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra.git
+    path: rabbitmq
+    ref: master
+    skipDepUpdate: true
+  releaseName: rabbitmq
+  targetNamespace: openstack
+  values:
+    endpoints:
+      oslo_messaging:
+        auth:
+          user:
+            password: password
+            username: rabbitmq
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        prometheus_rabbitmq_exporter: registry.cicd.stg.taco/kbudde/rabbitmq-exporter:v0.21.0
+        prometheus_rabbitmq_exporter_helm_tests: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        rabbitmq: registry.cicd.stg.taco/rabbitmq:3.7.13
+        rabbitmq_init: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        scripted_test: registry.cicd.stg.taco/rabbitmq:3.7.13-management
+    monitoring:
+      prometheus:
+        enabled: true
+        rabbitmq_exporter:
+          scrape: true
+    pod:
+      replicas:
+        server: 3
+    volume:
+      class_name: rbd
+      size: 256Mi
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: ceph-provisioners
+  name: ceph-provisioners
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm-infra
+    path: ceph-provisioners
+    ref: master
+    skipDepUpdate: true
+  releaseName: ceph-provisioners
+  targetNamespace: openstack
+  values:
+    conf:
+      ceph:
+        global:
+          mon_host: ""
+    deployment:
+      ceph: false
+      cephfs_provisioner: false
+      client_secrets: true
+      rbd_provisioner: false
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        ceph_bootstrap: registry.cicd.stg.taco/openstackhelm/ceph-daemon:latest-ubuntu_xenial
+        ceph_cephfs_provisioner: registry.cicd.stg.taco/openstackhelm/ceph-cephfs-provisioner:latest-ubuntu_xenial
+        ceph_config_helper: registry.cicd.stg.taco/port/ceph-config-helper:v1.14.3
+        ceph_rbd_provisioner: registry.cicd.stg.taco/openstackhelm/ceph-rbd-provisioner:latest-ubuntu_xenial
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+    manifests:
+      configmap_bin: false
+      configmap_bin_common: false
+      configmap_etc: true
+      deployment_cephfs_provisioner: false
+      deployment_rbd_provisioner: false
+      helm_tests: false
+      job_bootstrap: false
+      job_cephfs_client_key: false
+      job_image_repo_sync: false
+      job_namespace_client_key: false
+      job_namespace_client_key_cleaner: false
+      storageclass_cephfs: false
+      storageclass_rbd: false
+    storageclass:
+      cephfs:
+        provision_storage_class: false
+      rbd:
+        provision_storage_class: false
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: cinder
+  name: cinder
+spec:
+  chart:
+    git: https://github.com/openinfradev/openstack-helm
+    path: cinder
+    ref: master
+    skipDepUpdate: true
+  releaseName: cinder
+  targetNamespace: openstack
+  values:
+    conf:
+      backends:
+        rbd1:
+          rbd_pool: volumes
+          rbd_secret_uuid: 582393ff-9a5c-4a2e-ae0d-86ec18c36afc
+      ceph:
+        admin_keyring: ""
+        enabled: true
+        pools:
+          volumes:
+            app_name: cinder-volume
+            chunk_size: 128
+            crush_rule: replicated_rule
+            replication: 3
+      cinder:
+        DEFAULT:
+          backup_ceph_pool: backups
+          backup_ceph_user: cinder-backup
+          backup_driver: cinder.backup.drivers.ceph.CephBackupDriver
+      logging:
+        logger_cinder:
+          level: DEBUG
+        logger_oslo_service:
+          handlers: stderr
+          level: DEBUG
+          qualname: oslo_service
+        loggers:
+          keys:
+          - root
+          - cinder
+          - oslo_service
+    endpoints:
+      identity:
+        auth:
+          admin:
+            password: password
+            username: admin
+          cinder:
+            password: password
+            username: cinder
+      oslo_db:
+        auth:
+          admin:
+            password: password
+            username: root
+          cinder:
+            password: password
+            username: cinder
+      oslo_messaging:
+        auth:
+          admin:
+            password: password
+            username: rabbitmq
+          cinder:
+            password: password
+            username: cinder
+        statefulset: null
+      volume:
+        path:
+          default: /v2/%(tenant_id)s
+    images:
+      pull_policy: IfNotPresent
+      tags:
+        bootstrap: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        cinder_api: registry.cicd.stg.taco/stein/ubuntu-source-cinder-api:taco-0.1.0
+        cinder_backup: registry.cicd.stg.taco/stein/ubuntu-source-cinder-backup:taco-0.1.0
+        cinder_backup_storage_init: registry.cicd.stg.taco/port/ceph-config-helper:v1.14.3
+        cinder_db_sync: registry.cicd.stg.taco/stein/ubuntu-source-cinder-api:taco-0.1.0
+        cinder_scheduler: registry.cicd.stg.taco/stein/ubuntu-source-cinder-scheduler:taco-0.1.0
+        cinder_storage_init: registry.cicd.stg.taco/port/ceph-config-helper:v1.14.3
+        cinder_volume: registry.cicd.stg.taco/stein/ubuntu-source-cinder-volume:taco-0.1.0
+        cinder_volume_usage_audit: registry.cicd.stg.taco/stein/ubuntu-source-cinder-volume:taco-0.1.0
+        db_drop: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        db_init: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        dep_check: registry.cicd.stg.taco/airshipit/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: registry.cicd.stg.taco/docker:17.07.0
+        ks_endpoints: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_service: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        ks_user: registry.cicd.stg.taco/stein/ubuntu-source-heat-engine:taco-0.1.0
+        rabbit_init: registry.cicd.stg.taco/rabbitmq:3.7-management
+        test: registry.cicd.stg.taco/xrally/xrally-openstack:1.5.0
+    pod:
+      replicas:
+        api: 3
+        backup: 1
+        scheduler: 3
+        volume: 1
+      security_context:
+        cinder:
+          pod:
+            runAsUser: 42407
+        cinder_api:
+          pod:
+            runAsUser: 42407
+        cinder_backup:
+          pod:
+            runAsUser: 42407
+        cinder_scheduler:
+          pod:
+            runAsUser: 42407
+        cinder_volume:
+          pod:
+            runAsUser: 42407
+  wait: true
