@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1
+kind: Values
+metadata:
+  name: site
+spec:
+  externalIP: 172.27.1.55
+  k8sMasterIPs: [172.27.1.55, 172.27.1.212, 172.27.1.18]
+  ceph_monitor: 172.27.1.231
