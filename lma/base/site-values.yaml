@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1
+kind: Values
+metadata:
+  name: site
+spec:
+  # IP Addresses 
+  externalIP: 192.168.5.61
+  k8sMasterIPs: [192.168.5.61, 192.168.5.194, 192.168.5.195]
+  fed_prometheus_addresses: [192.168.5.61]
+  ceph_mon_hosts:
+  - ip: 192.168.97.118
+
+  storageClassName: rbd
+
+  serviceMonitor:
+    ceph: true
+    openstack: true
+
+  # Enable only if in the main cluster 
+  metricbeat:
+    enabled: true
+
+  # Volume sizes for lma
+  volumes:
+    elasticsearch: "5Gi"
+    prometheus: "200Gi"
+    prometheus-fed-master: "50Gi"
+
+  taco_cluster_name: "main"
+
+  prometheusRules:
+    aggregation: true
+    alert: true
