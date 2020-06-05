@@ -1,3 +1,5 @@
+Note: `DECAPOD (DEClarative APplication Orchestration & Delivery)` is a pilot project leveraging Kustomize, Helm Operator, Argo Workflow to deploy applications on Kubernetes. 
+
 # decapod-yaml
 `decapod-yaml` helps templating Kubernetes yaml files according to your environment.  
 Currently, it provides `LMA` and `OpenStack` templates.
