@@ -1,33 +1,188 @@
-apiVersion: kustomize.config.k8s.io/v1
-kind: Values
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
 metadata:
   name: site
-spec:
-  # IP Addresses 
-  externalIP: 192.168.5.61
-  k8sMasterIPs: [192.168.5.61, 192.168.5.194, 192.168.5.195]
-  fed_prometheus_addresses: [192.168.5.61]
-  ceph_mon_hosts:
-  - ip: 192.168.97.118
 
-  storageClassName: rbd
+global:
+  nodeSelector:
+    taco-lma: enabled
+  clusterName: cluster.local
+  storageClassName: ceph
+  repository: http://master-1:8879
+  serviceScrapeInterval: 10s
+  federateScrapeInterval: 10s
 
-  serviceMonitor:
-    ceph: true
-    openstack: true
+charts:
+- name: prometheus-operator
+  source:
+    repository: $(repository)
+  override:
+    prometheusOperator.nodeSelector: $(nodeSelector)
 
-  # Enable only if in the main cluster 
-  metricbeat:
-    enabled: true
+- name: elasticsearch-operator
+  source:
+    repository: $(repository)
 
-  # Volume sizes for lma
-  volumes:
-    elasticsearch: "5Gi"
-    prometheus: "200Gi"
-    prometheus-fed-master: "50Gi"
+- name: prometheus
+  source:
+    repository: $(repository)
+  override:
+    kubeEtcd.endpoints: [TO_BE_FIXED]
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 200Gi
+    prometheus.prometheusSpec.retention: 10d
+    prometheus.prometheusSpec.externalLabels.taco_cluster: $(clusterName)
+    prometheus.prometheusSpec.nodeSelector: $(nodeSelector)
+    coreDns.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeApiServer.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeControllerManager.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeDns.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeEtcd.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeProxy.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeScheduler.serviceMonitor.interval: $(serviceScrapeInterval)
+    
+- name: prometheus-fed-master
+  source:
+    repository: $(repository)  
+  override:
+    alertmanager.alertmanagerSpec.nodeSelector: $(nodeSelector)
+    alertmanager.alertmanagerSpec.retention: 120h
+    alertmanager.config.global.slack_api_url: https://hooks.slack.com/services/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
+    prometheus.prometheusSpec.nodeSelector: $(nodeSelector)
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 500Gi
+  
+- name: kube-state-metrics
+  source:
+    repository: $(repository)
+  override:
+    nodeSelector: $(nodeSelector)
+    collectors.verticalpodautoscalers: false
 
-  taco_cluster_name: "main"
+- name: prometheus-pushgateway
+  source:
+    repository: $(repository)
+  override:
+    nodeSelector: $(nodeSelector)
 
-  prometheusRules:
-    aggregation: true
-    alert: true
+- name: prometheus-node-exporter
+  source:
+    repository: $(repository)
+
+- name: prometheus-process-exporter
+  source:
+    repository: $(repository)
+
+- name: elasticsearch-kibana
+  source:
+    repository: $(repository)
+  override:
+    customResource.kibana.nodeSelector: $(nodeSelector)
+    customResource.kibana.limitCpu: 4
+    customResource.kibana.limitMem: 8Gi
+
+    customResource.elasticsearch.nodeSets.master.nodeSelector: $(nodeSelector)
+    customResource.elasticsearch.nodeSets.master.javaOpts: "-Xms2g -Xmx2g"
+    customResource.elasticsearch.nodeSets.master.limitCpu: 2
+    customResource.elasticsearch.nodeSets.master.limitMem: 4Gi
+    customResource.elasticsearch.nodeSets.master.pvc.storageClassName: $(storageClassName)
+    customResource.elasticsearch.nodeSets.master.pvc.size: 2Gi
+
+    customResource.elasticsearch.nodeSets.hotdata.nodeSelector: $(nodeSelector)
+    customResource.elasticsearch.nodeSets.hotdata.javaOpts: "-Xms2g -Xmx2g"
+    customResource.elasticsearch.nodeSets.hotdata.limitCpu: 2
+    customResource.elasticsearch.nodeSets.hotdata.limitMem: 4Gi
+    customResource.elasticsearch.nodeSets.hotdata.pvc.storageClassName: $(storageClassName)
+    customResource.elasticsearch.nodeSets.hotdata.pvc.size: 100Gi
+
+    customResource.elasticsearch.nodeSets.warmdata.enabled: false
+    customResource.elasticsearch.nodeSets.warmdata.nodeSelector: $(nodeSelector)
+    customResource.elasticsearch.nodeSets.warmdata.javaOpts: "-Xms2g -Xmx2g"
+    customResource.elasticsearch.nodeSets.warmdata.limitCpu: 1
+    customResource.elasticsearch.nodeSets.warmdata.limitMem: 2Gi
+    customResource.elasticsearch.nodeSets.warmdata.pvc.storageClassName: $(storageClassName)
+    customResource.elasticsearch.nodeSets.warmdata.pvc.size: 200Gi
+
+    customResource.elasticsearch.nodeSets.client.enabled: true
+    customResource.elasticsearch.nodeSets.client.count: 1
+    customResource.elasticsearch.nodeSets.client.nodeSelector: $(nodeSelector)
+    customResource.elasticsearch.nodeSets.client.javaOpts: "-Xms2g -Xmx2g"
+    customResource.elasticsearch.nodeSets.client.limitCpu: 2
+    customResource.elasticsearch.nodeSets.client.limitMem: 4Gi
+    customResource.elasticsearch.nodeSets.client.pvc.storageClassName: $(storageClassName)
+
+- name: grafana
+  source:
+    repository: $(repository)
+  override:
+    adminPassword: password
+    persistence.storageClassName: $(storageClassName)
+
+- name: fluentbit-operator
+  source:
+    repository: $(repository)
+  override:
+    global.base_cluster_url: $(clusterName)
+    fluentbitOperator.nodeSelector: $(nodeSelector)
+    logExporter.nodeSelector: $(nodeSelector)
+
+- name: fluentbit
+  source:
+    repository: $(repository)
+  override:
+    global.base_cluster_url: $(clusterName)
+    global.nodeSelector: $(nodeSelector)
+    fluentbit.clusterName: $(clusterName)
+    fluentbit.outputs.es.host: taco-elasticsearch-es-http.lma.svc.$(clusterName)
+    fluentbit.outputs.kafka:
+      enabled: false
+      broker: "YOUR_BORKER_INFO"
+      topic: "YOUR_TACO_LOG_INFO"
+    fluentbit.esTemplate.url: https://taco-elasticsearch-es-http.lma.svc.$(clusterName):9200
+    fluentbit.nodeSelector: $(nodeSelector)
+
+- name: addons
+  source:
+    repository: $(repository)
+  override:
+    serviceMonitor.processExporter.interval: $(serviceScrapeInterval)
+    serviceMonitor.ceph.interval: $(serviceScrapeInterval)
+    serviceMonitor.calico.interval: $(serviceScrapeInterval)
+    serviceMonitor.kubeStateMetrics.interval: $(serviceScrapeInterval)
+    serviceMonitor.nodeExporter.interval: $(serviceScrapeInterval)
+    serviceMonitor.kubelet.interval: $(serviceScrapeInterval)
+
+- name: fed-addons
+  source:
+    repository: $(repository)
+  override:
+    metricbeat.elasticsearch.host: https://taco-elasticsearch-es-http.lma.svc.$(clusterName):9200
+    metricbeat.kibana.host: taco-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
+    metricbeat.prometheus.hosts:
+    - fed-master-prometheus.fed.svc.$(clusterName):9090
+    tacoWatcher.host: taco-watcher.fed.svc.$(clusterName)
+    tacoWatcher.joinCluster.body.kibanaUrl: http://taco-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
+    tacoWatcher.joinCluster.body.grafanaUrl: http://grafana.fed.svc.$(clusterName)
+    tacoWatcher.joinCluster.body.k8sUrl: https://kubernetes.default.svc.$(clusterName)
+    kibanaInit.url: http://taco-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
+    serviceMonitor.grafana.interval: $(serviceScrapeInterval)
+    serviceMonitor.federations: 
+    - name: dev-federate
+      interval: $(federateScrapeInterval)
+      namespace: lma
+      selector:
+        app: prometheus
+        prometheus: lma-prometheus
+      port: 9090
+
+- name: prometheus-adapter
+  source:
+    repository: $(repository)
+  override:
+    nodeSelector: $(nodeSelector)
+
+- name: kubernetes-event-exporter
+  source:
+    repository: $(repository)
+  override:
+    conf.default.hosts: TO_BE_FIXED

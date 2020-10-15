@@ -1,6 +1,5 @@
 resources:
-- ./resources.yaml
-- ./site-values.yaml
+  - resources.yaml
 
-# transformers:
-# - ./transformer.yaml
+transformers:
+  - site-values.yaml

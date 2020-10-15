@@ -1,6 +1,0 @@
-apiVersion: builtin
-kind: KindFilterTransformer
-metadata:
-  name: kindfiltertransformer
-excludes:
-- Values

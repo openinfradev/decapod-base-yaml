@@ -1,21 +1,26 @@
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
 metadata:
-  name: neutron
-spec:
-  values:
+  name: linuxbridge-flat-vlan
+
+global:
+  networkBackend: onos
+  interfaceMappings: ""
+
+charts:
+- name: neutron
+  overrides:
     conf:
       neutron:
         DEFAULT:
           l3_ha: false
-          service_plugins: router
+          service_plugins: ""
       plugins:
         ml2_conf:
           ml2:
-            mechanism_drivers: $(Values.site.spec.network.network_backend)
-            type_drivers: flat,vlan,vxlan
-            tenant_network_types: vxlan
+            mechanism_drivers: $(networkBackend)
+            type_drivers: flat,vlan
+            tenant_network_types: ""
           ml2_type_flat:
             flat_networks: "*"
           ml2_type_vlan:
@@ -25,18 +30,17 @@ spec:
             bridge_mappings: ""
         linuxbridge_agent:
           linux_bridge:
-            physical_interface_mappings: $(Values.site.spec.network.interface_mappings)
+            physical_interface_mappings: $(interfaceMappings)
             bridge_mappings: ""
     network:
       backend:
-      - $(Values.site.spec.network.network_backend)
+      - $(networkBackend)
       share_namespaces: true
-      interface:
-        tunnel: $(Values.site.spec.network.tunnel_interface)
     manifests:
       daemonset_lb_agent: true
       daemonset_dhcp_agent: true
-      daemonset_metadata_agent: true
+      daemonset_metadata_agent: false
       daemonset_ovs_agent: false
       daemonset_sriov_agent: false
-      daemonset_l3_agent: true
+      daemonset_l3_agent: false
+
