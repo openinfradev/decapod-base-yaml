@@ -4,7 +4,7 @@ metadata:
   name: linuxbridge-flat-vlan
 
 global:
-  networkBackend: onos
+  networkBackend: linuxbridge
   interfaceMappings: ""
 
 charts:
