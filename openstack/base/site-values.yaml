@@ -1,44 +1,139 @@
-# contains all variables determined as a site environment.
-
-apiVersion: kustomize.config.k8s.io/v1
-kind: Values
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
 metadata:
   name: site
-spec:
-  # branch or tag name of helm charts
-  chart_ref: master
-  # external ip for nova vnc, public ip, image ip and so on
-  external_ip: taco-aio
-  docker_registry: registry.cicd.stg.taco
-  compute:
-    host_interface: em1
 
-  ########################################################################
-  # Network Configuration
-  ########################################################################
-  network:
-    network_backend: linuxbridge # available values: linuxbridge, openvswitch, onos
-    global_physnet_mtu: 1500
-    # If the network_backend is set to openvswitch, this value is defined as a bridge_mappings.
-    # If the network_backned is set to linuxbridge, this value is defied as a physical_interface_mappings.
-    interface_mappings: ""
-    tunnel_interface: null # need to set this value if vxlan type used
-    auto_bridge_add_interface: null # need to set this value if the network_backend is openvswitch
+global:
+  clusterName: cluster.local
+  storageClassName: rbd
+  repository: http://master-1:8879
+  externalIP: 192.168.0.7
+  ceph_keyring: AQCpRKFe/cWLFBAANOQ71DEm+GGI/vGvdK1Zvw==
+  cinder_keyring: AQAin8tU0CFgEhAATb7sYgtWsh+S5HEbg6MrGg==
+  adminPassword: password
 
-  ########################################################################
-  # Storage Configuration
-  ########################################################################
-  storage:
-    storage_class_name: rbd
-    mariadb_volume_size: 5Gi
-    rabbitmq_volume_size: 256Mi
-    # address of ceph monitors
-    ceph_mon_host: "" 
-    ceph_admin_keyring: ""
-  baremetal:
-    public_endpoint_ip: ""
-    pxe_device: ""
-    neutron_subnet_alloc_start: ""
-    neutron_subnet_alloc_end: ""
-    neutron_subnet_cidr: ""
-    neutron_subnet_gateway: ""
+charts:
+- name: glance
+  source:
+    repository: $(repository)
+  override:
+    conf.ceph.admin_keyring: $(ceph_keyring)
+    endpoints.cluster_domain_suffix: $(clusterName)
+    storage: $(storageClassName)
+    endpoints.identity.auth.admin.password: $(adminPassword)
+
+- name: heat
+  source:
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+    endpoints.identity.auth.admin.password: $(adminPassword)
+
+- name: horizon
+  source:
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+
+- name: ingress
+  source:
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+    
+- name: keystone
+  source:
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+    endpoints.identity.auth.admin.password: $(adminPassword)
+
+- name: libvirt
+  source:
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+    conf.ceph.admin_keyring: $(ceph_keyring)
+    conf.ceph.cinder.keyring: $(cinder_keyring)
+
+- name: mariadb
+  source:
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+    volume.backup.class_name: $(storageClassName)
+    volume.backup.size: 10Gi
+    volume.backup.enabled: false
+    volume.class_name: $(storageClassName)
+
+- name: memcached
+  source:
+    repository: $(repository)
+
+- name: neutron
+  source:
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+    endpoints.identity.auth.admin.password: $(adminPassword)
+
+- name: nova
+  source:
+    repository: $(repository)
+  override:
+    conf.ceph.admin_keyring: $(ceph_keyring)
+    conf.ceph.cinder.keyring: $(cinder_keyring)
+    conf.hypervisor.host_interface: eth2
+    conf.libvirt.live_migration_interface: eth2
+    conf.nova.vnc.novncproxy_base_url: http://$(externalIP):30608/vnc_auto.html
+    endpoints.cluster_domain_suffix: $(clusterName)
+    endpoints.identity.auth.admin.password: $(adminPassword)
+
+- name: prometheus-openstack-exporter
+  source:
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+    endpoints.identity.auth.admin.password: $(adminPassword)
+
+- name: rabbitmq
+  source:
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+    volume.class_name: $(storageClassName)
+
+- name: ceph-provisioners
+  source:
+    repository: $(repository)
+  override:
+    conf.ceph.global.mon_host: 192.168.0.1,192.168.0.2,192.168.0.3
+
+- name: cinder
+  source:
+    repository: $(repository)
+  override:
+    conf.ceph.admin_keyring: $(ceph_keyring)
+    conf.ceph.enabled: true
+    endpoints.cluster_domain_suffix: $(clusterName)
+    endpoints.identity.auth.admin.password: $(adminPassword)
+
+- name: ironic
+  source: 
+    repository: $(repository)
+  override:
+    endpoints.cluster_domain_suffix: $(clusterName)
+    endpoints.baremetal.hosts.public: 192.168.0.7
+    network.pxe:
+      device: eth1
+      neutron_subnet_alloc_end: 192.168.0.150
+      neutron_subnet_alloc_start: 192.168.0.100
+      neutron_subnet_cidr: 192.168.0.0/24
+      neutron_subnet_gateway: 192.168.0.1
+    endpoints.identity.auth.admin.password: $(adminPassword)
+
+- name: sona
+  source:
+    repository: $(repository)
+  override:
+    openstack.password: $(adminPassword)
