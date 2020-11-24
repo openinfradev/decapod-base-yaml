@@ -8,7 +8,7 @@ spec:
   chart:
     repository: TO_BE_FIXED
     name: prometheus-operator
-    version: 8.12.3
+    version: 9.3.2
   releaseName: prometheus-operator
   targetNamespace: lma
   values:
@@ -81,7 +81,7 @@ spec:
   chart:
     repository: TO_BE_FIXED
     name: prometheus-operator
-    version: 8.12.3
+    version: 9.3.2
   releaseName: prometheus
   targetNamespace: lma
   values:
@@ -182,7 +182,7 @@ spec:
   chart:
     repository: TO_BE_FIXED
     name: prometheus-operator
-    version: 8.12.3
+    version: 9.3.2
   releaseName: prometheus-fed-master
   targetNamespace: fed
   values:
