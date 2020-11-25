@@ -808,7 +808,7 @@ metadata:
 spec:
   chart:
     repository: TO_BE_FIXED
-    name: taco-addons-lma
+    name: lma-addons
     version: 1.0.6
   releaseName: addons
   targetNamespace: lma
@@ -857,7 +857,7 @@ metadata:
 spec:
   chart:
     repository: TO_BE_FIXED
-    name: taco-addons-lma
+    name: lma-addons
     version: 1.0.6
   releaseName: fed-addons
   targetNamespace: fed
