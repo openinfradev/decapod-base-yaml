@@ -325,7 +325,7 @@ spec:
   chart:
     repository: TO_BE_FIXED
     name: kube-state-metrics
-    version: 2.8.2
+    version: 2.9.4
   releaseName: kube-state-metrics
   targetNamespace: lma
   values:
@@ -342,7 +342,7 @@ spec:
   chart:
     repository: TO_BE_FIXED
     name: prometheus-node-exporter
-    version: 1.9.1
+    version: 1.11.2
   releaseName: prometheus-node-exporter
   targetNamespace: lma
   values:
@@ -360,7 +360,7 @@ spec:
   chart:
     repository: TO_BE_FIXED
     name: prometheus-pushgateway
-    version: 1.3.0 
+    version: 1.4.3
   releaseName: prometheus-pushgateway
   targetNamespace: lma
   values:
@@ -503,7 +503,7 @@ spec:
   chart:
     repository: TO_BE_FIXED
     name: grafana
-    version: 5.0.7
+    version: 5.5.7
   releaseName: grafana
   targetNamespace: fed
   values:
@@ -927,7 +927,7 @@ spec:
   chart:
     repository: TO_BE_FIXED
     name: prometheus-adapter
-    version: 2.1.3 
+    version: 2.5.1
   releaseName: prometheus-adapter
   targetNamespace: lma
   values:
