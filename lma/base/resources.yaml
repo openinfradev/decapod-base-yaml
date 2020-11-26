@@ -38,7 +38,8 @@ spec:
       enabled: false
     prometheusOperator:
       enabled: true
-      nodeSelector: TO_BE_FIXED
+      nodeSelector:
+        TO_BE_FIXED: TO_BE_FIXED
       createCustomResource: true
       cleanupCustomResource: true
       cleanupCustomResourceBeforeInstall: true
@@ -188,7 +189,8 @@ spec:
   values:
     alertmanager:
       alertmanagerSpec:
-        nodeSelector: TO_BE_FIXED
+        nodeSelector:
+          TO_BE_FIXED: TO_BE_FIXED
         retention: TO_BE_FIXED
       config:
         global:
@@ -284,7 +286,8 @@ spec:
       prometheusSpec:
         externalLabels:
           taco_cluster: federation-master
-        nodeSelector: TO_BE_FIXED
+        nodeSelector:
+          TO_BE_FIXED: TO_BE_FIXED
         replicas: 1
         ruleNamespaceSelector:
           matchLabels:
@@ -329,7 +332,8 @@ spec:
   releaseName: kube-state-metrics
   targetNamespace: lma
   values:
-    nodeSelector: TO_BE_FIXED
+    nodeSelector:
+      TO_BE_FIXED: TO_BE_FIXED
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -367,7 +371,8 @@ spec:
     service:
       nodePort: 30010
       type: NodePort
-    nodeSelector: TO_BE_FIXED
+    nodeSelector:
+      TO_BE_FIXED: TO_BE_FIXED
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -435,7 +440,8 @@ spec:
         nodeSets:
           master:
             enabled: true
-            nodeSelector: TO_BE_FIXED
+            nodeSelector:
+              TO_BE_FIXED: TO_BE_FIXED
             count: 3
             javaOpts: TO_BE_FIXED
             limitCpu: TO_BE_FIXED
@@ -445,7 +451,8 @@ spec:
               size: TO_BE_FIXED
           hotdata:
             enabled: true
-            nodeSelector: TO_BE_FIXED
+            nodeSelector:
+              TO_BE_FIXED: TO_BE_FIXED
             count: 3
             javaOpts: TO_BE_FIXED
             limitCpu: TO_BE_FIXED
@@ -455,7 +462,8 @@ spec:
               size: TO_BE_FIXED
           warmdata:
             enabled: TO_BE_FIXED
-            nodeSelector: TO_BE_FIXED
+            nodeSelector:
+              TO_BE_FIXED: TO_BE_FIXED
             count: 2
             javaOpts: TO_BE_FIXED
             limitCpu: TO_BE_FIXED
@@ -465,7 +473,8 @@ spec:
               size: TO_BE_FIXED
           client:
             enabled: TO_BE_FIXED
-            nodeSelector: TO_BE_FIXED
+            nodeSelector:
+              TO_BE_FIXED: TO_BE_FIXED
             count: TO_BE_FIXED
             javaOpts: TO_BE_FIXED
             limitCpu: TO_BE_FIXED
@@ -490,7 +499,8 @@ spec:
                 port: 5601
         limitCpu: TO_BE_FIXED
         limitMem: TO_BE_FIXED
-        nodeSelector: TO_BE_FIXED
+        nodeSelector:
+          TO_BE_FIXED: TO_BE_FIXED
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -554,7 +564,8 @@ spec:
       enabled: true
       createCustomResource: true
       cleanupCustomResource: true
-      nodeSelector: TO_BE_FIXED
+      nodeSelector:
+        TO_BE_FIXED: TO_BE_FIXED
       resources:
         limits:
           cpu: "2"
@@ -566,7 +577,8 @@ spec:
       enabled: false
     logExporter:
       enabled: true
-      nodeSelector: TO_BE_FIXED
+      nodeSelector:
+        TO_BE_FIXED: TO_BE_FIXED
       serviceMonitor:
         enabled: false
         interval: 1m
@@ -589,7 +601,8 @@ spec:
   values:
     global:
       base_cluster_url: TO_BE_FIXED   #FIXME
-      nodeSelector: TO_BE_FIXED
+      nodeSelector:
+        TO_BE_FIXED: TO_BE_FIXED
     fluentbitOperator:
       enabled: false
       createCustomResource: false
@@ -790,7 +803,8 @@ spec:
         value: kibana|elasticsearch|fluent-bit
       alerts:
         makeAlertRule: true
-      nodeSelector: TO_BE_FIXED
+      nodeSelector:
+        TO_BE_FIXED: TO_BE_FIXED
     fluentbitOperator:
       enabled: false
       createCustomResource: false
@@ -871,7 +885,8 @@ spec:
       kibana:
         host: TO_BE_FIXED
       prometheus:
-        hosts: TO_BE_FIXED
+        hosts:
+        - TO_BE_FIXED
       addtionalModules: []
     grafanaDashboard:
       enabled: true
@@ -892,7 +907,8 @@ spec:
         enabled: false
       nodeExporter:
         enabled: false
-      federations: TO_BE_FIXED
+      federations:
+      - TO_BE_FIXED
     tacoWatcher:
       host: TO_BE_FIXED
       port: 32000
@@ -936,7 +952,8 @@ spec:
       port: 9090
     rules:
       default: false
-    nodeSelector: TO_BE_FIXED
+    nodeSelector:
+      TO_BE_FIXED: TO_BE_FIXED
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -957,7 +974,8 @@ spec:
       logLevel: error     # possible level: error, debug,
       logFormat: json
       default:
-        hosts: TO_BE_FIXED  #[]
+        hosts:
+        - TO_BE_FIXED 
         index: kube-events
         user: elastic
         password: tacoword
