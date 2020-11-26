@@ -369,8 +369,7 @@ spec:
       configmap_etc: true
       daemonset_libvirt: true
     network:
-      backend:
-      - TO_BE_FIXED
+      backend: [] # TO_BE_FIXED
     release_group: null
   wait: true
 ---
@@ -555,8 +554,7 @@ spec:
       daemonset_ovs_agent: false
       daemonset_sriov_agent: false
     network:
-      backend:
-      - TO_BE_FIXED
+      backend: [] # TO_BE_FIXED
       server:
         node_port:
           enabled: true
@@ -720,8 +718,7 @@ spec:
     manifests:
       statefulset_compute_ironic: true
     network:
-      backend:
-      - TO_BE_FIXED
+      backend: [] # TO_BE_FIXED
       novncproxy:
         name: nova-novncproxy
         node_port:
@@ -1106,8 +1103,7 @@ spec:
     controller:
       master: TO_BE_FIXED
       slave: TO_BE_FIXED
-    hosts:
-    - TO_BE_FIXED
+    hosts: [] # TO_BE_FIXED
     onos:
       config:
         ovsdb_port: TO_BE_FIXED
