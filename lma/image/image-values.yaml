@@ -63,7 +63,8 @@ charts:
     image.tag: 6.6.2
     initChownData.image.repository: $(registry)/library/busybox
     initChownData.image.tag: 1.31.1
-    sidecar.image: $(registry)/k8s-sidecar:0.1.99
+    sidecar.image.repository: $(registry)/k8s-sidecar
+    sidecar.image.tag: 0.1.151
     testFramework.image: $(registry)/bats
     testFramework.tag: v1.1.0
 
