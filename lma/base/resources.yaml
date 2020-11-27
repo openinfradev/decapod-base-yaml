@@ -192,8 +192,6 @@ spec:
         retention: TO_BE_FIXED
       config:
         global:
-          hipchat_api_url: null
-          hipchat_auth_token: null
           slack_api_url: TO_BE_FIXED
           smtp_auth_password: null
           smtp_auth_username: null
