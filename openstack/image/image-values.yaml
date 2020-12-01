@@ -271,3 +271,11 @@ charts:
       onos: $(registry)/onos-sona-nightly-docker:stable
       python: $(registry)/python:2-alpine
 
+- name: openvswitch
+  override:
+    images.pull_policy: IfNotPresent
+    images.tags:
+      openvswitch_db_server: $(registry)/kolla/ubuntu-source-openvswitch-db-server:8.0.3
+      openvswitch_vswitchd: $(registry)/kolla/ubuntu-source-openvswitch-vswitchd:8.0.3
+      dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
+      image_repo_sync: $(registry)/docker:17.07.0
