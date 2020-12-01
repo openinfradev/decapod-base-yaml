@@ -1129,3 +1129,32 @@ spec:
       password: TO_BE_FIXED
       project: admin
       username: admin
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: openvswitch
+  name: openvswitch
+spec:
+  chart:
+    repository: TO_BE_FIXED
+    name: openvswitch
+    version: 0.1.0
+    skipDepUpdate: true
+  releaseName: openvswitch
+  targetNamespace: openstack
+  values:
+    release_group: null
+    pod:
+      security_context:
+        openvswitch_db_server:
+          pod:
+            runAsUser: 0
+          container:
+            server:
+              runAsUser: 0
+      user:
+        nova:
+          uid: 42436
+
