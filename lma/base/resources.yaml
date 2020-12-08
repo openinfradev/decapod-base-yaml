@@ -5,6 +5,7 @@ metadata:
     name: prometheus-operator
   name: prometheus-operator
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: prometheus-operator
@@ -53,6 +54,7 @@ metadata:
     name: elasticsearch-operator
   name: elasticsearch-operator
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: elasticsearch-operator
@@ -78,6 +80,7 @@ metadata:
     name: prometheus
   name: prometheus
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: prometheus-operator
@@ -179,6 +182,7 @@ metadata:
     name: prometheus-fed-master
   name: prometheus-fed-master
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: prometheus-operator
@@ -320,6 +324,7 @@ metadata:
     name: kube-state-metrics
   name: kube-state-metrics
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: kube-state-metrics
@@ -337,6 +342,7 @@ metadata:
     name: prometheus-node-exporter
   name: prometheus-node-exporter
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: prometheus-node-exporter
@@ -355,6 +361,7 @@ metadata:
     name: prometheus-pushgateway
   name: prometheus-pushgateway
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: prometheus-pushgateway
@@ -375,6 +382,7 @@ metadata:
     name: prometheus-process-exporter
   name: prometheus-process-exporter
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: prometheus-process-exporter
@@ -416,6 +424,7 @@ metadata:
     name: elasticsearch-kibana
   name: elasticsearch-kibana
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: elasticsearch-operator
@@ -498,6 +507,7 @@ metadata:
     name: grafana
   name: grafana
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: grafana
@@ -538,6 +548,7 @@ metadata:
     name: fluentbit-operator
   name: fluentbit-operator
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: fluentbit-operator
@@ -577,6 +588,7 @@ metadata:
     name: fluentbit
   name: fluentbit
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: fluentbit-operator
@@ -804,6 +816,7 @@ metadata:
     name: addons
   name: addons
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: lma-addons
@@ -853,6 +866,7 @@ metadata:
     name: fed-addons
   name: fed-addons
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: lma-addons
@@ -922,6 +936,7 @@ metadata:
     name: prometheus-adapter
   name: prometheus-adapter
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: prometheus-adapter
@@ -944,6 +959,7 @@ metadata:
     name: kubernetes-event-exporter
   name: kubernetes-event-exporter
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: kubernetes-event-exporter

@@ -5,6 +5,7 @@ metadata:
     name: glance
   name: glance
 spec:
+  helmVersion: v3
   chart:
     name: glance
     repository: TO_BE_FIXED
@@ -91,6 +92,7 @@ metadata:
     name: heat
   name: heat
 spec:
+  helmVersion: v3
   chart:
     name: heat
     repository: TO_BE_FIXED
@@ -153,6 +155,7 @@ metadata:
     name: horizon
   name: horizon
 spec:
+  helmVersion: v3
   timeout: 30000
   chart:
     name: horizon
@@ -248,6 +251,7 @@ metadata:
     name: ingress
   name: ingress
 spec:
+  helmVersion: v3
   chart:
     name: ingress
     repository: TO_BE_FIXED
@@ -287,6 +291,7 @@ metadata:
     name: keystone
   name: keystone
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: keystone
@@ -340,6 +345,7 @@ metadata:
   name: libvirt
   schema: metadata/Document/v1
 spec:
+  helmVersion: v3
   chart:
     name: libvirt
     repository: TO_BE_FIXED
@@ -380,6 +386,7 @@ metadata:
     name: mariadb
   name: mariadb
 spec:
+  helmVersion: v3
   chart:
     name: mariadb
     repository: TO_BE_FIXED
@@ -419,6 +426,7 @@ metadata:
     name: memcached
   name: memcached
 spec:
+  helmVersion: v3
   chart:
     name: memcached
     repository: TO_BE_FIXED
@@ -444,6 +452,7 @@ metadata:
     name: neutron
   name: neutron
 spec:
+  helmVersion: v3
   chart:
     name: neutron
     repository: TO_BE_FIXED
@@ -606,6 +615,7 @@ metadata:
     name: nova
   name: nova
 spec:
+  helmVersion: v3
   timeout: 30000
   chart:
     repository: TO_BE_FIXED
@@ -753,6 +763,7 @@ metadata:
     name: prometheus-openstack-exporter
   name: prometheus-openstack-exporter
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: prometheus-openstack-exporter
@@ -794,6 +805,7 @@ metadata:
     name: rabbitmq
   name: rabbitmq
 spec:
+  helmVersion: v3
   chart:
     name: rabbitmq
     repository: TO_BE_FIXED
@@ -829,6 +841,7 @@ metadata:
     name: ceph-provisioners
   name: ceph-provisioners
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: ceph-provisioners
@@ -874,6 +887,7 @@ metadata:
     name: cinder
   name: cinder
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: cinder
@@ -974,6 +988,7 @@ metadata:
     name: ironic
   name: ironic
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: ironic
@@ -1092,6 +1107,7 @@ metadata:
     name: sona
   name: sona
 spec:
+  helmVersion: v3
   chart:
     repository: TO_BE_FIXED
     name: sona
