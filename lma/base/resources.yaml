@@ -437,7 +437,7 @@ spec:
     customResource:
       elasticsearch:
         version: 7.5.1
-        enabled: true
+        enabled: true 
         count: 3        # FIXME
         nodeSets:
           master:
@@ -461,7 +461,7 @@ spec:
               storageClassName: TO_BE_FIXED
               size: TO_BE_FIXED
           warmdata:
-            enabled: false
+            enabled: false # TO_BE_FIXED
             nodeSelector: {} # TO_BE_FIXED
             count: 2
             javaOpts: TO_BE_FIXED
@@ -471,7 +471,7 @@ spec:
               storageClassName: TO_BE_FIXED
               size: TO_BE_FIXED
           client:
-            enabled: true
+            enabled: true # TO_BE_FIXED
             nodeSelector: {} # TO_BE_FIXED
             count: TO_BE_FIXED
             javaOpts: TO_BE_FIXED
