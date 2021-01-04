@@ -1,0 +1,120 @@
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: keycloak
+  name: keycloak-postsql
+spec:
+  chart:
+    repository: TO_BE_FIXED
+    name: keycloak
+    version: 8.2.2
+  releaseName: keycloak
+  targetNamespace: fed
+  values:
+    clusterDomain: TO_BE_FIXED
+    keycloak:
+      extraEnv: |
+        - name: KEYCLOAK_LOGLEVEL
+          value: WARN
+        - name: WILDFLY_LOGLEVEL
+          value: WARN
+      service:
+        type: TO_BE_FIXED
+        nodePort: TO_BE_FIXED
+        httpPort: 80
+        httpNodePort: ""
+        httpsPort: 8443
+        httpsNodePort: ""
+        jgroupsPort: 7600
+        extraPorts: |
+
+      ingress:
+        enabled: false
+        hosts:
+          - keycloak.example.com
+        tls:
+          - hosts:
+            - keycloak.example.com
+            secretName: tls-keycloak
+      password: TO_BE_FIXED
+      persistence:
+        deployPostgres: true
+        dbVendor: postgres
+        dbUser: TO_BE_FIXED
+        dbPassword: TO_BE_FIXED
+    postgresql:
+      postgresqlUsername: keycloak
+      postgresqlPassword: TO_BE_FIXED
+      postgresqlDatabase: keycloak
+      postgresqlPostgresPassword: TO_BE_FIXED
+      persistence:
+        enabled: false
+        storageClass: TO_BE_FIXED
+        size: TO_BE_FIXED
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: cloud-console
+  name: cloud-console
+spec:
+  chart:
+    repository: TO_BE_FIXED
+    name: cloud-console
+    version: 1.0.7
+  releaseName: cloud-console
+  targetNamespace: fed
+  values:
+    config:
+      grafana:
+        authkey: admin:password
+      initDB: true
+      kibana:
+        authkey: elastic:tacoword
+      password: password
+      username: taco
+    nodeSelector:
+      taco-lma: enabled
+    service:
+      nodePort: 32000
+      port: 32000
+      proxy_from: 32001
+      proxy_to: 32008
+      targetPort: 32000
+      type: ClusterIP
+    ingress:
+      enabled: false
+    volume:
+      storageClassName: TO_BE_FIXED
+    config:
+      #config.service.proxyurl.format
+      service:
+        proxyportlist: 32001-32008
+        proxyurl:
+          format: TO_BE_FIXED
+      prometheus:
+        ruleUrl: /apis/monitoring.coreos.com/v1/namespaces/fed/prometheusrules
+      loggingfilter:
+        url: /apis/logging.kubesphere.io/v1alpha2/namespaces/lma/filters/kubernetes
+      filter:
+        rule: "yes"
+      keycloak:
+        enabled: "yes"
+        url: TO_BE_FIXED  
+        realm: TO_BE_FIXED
+        clientId: cloud-console
+        hasRealmRole1: lma_system
+        hasRealmRole2: lma_app
+        hasRealmRole3: lma_viewer
+        cacert: TO_BE_FIXED 
+      lenz:
+        url: TO_BE_FIXED  
+      extra:
+        config: |-
+        
+        sql: |-
+  wait: true
