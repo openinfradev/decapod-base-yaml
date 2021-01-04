@@ -10,7 +10,7 @@ global:
   keycloakDomain: keycloak.example.com
   keycloakPassword: password
 charts:
-- name: keycloak-postsql
+- name: keycloak
   source:
     repository: $(repository)
   override:
@@ -47,9 +47,9 @@ charts:
   override:
     ingress.enabled: false
     volume.storageClassName: $(storageClassName)
-    config.service.proxyurl.format: "http://proxy-%REQUEST_PORT%.sktelecom.com"
-    config.keycloak.url: "https://keycloak.sktelecom.com/auth"
-    config.keycloak.realm: nextpaas
+    config.service.proxyurl.format: "http://proxy-%REQUEST_PORT%.hanu.io"
+    config.keycloak.url: "https://keycloak.hanu.io/auth"
+    config.keycloak.realm: hanu
     config.keycloak.cacert: TO_BE_FIXED
-    config.lenz.url: "http://dashboard.sktelecom.com"
+    config.lenz.url: "http://lenz.hanu.io"
 

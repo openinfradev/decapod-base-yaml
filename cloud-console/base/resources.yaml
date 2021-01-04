@@ -4,7 +4,7 @@ kind: HelmRelease
 metadata:
   labels:
     name: keycloak
-  name: keycloak-postsql
+  name: keycloak
 spec:
   chart:
     repository: TO_BE_FIXED
@@ -65,7 +65,7 @@ spec:
   chart:
     repository: TO_BE_FIXED
     name: cloud-console
-    version: 1.0.7
+    version: 1.0.0
   releaseName: cloud-console
   targetNamespace: fed
   values:
@@ -77,20 +77,6 @@ spec:
         authkey: elastic:tacoword
       password: password
       username: taco
-    nodeSelector:
-      taco-lma: enabled
-    service:
-      nodePort: 32000
-      port: 32000
-      proxy_from: 32001
-      proxy_to: 32008
-      targetPort: 32000
-      type: ClusterIP
-    ingress:
-      enabled: false
-    volume:
-      storageClassName: TO_BE_FIXED
-    config:
       #config.service.proxyurl.format
       service:
         proxyportlist: 32001-32008
@@ -117,4 +103,19 @@ spec:
         config: |-
         
         sql: |-
+
+    nodeSelector:
+      taco-lma: enabled
+    service:
+      nodePort: 32000
+      port: 32000
+      proxy_from: 32001
+      proxy_to: 32008
+      targetPort: 32000
+      type: ClusterIP
+    ingress:
+      enabled: false
+    volume:
+      storageClassName: TO_BE_FIXED
+      accessModes: ReadWriteOnce
   wait: true
