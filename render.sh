@@ -1,5 +1,5 @@
 #!/bin/bash
-DECAPOD_BASE_URL=https://github.com/openinfradev/decapod-yaml.git
+DECAPOD_BASE_URL=https://github.com/openinfradev/decapod-base-yaml.git
 BRANCH="master"
 
 if [ $# -eq 0 ]; then
