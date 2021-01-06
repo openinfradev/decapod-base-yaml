@@ -8,24 +8,17 @@ global:
     taco-lma: enabled
   clusterName: cluster.local
   storageClassName: ceph
-  repository: http://master-1:8879
   serviceScrapeInterval: 10s
   federateScrapeInterval: 10s
 
 charts:
 - name: prometheus-operator
-  source:
-    repository: $(repository)
   override:
     prometheusOperator.nodeSelector: $(nodeSelector)
 
 - name: elasticsearch-operator
-  source:
-    repository: $(repository)
 
 - name: prometheus
-  source:
-    repository: $(repository)
   override:
     kubeEtcd.endpoints: [TO_BE_FIXED]
     prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
@@ -41,9 +34,7 @@ charts:
     kubeProxy.serviceMonitor.interval: $(serviceScrapeInterval)
     kubeScheduler.serviceMonitor.interval: $(serviceScrapeInterval)
     
-- name: prometheus-fed-master
-  source:
-    repository: $(repository)  
+- name: prometheus-fed-master  
   override:
     alertmanager.alertmanagerSpec.nodeSelector: $(nodeSelector)
     alertmanager.alertmanagerSpec.retention: 120h
@@ -53,29 +44,19 @@ charts:
     prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 500Gi
   
 - name: kube-state-metrics
-  source:
-    repository: $(repository)
   override:
     nodeSelector: $(nodeSelector)
     collectors.verticalpodautoscalers: false
 
 - name: prometheus-pushgateway
-  source:
-    repository: $(repository)
   override:
     nodeSelector: $(nodeSelector)
 
 - name: prometheus-node-exporter
-  source:
-    repository: $(repository)
 
 - name: prometheus-process-exporter
-  source:
-    repository: $(repository)
 
 - name: elasticsearch-kibana
-  source:
-    repository: $(repository)
   override:
     customResource.kibana.nodeSelector: $(nodeSelector)
     customResource.kibana.limitCpu: 4
@@ -112,23 +93,17 @@ charts:
     customResource.elasticsearch.nodeSets.client.pvc.storageClassName: $(storageClassName)
 
 - name: grafana
-  source:
-    repository: $(repository)
   override:
     adminPassword: password
     persistence.storageClassName: $(storageClassName)
 
 - name: fluentbit-operator
-  source:
-    repository: $(repository)
   override:
     global.base_cluster_url: $(clusterName)
     fluentbitOperator.nodeSelector: $(nodeSelector)
     logExporter.nodeSelector: $(nodeSelector)
 
 - name: fluentbit
-  source:
-    repository: $(repository)
   override:
     global.base_cluster_url: $(clusterName)
     global.nodeSelector: $(nodeSelector)
@@ -142,8 +117,6 @@ charts:
     fluentbit.nodeSelector: $(nodeSelector)
 
 - name: addons
-  source:
-    repository: $(repository)
   override:
     serviceMonitor.processExporter.interval: $(serviceScrapeInterval)
     serviceMonitor.ceph.interval: $(serviceScrapeInterval)
@@ -153,8 +126,6 @@ charts:
     serviceMonitor.kubelet.interval: $(serviceScrapeInterval)
 
 - name: fed-addons
-  source:
-    repository: $(repository)
   override:
     metricbeat.elasticsearch.host: https://taco-elasticsearch-es-http.lma.svc.$(clusterName):9200
     metricbeat.kibana.host: taco-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
@@ -176,14 +147,10 @@ charts:
       port: 9090
 
 - name: prometheus-adapter
-  source:
-    repository: $(repository)
   override:
     nodeSelector: $(nodeSelector)
 
 - name: kubernetes-event-exporter
-  source:
-    repository: $(repository)
   override:
     conf.default.hosts:
     - TO_BE_FIXED
