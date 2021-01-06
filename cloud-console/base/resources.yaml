@@ -7,7 +7,7 @@ metadata:
   name: keycloak
 spec:
   chart:
-    repository: TO_BE_FIXED
+    repository: https://codecentric.github.io/helm-charts
     name: keycloak
     version: 8.2.2
   releaseName: keycloak
@@ -22,22 +22,15 @@ spec:
           value: WARN
       service:
         type: TO_BE_FIXED
-        nodePort: TO_BE_FIXED
         httpPort: 80
         httpNodePort: ""
         httpsPort: 8443
         httpsNodePort: ""
         jgroupsPort: 7600
-        extraPorts: |
-
       ingress:
         enabled: false
-        hosts:
-          - keycloak.example.com
-        tls:
-          - hosts:
-            - keycloak.example.com
-            secretName: tls-keycloak
+        hosts: []
+        tls: []
       password: TO_BE_FIXED
       persistence:
         deployPostgres: true
@@ -48,7 +41,6 @@ spec:
       postgresqlUsername: keycloak
       postgresqlPassword: TO_BE_FIXED
       postgresqlDatabase: keycloak
-      postgresqlPostgresPassword: TO_BE_FIXED
       persistence:
         enabled: false
         storageClass: TO_BE_FIXED
@@ -63,7 +55,7 @@ metadata:
   name: cloud-console
 spec:
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: cloud-console
     version: 1.0.0
   releaseName: cloud-console

@@ -6,27 +6,17 @@ metadata:
 global:
   clusterName: cluster.local
   storageClassName: ceph
-  repository: http://master-1:8879
   keycloakDomain: keycloak.example.com
   keycloakPassword: password
 charts:
 - name: keycloak
-  source:
-    repository: $(repository)
   override:
     clusterDomain: $(clusterName)
     global.storageClass: $(storageClassName)
     keycloak:
-      ingress:
-        hosts:
-          - $(keycloakDomain)
-        tls:
-          - hosts:
-            - $(keycloakDomain)
-            secretName: tls-keycloak
       service:
         type: ClusterIP
-        nodePort: 32080
+        httpNodePort: 32080
       password: $(keycloakPassword)
       persistence:
         dbUser: keycloak
@@ -40,10 +30,7 @@ charts:
         enabled: false
         storageClass: $(storageClassName)
         size: 5Gi
-
 - name: cloud-console
-  source:
-    repository: $(repository)
   override:
     ingress.enabled: false
     volume.storageClassName: $(storageClassName)
@@ -52,4 +39,3 @@ charts:
     config.keycloak.realm: hanu
     config.keycloak.cacert: TO_BE_FIXED
     config.lenz.url: "http://lenz.hanu.io"
-
