@@ -7,7 +7,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-operator
     version: 9.3.2
   releaseName: prometheus-operator
@@ -56,7 +56,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: elasticsearch-operator
     version: 1.0.3
   releaseName: elasticsearch-operator
@@ -82,7 +82,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-operator
     version: 9.3.2
   releaseName: prometheus
@@ -184,7 +184,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-operator
     version: 9.3.2
   releaseName: prometheus-fed-master
@@ -326,9 +326,18 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    # repository: https://kubernetes.github.io/kube-state-metrics
+    # --------------------------------------------------------------------
+    # this repo is not working on 2021.1.6
+    # several issues are opend for this
+    #    - https://github.com/kubernetes/kube-state-metrics/issues/1331
+    #    - https://github.com/kubernetes/kube-state-metrics/issues/1337
+    #    - https://github.com/kubernetes/kube-state-metrics/issues/1342
+    # so, i'll use bitnami before the issues are closed
+    repository: https://charts.bitnami.com/bitnami
     name: kube-state-metrics
-    version: 2.9.4
+    # version: 2.9.4
+    version: 1.1.3
   releaseName: kube-state-metrics
   targetNamespace: lma
   values:
@@ -344,7 +353,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-node-exporter
     version: 1.11.2
   releaseName: prometheus-node-exporter
@@ -363,9 +372,9 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-pushgateway
-    version: 1.4.3
+    version: 1.5.1
   releaseName: prometheus-pushgateway
   targetNamespace: lma
   values:
@@ -384,7 +393,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: prometheus-process-exporter
     version: 0.1.0
     skipDepUpdate: true
@@ -426,7 +435,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: elasticsearch-operator
     version: 1.0.3
   releaseName: elasticsearch-kibana
@@ -509,7 +518,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://grafana.github.io/helm-charts
     name: grafana
     version: 5.5.7
   releaseName: grafana
@@ -550,7 +559,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: fluentbit-operator
     version: 1.0.9
     skipDepUpdate: true
@@ -590,7 +599,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: fluentbit-operator
     version: 1.0.9
     skipDepUpdate: true
@@ -818,7 +827,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: lma-addons
     version: 1.0.6
   releaseName: addons
@@ -868,7 +877,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: lma-addons
     version: 1.0.6
   releaseName: fed-addons
@@ -938,7 +947,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-adapter
     version: 2.5.1
   releaseName: prometheus-adapter
@@ -961,7 +970,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: kubernetes-event-exporter
     version: 1.0.0
   releaseName: kubernetes-event-exporter
@@ -988,7 +997,7 @@ metadata:
 spec:
   helmVersion: v3 
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: taco-watcher
     version: 0.1.0
   releaseName: taco-watcher
