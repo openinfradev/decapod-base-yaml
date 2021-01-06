@@ -1,7 +1,7 @@
 Note: `DECAPOD (DEClarative APplication Orchestration & Delivery)` is a pilot project leveraging Kustomize, Helm Operator, Argo Workflow to deploy applications on Kubernetes. 
 
-# decapod-yaml
-`decapod-yaml` helps templating Kubernetes yaml files according to your environment.  
+# decapod-base-yaml
+`decapod-base-yaml` helps templating Kubernetes yaml files according to your environment.  
 Currently, it provides `LMA` and `OpenStack` templates.
 
 Prerequisite
@@ -58,10 +58,10 @@ Copy site-values.yaml and update the values.
 ### 3) Build OpenStack templates with `kustomize-plugin`
 Option 1. Using docker image
 > ```
-> $ docker run -it -v $(pwd)/site:/site -v $(pwd)/decapod-yaml/$APP_NAME/base:/base -v $(pwd)/$APP_NAME/output:/output sktdev/decapod-kustomize:alpha-v2.0 /site/dev -o output-manifest.yaml
+> $ docker run -it -v $(pwd)/site:/site -v $(pwd)/decapod-base-yaml/$APP_NAME/base:/base -v $(pwd)/$APP_NAME/output:/output sktdev/decapod-kustomize:alpha-v2.0 /site/dev -o output-manifest.yaml
 > ```
 
-Option 2. Using a [render.sh](https://github.com/openinfradev/decapod-yaml/blob/master/render.sh) script
+Option 2. Using a [render.sh](https://github.com/openinfradev/decapod-base-yaml/blob/main/render.sh) script
 > ```
 > $ # ./render.sh APP_NAME SITE_NAME
 > $ ./render.sh lma dev
