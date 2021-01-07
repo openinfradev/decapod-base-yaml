@@ -1,0 +1,41 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+global:
+  clusterName: cluster.local
+  storageClassName: ceph
+  keycloakDomain: keycloak.example.com
+  keycloakPassword: password
+charts:
+- name: keycloak
+  override:
+    clusterDomain: $(clusterName)
+    global.storageClass: $(storageClassName)
+    keycloak:
+      service:
+        type: ClusterIP
+        httpNodePort: 32080
+      password: $(keycloakPassword)
+      persistence:
+        dbUser: keycloak
+        dbPassword: $(keycloakPassword)
+    postgresql:
+      postgresqlUsername: keycloak
+      postgresqlPassword: $(keycloakPassword)
+      postgresqlDatabase: keycloak
+      postgresqlPostgresPassword: $(keycloakPassword)
+      persistence:
+        enabled: false
+        storageClass: $(storageClassName)
+        size: 5Gi
+- name: cloud-console
+  override:
+    ingress.enabled: false
+    volume.storageClassName: $(storageClassName)
+    config.service.proxyurl.format: "http://proxy-%REQUEST_PORT%.hanu.io"
+    config.keycloak.url: "https://keycloak.hanu.io/auth"
+    config.keycloak.realm: hanu
+    config.keycloak.cacert: TO_BE_FIXED
+    config.lenz.url: "http://lenz.hanu.io"
