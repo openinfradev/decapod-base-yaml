@@ -17,8 +17,7 @@ It works with [decapod-site-yaml](https://github.com/openinfradev/decapod-site-y
 * [Glossary](docs/glossary.md)
 * [Contribution](docs/contribution.md)
 
-## Example
-### Layout 
+## Layout 
 An example of decapod-base-yaml:
 ```
  product
@@ -43,62 +42,60 @@ An example of decapod-site-yaml:
  └── output
      └── product-manifest.yaml 
 ```
+## Example
 
-### Render a [variant](https://kubectl.docs.kubernetes.io/references/kustomize/glossary/#variant)
+base(1) + site(2) => [variant](https://kubectl.docs.kubernetes.io/references/kustomize/glossary/#variant)(3)
 
-**Base**  
-_decapod-base-yaml/lma/base/resources.yaml_:
-```yaml
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  name: elasticsearch-operator
-spec:
-  chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
-    name: elasticsearch-operator
-    version: 1.0.3
-  releaseName: elasticsearch-operator
-  targetNamespace: elastic-system
-  values:
-    elasticsearchOperator:
-      nodeSelector: {} # TO_BE_FIXED
-```
+1. _decapod-base-yaml/lma/base/resources.yaml_:
+   ```yaml
+   apiVersion: helm.fluxcd.io/v1
+   kind: HelmRelease
+   metadata:
+   name: elasticsearch-operator
+   spec:
+   chart:
+      repository: https://openinfradev.github.io/hanu-helm-repo
+      name: elasticsearch-operator
+      version: 1.0.3
+   releaseName: elasticsearch-operator
+   targetNamespace: elastic-system
+   values:
+      elasticsearchOperator:
+         nodeSelector: {} # TO_BE_FIXED
+   ```
 
-**Site**  
-_decapod-site-yaml/lma/site/dev/site-values.yaml_:
-```yaml
-apiVersion: openinfradev.github.com/v1
-kind: HelmValuesTransformer
-metadata:
-  name: site
+2. _decapod-site-yaml/lma/site/dev/site-values.yaml_:
+   ```yaml
+   apiVersion: openinfradev.github.com/v1
+   kind: HelmValuesTransformer
+   metadata:
+   name: site
 
-global:
-  nodeSelector:
-    taco-lma: enabled
+   global:
+   nodeSelector:
+      taco-lma: enabled
 
-charts:
-- name: elasticsearch-operator
-  override:
-    elasticsearchOperator.nodeSelector: $(nodeSelector)
-```
+   charts:
+   - name: elasticsearch-operator
+   override:
+      elasticsearchOperator.nodeSelector: $(nodeSelector)
+   ```
 
-**Variant** 
-_decapod-site-yaml/lma/output/dev/lma-manifest.yaml_:
-```yaml
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  name: elasticsearch-operator
-spec:
-  chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
-    name: elasticsearch-operator
-    version: 1.0.3
-  releaseName: elasticsearch-operator
-  targetNamespace: elastic-system
-  values:
-    elasticsearchOperator:
-      nodeSelector:
-        taco-lma: enabled
-```
+3. _decapod-site-yaml/lma/output/dev/lma-manifest.yaml_:
+   ```yaml
+   apiVersion: helm.fluxcd.io/v1
+   kind: HelmRelease
+   metadata:
+   name: elasticsearch-operator
+   spec:
+   chart:
+      repository: https://openinfradev.github.io/hanu-helm-repo
+      name: elasticsearch-operator
+      version: 1.0.3
+   releaseName: elasticsearch-operator
+   targetNamespace: elastic-system
+   values:
+      elasticsearchOperator:
+         nodeSelector:
+         taco-lma: enabled
+   ```
