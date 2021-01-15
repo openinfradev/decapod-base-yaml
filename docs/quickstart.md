@@ -20,7 +20,7 @@ $ docker run --rm -i -v decapod-base-yaml:/decapod-base-yaml sktdev/decapod-kust
 ```console
 $ git clone https://github.com/openinfradev/decapod-site-yaml.git
 $ cd decapod-site-yaml
-$ .github/workflows/render.sh product_name # replace product_name to lma or openstack or cloud-console.
+$ .github/workflows/render.sh <product_name> # replace product_name to lma or openstack or cloud-console.
 Fetch base with main branch/tag........
 Cloning into 'decapod-base-yaml'...
 remote: Enumerating objects: 35, done.
