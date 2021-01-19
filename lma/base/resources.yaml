@@ -857,6 +857,7 @@ spec:
       ceph:
         enabled: false  #FIXME
         interval: TO_BE_FIXED
+        mon_hosts: []
       calico:
         enabled: true
         interval: TO_BE_FIXED
