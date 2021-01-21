@@ -107,7 +107,7 @@ spec:
       serviceMonitor:
         interval: TO_BE_FIXED
     kubeDns:
-      enabled: true
+      enabled: false
       serviceMonitor:
         interval: TO_BE_FIXED
     kubeEtcd:
