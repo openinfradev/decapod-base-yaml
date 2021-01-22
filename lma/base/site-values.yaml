@@ -10,6 +10,8 @@ global:
   storageClassName: ceph
   serviceScrapeInterval: 10s
   federateScrapeInterval: 10s
+  defaultPassword: password
+  defaultUser: taco
 
 charts:
 - name: prometheus-operator
@@ -153,3 +155,39 @@ charts:
   override:
     conf.default.hosts:
     - TO_BE_FIXED
+
+- name: thanos
+  override:
+    global.storageClass: $(storageClassName)
+    clusterDomain: cluster.local
+    objstoreConfig: |-
+      type: s3
+      config:
+        bucket: thanos
+        endpoint: {{ include "thanos.minio.fullname" . }}.fed.svc.$(clusterName):9000
+        access_key: $(defaultUser)
+        secret_key: $(defaultPassword)
+        insecure: true
+    query.nodeSelector: $(nodeSelector)
+    queryFrontend.nodeSelector: $(nodeSelector)
+    queryFrontend.service.type: NodePort
+    queryFrontend.service.http.nodePort: 30007
+    bucketweb.nodeSelector: $(nodeSelector)
+    compactor.nodeSelector: $(nodeSelector)
+    storegateway.nodeSelector: $(nodeSelector)
+    ruler.nodeSelector: $(nodeSelector)      
+
+    compactor.persistence.size: 8Gi
+    storegateway.persistence.size: 8Gi
+    ruler.alertmanagers:
+      - http://prometheus-operator-alertmanager:9093
+    ruler.config: |-
+        groups:
+          - name: "metamonitoring"
+            rules:
+              - alert: "PrometheusDown"
+                expr: absent(up{prometheus="monitoring/prometheus-operator"})
+    ruler.persistence.size: 8Gi
+    minio.accessKey.password: $(defaultUser)
+    minio.secretKey.password: $(defaultPassword)
+    minio.defaultBuckets: 'thanos'
