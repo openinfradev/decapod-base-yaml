@@ -109,10 +109,9 @@ spec:
         interval: TO_BE_FIXED
     kubeEtcd:
       enabled: true
-      serviceMonitor:
-        interval: TO_BE_FIXED
       endpoints: [] # TO_BE_FIXED
       serviceMonitor:
+        interval: TO_BE_FIXED
         caFile: /etc/prometheus/secrets/etcd-client-cert/etcd-ca
         certFile: /etc/prometheus/secrets/etcd-client-cert/etcd-client
         insecureSkipVerify: false
@@ -160,9 +159,18 @@ spec:
           matchLabels:
             name: lma
         serviceMonitorSelectorNilUsesHelmValues: false
+        thanos:
+          version: v0.11.0
       service:
         nodePort: 30008
         type: NodePort
+        additionalPorts:
+        - name: grpc
+          protocol: TCP
+          port: 10901
+          targetPort: grpc
+          nodePort: 30901
+
     prometheusOperator:
       admissionWebhooks:
         enabled: false
@@ -812,10 +820,6 @@ spec:
       alerts:
         makeAlertRule: true
       nodeSelector: {} # TO_BE_FIXED
-    fluentbitOperator:
-      enabled: false
-      createCustomResource: false
-      cleanupCustomResource: false
     logExporter:
       enabled: false
     image:
@@ -1028,4 +1032,124 @@ spec:
       targetPort: 32000
       type: NodePort
   wait: true
-
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: thanos
+  name: thanos
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://charts.bitnami.com/bitnami
+    name: thanos
+    version: 3.4.0
+  releaseName: thanos
+  targetNamespace: fed
+  values:
+    global:
+      storageClass: local-path
+    clusterDomain: TO_BE_FIXED
+    objstoreConfig: TO_BE_FIXED
+    query:
+      nodeSelector: {}
+    querier:
+      stores: TO_BE_FIXED
+    queryFrontend:
+      nodeSelector: {}
+      service:
+        type: TO_BE_FIXED
+        http:
+          port: 9090
+          nodePort: TO_BE_FIXED
+    bucketweb:
+      enabled: true
+      logLevel: info
+      refresh: 30m
+      timeout: 5m
+      nodeSelector: {}
+      service:
+        type: ClusterIP
+        http:
+          port: 8080
+    compactor:
+      enabled: true
+      logLevel: info
+      retentionResolutionRaw: 30d
+      retentionResolution5m: 30d
+      retentionResolution1h: 10y
+      consistencyDelay: 30m
+      nodeSelector: {}
+      service:
+        type: ClusterIP
+        http:
+          port: 9090
+      persistence:
+        enabled: true
+        accessModes:
+          - ReadWriteOnce
+        size: TO_BE_FIXED
+    storegateway:
+      enabled: true
+      logLevel: info
+      nodeSelector: {}
+      service:
+        type: ClusterIP
+        http:
+          port: 9090
+        grpc:
+          port: 10901
+      persistence:
+        enabled: true
+        accessModes:
+          - ReadWriteOnce
+        size: TO_BE_FIXED
+      autoscaling:
+        enabled: false
+        #  minReplicas: 1
+        #  maxReplicas: 11
+        #  targetCPU: 50
+        #  targetMemory: 50
+    ruler:
+      enabled: true
+      logLevel: info
+      alertmanagers: TO_BE_FIXED
+      evalInterval: 1m
+      config: TO_BE_FIXED
+      replicaCount: 1
+      updateStrategyType: RollingUpdate
+      podManagementPolicy: OrderedReady
+      nodeSelector: {}
+      service:
+        type: ClusterIP
+        http:
+          port: 9090
+        grpc:
+          port: 10901
+      persistence:
+        enabled: true
+        accessModes:
+          - ReadWriteOnce
+        size: TO_BE_FIXED
+    metrics:
+      enabled: false
+      serviceMonitor:
+        enabled: false
+    volumePermissions:
+      enabled: false
+      image:
+        registry: docker.io
+        repository: bitnami/minideb
+        tag: buster
+    minio:
+      enabled: true
+      accessKey:
+        password: TO_BE_FIXED
+      secretKey:
+        password: TO_BE_FIXED
+      defaultBuckets: TO_BE_FIXED
+      service:
+        type: NodePort
+        nodePort: 30002
+  wait: true
