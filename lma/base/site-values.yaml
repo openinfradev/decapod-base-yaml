@@ -107,12 +107,12 @@ charts:
     global.base_cluster_url: $(clusterName)
     global.nodeSelector: $(nodeSelector)
     fluentbit.clusterName: $(clusterName)
-    fluentbit.outputs.es.host: taco-elasticsearch-es-http.lma.svc.$(clusterName)
+    fluentbit.outputs.es.host: eck-elasticsearch-es-http.lma.svc.$(clusterName)
     fluentbit.outputs.kafka:
       enabled: false
       broker: "YOUR_BORKER_INFO"
       topic: "YOUR_TACO_LOG_INFO"
-    fluentbit.esTemplate.url: https://taco-elasticsearch-es-http.lma.svc.$(clusterName):9200
+    fluentbit.esTemplate.url: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
     fluentbit.nodeSelector: $(nodeSelector)
 
 - name: addons
@@ -126,15 +126,15 @@ charts:
 
 - name: fed-addons
   override:
-    metricbeat.elasticsearch.host: https://taco-elasticsearch-es-http.lma.svc.$(clusterName):9200
-    metricbeat.kibana.host: taco-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
+    metricbeat.elasticsearch.host: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
+    metricbeat.kibana.host: eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     metricbeat.prometheus.hosts:
     - fed-master-prometheus.fed.svc.$(clusterName):9090
     tacoWatcher.host: taco-watcher.fed.svc.$(clusterName)
-    tacoWatcher.joinCluster.body.kibanaUrl: http://taco-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
+    tacoWatcher.joinCluster.body.kibanaUrl: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     tacoWatcher.joinCluster.body.grafanaUrl: http://grafana.fed.svc.$(clusterName)
     tacoWatcher.joinCluster.body.k8sUrl: https://kubernetes.default.svc.$(clusterName)
-    kibanaInit.url: http://taco-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
+    kibanaInit.url: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     serviceMonitor.grafana.interval: $(serviceScrapeInterval)
     serviceMonitor.federations: 
     - name: dev-federate
