@@ -16,8 +16,6 @@ charts:
   override:
     prometheusOperator.nodeSelector: $(nodeSelector)
 
-- name: elasticsearch-operator
-
 - name: prometheus
   override:
     kubeEtcd.endpoints: [TO_BE_FIXED]
@@ -56,41 +54,42 @@ charts:
 
 - name: prometheus-process-exporter
 
-- name: elasticsearch-kibana
+- name: eck-resource
   override:
-    customResource.kibana.nodeSelector: $(nodeSelector)
-    customResource.kibana.limitCpu: 4
-    customResource.kibana.limitMem: 8Gi
+    kibana.nodeSelector: $(nodeSelector)
+    kibana.limitCpu: 4
+    kibana.limitMem: 8Gi
 
-    customResource.elasticsearch.nodeSets.master.nodeSelector: $(nodeSelector)
-    customResource.elasticsearch.nodeSets.master.javaOpts: "-Xms2g -Xmx2g"
-    customResource.elasticsearch.nodeSets.master.limitCpu: 2
-    customResource.elasticsearch.nodeSets.master.limitMem: 4Gi
-    customResource.elasticsearch.nodeSets.master.pvc.storageClassName: $(storageClassName)
-    customResource.elasticsearch.nodeSets.master.pvc.size: 2Gi
+    elasticsearch.adminPassword: tacoword
+    elasticsearch.nodeSets.master.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.master.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.master.limitCpu: 2
+    elasticsearch.nodeSets.master.limitMem: 4Gi
+    elasticsearch.nodeSets.master.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.master.pvc.size: 2Gi
 
-    customResource.elasticsearch.nodeSets.hotdata.nodeSelector: $(nodeSelector)
-    customResource.elasticsearch.nodeSets.hotdata.javaOpts: "-Xms2g -Xmx2g"
-    customResource.elasticsearch.nodeSets.hotdata.limitCpu: 2
-    customResource.elasticsearch.nodeSets.hotdata.limitMem: 4Gi
-    customResource.elasticsearch.nodeSets.hotdata.pvc.storageClassName: $(storageClassName)
-    customResource.elasticsearch.nodeSets.hotdata.pvc.size: 100Gi
+    elasticsearch.nodeSets.hotdata.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.hotdata.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.hotdata.limitCpu: 2
+    elasticsearch.nodeSets.hotdata.limitMem: 4Gi
+    elasticsearch.nodeSets.hotdata.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.hotdata.pvc.size: 100Gi
 
-    customResource.elasticsearch.nodeSets.warmdata.enabled: false
-    customResource.elasticsearch.nodeSets.warmdata.nodeSelector: $(nodeSelector)
-    customResource.elasticsearch.nodeSets.warmdata.javaOpts: "-Xms2g -Xmx2g"
-    customResource.elasticsearch.nodeSets.warmdata.limitCpu: 1
-    customResource.elasticsearch.nodeSets.warmdata.limitMem: 2Gi
-    customResource.elasticsearch.nodeSets.warmdata.pvc.storageClassName: $(storageClassName)
-    customResource.elasticsearch.nodeSets.warmdata.pvc.size: 200Gi
+    elasticsearch.nodeSets.warmdata.enabled: false
+    elasticsearch.nodeSets.warmdata.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.warmdata.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.warmdata.limitCpu: 1
+    elasticsearch.nodeSets.warmdata.limitMem: 2Gi
+    elasticsearch.nodeSets.warmdata.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.warmdata.pvc.size: 200Gi
 
-    customResource.elasticsearch.nodeSets.client.enabled: true
-    customResource.elasticsearch.nodeSets.client.count: 1
-    customResource.elasticsearch.nodeSets.client.nodeSelector: $(nodeSelector)
-    customResource.elasticsearch.nodeSets.client.javaOpts: "-Xms2g -Xmx2g"
-    customResource.elasticsearch.nodeSets.client.limitCpu: 2
-    customResource.elasticsearch.nodeSets.client.limitMem: 4Gi
-    customResource.elasticsearch.nodeSets.client.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.client.enabled: true
+    elasticsearch.nodeSets.client.count: 1
+    elasticsearch.nodeSets.client.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.client.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.client.limitCpu: 2
+    elasticsearch.nodeSets.client.limitMem: 4Gi
+    elasticsearch.nodeSets.client.pvc.storageClassName: $(storageClassName)
 
 - name: grafana
   override:
