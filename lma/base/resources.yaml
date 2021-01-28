@@ -51,26 +51,21 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: elasticsearch-operator
-  name: elasticsearch-operator
+    name: eck-operator
+  name: eck-operator
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
-    name: elasticsearch-operator
-    version: 1.0.3
-  releaseName: elasticsearch-operator
+    repository: https://helm.elastic.co
+    name: eck-operator
+    version: 1.3.1
+  releaseName: eck-operator
   targetNamespace: elastic-system
   values:
-    elasticsearchOperator:
-      enabled: true
-      createNamespace: false
-      createCustomResource: true
-    customResource:
-      elasticsearch:
-        enabled: false
-      kibana:
-        enabled: false
+    installCRDs: true
+    replicaCount: 1
+    config:
+      containerRegistry: docker.elastic.co
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -430,83 +425,81 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: elasticsearch-kibana
-  name: elasticsearch-kibana
+    name: eck-resource
+  name: eck-resource
 spec:
   helmVersion: v3
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
-    name: elasticsearch-operator
-    version: 1.0.3
-  releaseName: elasticsearch-kibana
+    name: eck-resource
+    version: 1.0.0
+  releaseName: eck-resource
   targetNamespace: lma
   values:
-    elasticsearchOperator:
-      enabled: false
-    customResource:
-      elasticsearch:
-        version: 7.5.1
-        enabled: true 
-        count: 3        # FIXME
-        nodeSets:
-          master:
-            enabled: true
-            nodeSelector: {} # TO_BE_FIXED
-            count: 3
-            javaOpts: TO_BE_FIXED
-            limitCpu: TO_BE_FIXED
-            limitMem: TO_BE_FIXED
-            pvc:
-              storageClassName: TO_BE_FIXED
-              size: TO_BE_FIXED
-          hotdata:
-            enabled: true
-            nodeSelector: {} # TO_BE_FIXED
-            count: 3
-            javaOpts: TO_BE_FIXED
-            limitCpu: TO_BE_FIXED
-            limitMem: TO_BE_FIXED
-            pvc:
-              storageClassName: TO_BE_FIXED
-              size: TO_BE_FIXED
-          warmdata:
-            enabled: false # TO_BE_FIXED
-            nodeSelector: {} # TO_BE_FIXED
-            count: 2
-            javaOpts: TO_BE_FIXED
-            limitCpu: TO_BE_FIXED
-            limitMem: TO_BE_FIXED
-            pvc:
-              storageClassName: TO_BE_FIXED
-              size: TO_BE_FIXED
-          client:
-            enabled: true # TO_BE_FIXED
-            nodeSelector: {} # TO_BE_FIXED
-            count: TO_BE_FIXED
-            javaOpts: TO_BE_FIXED
-            limitCpu: TO_BE_FIXED
-            limitMem: TO_BE_FIXED
-            pvc:
-              storageClassName: TO_BE_FIXED
-              size: 0.5Gi
-      kibana:
-        version: 7.5.1
-        enabled: true
-        http:
-          tls:
-            selfSignedCertificate:
-              disabled: true
-          service:
-            spec:
-              type: NodePort
-              ports:
-              - name: http
-                nodePort: 30001
-                targetPort: 5601
-                port: 5601
-        limitCpu: TO_BE_FIXED
-        limitMem: TO_BE_FIXED
-        nodeSelector: {} # TO_BE_FIXED
+    elasticsearch:
+      version: 7.5.1
+      adminPassword: TO_BE_FIXED
+      enabled: true 
+      count: 3        # FIXME
+      nodeSets:
+        master:
+          enabled: true
+          nodeSelector: {} # TO_BE_FIXED
+          count: 3
+          javaOpts: TO_BE_FIXED
+          limitCpu: TO_BE_FIXED
+          limitMem: TO_BE_FIXED
+          pvc:
+            storageClassName: TO_BE_FIXED
+            size: TO_BE_FIXED
+        hotdata:
+          enabled: true
+          nodeSelector: {} # TO_BE_FIXED
+          count: 3
+          javaOpts: TO_BE_FIXED
+          limitCpu: TO_BE_FIXED
+          limitMem: TO_BE_FIXED
+          pvc:
+            storageClassName: TO_BE_FIXED
+            size: TO_BE_FIXED
+        warmdata:
+          enabled: false # TO_BE_FIXED
+          nodeSelector: {} # TO_BE_FIXED
+          count: 2
+          javaOpts: TO_BE_FIXED
+          limitCpu: TO_BE_FIXED
+          limitMem: TO_BE_FIXED
+          pvc:
+            storageClassName: TO_BE_FIXED
+            size: TO_BE_FIXED
+        client:
+          enabled: true # TO_BE_FIXED
+          nodeSelector: {} # TO_BE_FIXED
+          count: TO_BE_FIXED
+          javaOpts: TO_BE_FIXED
+          limitCpu: TO_BE_FIXED
+          limitMem: TO_BE_FIXED
+          pvc:
+            storageClassName: TO_BE_FIXED
+            size: 0.5Gi
+    kibana:
+      version: 7.5.1
+      enabled: true
+      http:
+        tls:
+          selfSignedCertificate:
+            disabled: true
+        service:
+          spec:
+            type: NodePort
+            ports:
+            - name: http
+              nodePort: 30001
+              targetPort: 5601
+              port: 5601
+      limitCpu: TO_BE_FIXED
+      limitMem: TO_BE_FIXED
+      nodeSelector: {} # TO_BE_FIXED
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1

@@ -6,19 +6,17 @@ global:
   registry: private-registry:5000
 
 charts:
-- name: elasticsearch-kibana
+- name: eck-resource
   override:
-    customResource.elasticsearch.image.repository: $(registry)/elasticsearch/elasticsearch
-    customResource.elasticsearch.image.tag: 7.5.1
-    customResource.kibana.image.repository: $(registry)/kibana/kibana
-    customResource.kibana.image.tag: 7.5.1
+    elasticsearch.image.repository: $(registry)/elasticsearch/elasticsearch
+    elasticsearch.image.tag: 7.5.1
+    kibana.image.repository: $(registry)/kibana/kibana
+    kibana.image.tag: 7.5.1
 
-- name: elasticsearch-operator
+- name: eck-operator
   override:
-    elasticsearchOperator.hyperkubeImage.repository: $(registry)/hyperkube
-    elasticsearchOperator.hyperkubeImage.tag: v1.17.6
-    elasticsearchOperator.image.repository: $(registry)/eck/eck-operator
-    elasticsearchOperator.image.tag: 1.1.1
+    image.repository: docker.elastic.co/eck/eck-operator
+    image.tag: null
 
 - name: fed-addons
   override:
