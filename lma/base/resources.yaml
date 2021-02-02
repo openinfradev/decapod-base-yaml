@@ -43,6 +43,8 @@ spec:
       createCustomResource: true
       cleanupCustomResource: true
       cleanupCustomResourceBeforeInstall: true
+      hyperkubeImage:
+        tag: v1.17.6
     prometheus:
       enabled: false
   wait: true
@@ -168,6 +170,8 @@ spec:
       cleanupCustomResourceBeforeInstall: false
       createCustomResource: false
       enabled: false
+      hyperkubeImage:
+        tag: v1.17.6
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -310,6 +314,8 @@ spec:
       cleanupCustomResourceBeforeInstall: false
       createCustomResource: false
       enabled: false
+      hyperkubeImage:
+        tag: v1.17.6
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -581,6 +587,9 @@ spec:
       serviceMonitor:
         enabled: false
         interval: 1m
+    image:
+      hyperkube:
+        tag: v1.17.6
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -809,6 +818,9 @@ spec:
       cleanupCustomResource: false
     logExporter:
       enabled: false
+    image:
+      hyperkube:
+        tag: v1.17.6
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
