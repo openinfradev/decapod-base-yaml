@@ -6,19 +6,26 @@ global:
   registry: private-registry:5000
 
 charts:
-- name: elasticsearch-kibana
+- name: eck-resource
   override:
-    customResource.elasticsearch.image.repository: $(registry)/elasticsearch/elasticsearch
-    customResource.elasticsearch.image.tag: 7.5.1
-    customResource.kibana.image.repository: $(registry)/kibana/kibana
-    customResource.kibana.image.tag: 7.5.1
+    elasticsearch.image.repository: $(registry)/elasticsearch/elasticsearch
+    elasticsearch.image.tag: 7.5.1
+    kibana.image.repository: $(registry)/kibana/kibana
+    kibana.image.tag: 7.5.1
 
-- name: elasticsearch-operator
+- name: eck-operator
   override:
-    elasticsearchOperator.hyperkubeImage.repository: $(registry)/hyperkube
-    elasticsearchOperator.hyperkubeImage.tag: v1.17.6
-    elasticsearchOperator.image.repository: $(registry)/eck/eck-operator
-    elasticsearchOperator.image.tag: 1.1.1
+    image.repository: docker.elastic.co/eck/eck-operator
+    image.tag: null
+
+- name: addons
+  override:
+    kibanaInit.image.repository: $(registry)/kibana-init
+    kibanaInit.image.tag: v4
+    metricbeat.image.repository: $(registry)/metricbeat
+    metricbeat.image.tag: taco-1.0.0
+    tacoWatcher.joinCluster.image.repository: $(registry)/curl
+    tacoWatcher.joinCluster.image.tag: latest
 
 - name: fed-addons
   override:
@@ -40,7 +47,9 @@ charts:
     image.init.repository: $(registry)/library/docker
     image.init.tag: 19.03
     image.operator.repository: $(registry)/fluentbit-operator
-    image.operator.tag: v0.2.0
+    image.operator.tag: v0.1.1
+    image.elasticsearchTemplates.repository: $(registry)/openstackhelm/heat
+    image.elasticsearchTemplates.tag: newton
 
 - name: fluentbit-operator
   override:
@@ -53,14 +62,16 @@ charts:
     image.init.repository: $(registry)/library/docker
     image.init.tag: 19.03
     image.operator.repository: $(registry)/fluentbit-operator
-    image.operator.tag: v0.2.0
+    image.operator.tag: v0.1.1
+    image.elasticsearchTemplates.repository: $(registry)/openstackhelm/heat
+    image.elasticsearchTemplates.tag: newton
 
 - name: grafana
   override:
     downloadDashboardsImage.repository: $(registry)/curl
-    downloadDashboardsImage.tag: 7.68.0
+    downloadDashboardsImage.tag: 7.70.0
     image.repository: $(registry)/grafana
-    image.tag: 6.6.2
+    image.tag: 7.1.1
     initChownData.image.repository: $(registry)/library/busybox
     initChownData.image.tag: 1.31.1
     sidecar.image.repository: $(registry)/k8s-sidecar
@@ -70,45 +81,75 @@ charts:
 
 - name: kube-state-metrics
   override:
-    image.repository: $(registry)/coreos/kube-state-metrics
-    image.tag: v1.9.5
+    image.repository: $(registry)/bitnami/kube-state-metrics
+    image.tag: 1.9.7-debian-10-r143
 
 - name: prometheus
   override:
+    alertmanager.alertmanagerSpec.image.repository: $(registry)/prometheus/alertmanager
+    alertmanager.alertmanagerSpec.image.tag: v0.21.0
+    prometheusOperator.admissionWebhooks.patch.image.repository: $(registry)/kube-webhook-certgen
+    prometheusOperator.admissionWebhooks.patch.image.tag: v1.2.1
+    prometheusOperator.configmapReloadImage.repository: $(registry)/jimmidyson/configmap-reload
+    prometheusOperator.configmapReloadImage.tag: v0.3.0
+    prometheusOperator.hyperkubeImage.repository: $(registry)/hyperkube
+    prometheusOperator.hyperkubeImage.tag: v1.17.6
+    prometheusOperator.image.repository: $(registry)/coreos/prometheus-operator
+    prometheusOperator.image.tag: v0.38.1
+    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/coreos/prometheus-config-reloader
+    prometheusOperator.prometheusConfigReloaderImage.tag: v0.38.1
+    prometheusOperator.tlsProxy.image.repository: $(registry)/ghostunnel
+    prometheusOperator.tlsProxy.image.tag: v1.5.2
     prometheus.prometheusSpec.image.repository: $(registry)/prometheus/prometheus
-    prometheus.prometheusSpec.image.tag: v2.15.2
+    prometheus.prometheusSpec.image.tag: v2.18.2
 
 - name: prometheus-adapter
   override:
     image.repository: $(registry)/k8s-prometheus-adapter-amd64
-    image.tag: v0.6.0
+    image.tag: v0.7.0
 
 - name: prometheus-fed-master
   override:
     alertmanager.alertmanagerSpec.image.repository: $(registry)/prometheus/alertmanager
-    alertmanager.alertmanagerSpec.image.tag: v0.20.0
+    alertmanager.alertmanagerSpec.image.tag: v0.21.0
+    prometheusOperator.admissionWebhooks.patch.image.repository: $(registry)/kube-webhook-certgen
+    prometheusOperator.admissionWebhooks.patch.image.tag: v1.2.1
+    prometheusOperator.configmapReloadImage.repository: $(registry)/jimmidyson/configmap-reload
+    prometheusOperator.configmapReloadImage.tag: v0.3.0
+    prometheusOperator.hyperkubeImage.repository: $(registry)/hyperkube
+    prometheusOperator.hyperkubeImage.tag: v1.17.6
+    prometheusOperator.image.repository: $(registry)/coreos/prometheus-operator
+    prometheusOperator.image.tag: v0.38.1
+    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/coreos/prometheus-config-reloader
+    prometheusOperator.prometheusConfigReloaderImage.tag: v0.38.1
+    prometheusOperator.tlsProxy.image.repository: $(registry)/ghostunnel
+    prometheusOperator.tlsProxy.image.tag: v1.5.2
     prometheus.prometheusSpec.image.repository: $(registry)/prometheus/prometheus
-    prometheus.prometheusSpec.image.tag: v2.15.2
+    prometheus.prometheusSpec.image.tag: v2.18.2
 
 - name: prometheus-node-exporter
   override:
     image.repository: $(registry)/prometheus/node-exporter
-    image.tag: v0.18.1
+    image.tag: v1.0.1
 
 - name: prometheus-operator
   override:
+    alertmanager.alertmanagerSpec.image.repository: $(registry)/prometheus/alertmanager
+    alertmanager.alertmanagerSpec.image.tag: v0.21.0
     prometheusOperator.admissionWebhooks.patch.image.repository: $(registry)/kube-webhook-certgen
-    prometheusOperator.admissionWebhooks.patch.image.tag: v1.0.0
-    prometheusOperator.configmapReloadImage.repository: $(registry)/coreos/configmap-reload
-    prometheusOperator.configmapReloadImage.tag: v0.0.1
+    prometheusOperator.admissionWebhooks.patch.image.tag: v1.2.1
+    prometheusOperator.configmapReloadImage.repository: $(registry)/jimmidyson/configmap-reload
+    prometheusOperator.configmapReloadImage.tag: v0.3.0
     prometheusOperator.hyperkubeImage.repository: $(registry)/hyperkube
     prometheusOperator.hyperkubeImage.tag: v1.17.6
     prometheusOperator.image.repository: $(registry)/coreos/prometheus-operator
-    prometheusOperator.image.tag: v0.37.0
-    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/coreos/prometheus-config-reloader
-    prometheusOperator.prometheusConfigReloaderImage.tag: v0.37.0
+    prometheusOperator.image.tag: v0.38.1
+    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/coreos/prometheus-config-reload
+    prometheusOperator.prometheusConfigReloaderImage.tag: v0.38.1
     prometheusOperator.tlsProxy.image.repository: $(registry)/ghostunnel
     prometheusOperator.tlsProxy.image.tag: v1.5.2
+    prometheus.prometheusSpec.image.repository: $(registry)/prometheus/prometheus
+    prometheus.prometheusSpec.image.tag: v2.18.2
 
 - name: prometheus-process-exporter
   override:
@@ -119,7 +160,7 @@ charts:
 - name: prometheus-pushgateway
   override:
     image.repository: $(registry)/pushgateway
-    image.tag: v1.2.0
+    image.tag: v1.3.0
 
 - name: kubernetes-event-exporter
   override:
@@ -130,5 +171,5 @@ charts:
 - name: taco-watcher
   override:
     image.repository: sktdev/taco-watcher
-    tag: 1.0.4
+    image.tag: latest
 
