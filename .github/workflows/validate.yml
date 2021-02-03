@@ -32,6 +32,6 @@ jobs:
       - name: validate image
         uses: jabbukka/helm-image-validator@main
         with:
-          app_list: "lma"
+          app_list: "lma,openstack"
           helm_binary_path: "/usr/local/bin/helm"
 
