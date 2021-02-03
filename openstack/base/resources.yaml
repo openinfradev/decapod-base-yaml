@@ -8,7 +8,7 @@ spec:
   helmVersion: v3
   chart:
     name: glance
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     version: 0.1.0
     skipDepUpdate: true
   releaseName: glance
@@ -95,7 +95,7 @@ spec:
   helmVersion: v3
   chart:
     name: heat
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     version: 0.1.0
     skipDepUpdate: true
   releaseName: heat
@@ -159,7 +159,7 @@ spec:
   timeout: 30000
   chart:
     name: horizon
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     version: 0.1.0
     skipDepUpdate: true
   releaseName: horizon
@@ -254,7 +254,7 @@ spec:
   helmVersion: v3
   chart:
     name: ingress
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     version: 0.1.0
     skipDepUpdate: true
   releaseName: ingress
@@ -293,7 +293,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: keystone
     version: 0.1.0
     skipDepUpdate: true
@@ -348,7 +348,7 @@ spec:
   helmVersion: v3
   chart:
     name: libvirt
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     version: 0.1.0
     skipDepUpdate: true
   releaseName: libvirt
@@ -389,7 +389,7 @@ spec:
   helmVersion: v3
   chart:
     name: mariadb
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     version: 0.1.1
     skipDepUpdate: true
   releaseName: mariadb
@@ -429,8 +429,8 @@ spec:
   helmVersion: v3
   chart:
     name: memcached
-    repository: TO_BE_FIXED
-    version: 0.1.0
+    repository: https://openinfradev.github.io/hanu-helm-repo
+    version: 0.1.0-skt
     skipDepUpdate: true
   releaseName: memcached
   targetNamespace: openstack
@@ -455,7 +455,7 @@ spec:
   helmVersion: v3
   chart:
     name: neutron
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     version: 0.1.0
     skipDepUpdate: true
   releaseName: neutron
@@ -618,7 +618,7 @@ spec:
   helmVersion: v3
   timeout: 30000
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: nova
     version: 0.1.0
     skipDepUpdate: true
@@ -765,7 +765,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: prometheus-openstack-exporter
     version: 0.1.0
     skipDepUpdate: true
@@ -808,7 +808,7 @@ spec:
   helmVersion: v3
   chart:
     name: rabbitmq
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     version: 0.1.0
     skipDepUpdate: true
   releaseName: rabbitmq
@@ -843,7 +843,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: ceph-provisioners
     version: 0.1.0
     skipDepUpdate: true
@@ -889,7 +889,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: cinder
     version: 0.1.1
     skipDepUpdate: true
@@ -990,7 +990,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: ironic
     version: 0.1.0
     skipDepUpdate: true
@@ -1109,7 +1109,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: sona
     version: 0.1.0
     skipDepUpdate: true
@@ -1154,7 +1154,7 @@ metadata:
   name: openvswitch
 spec:
   chart:
-    repository: TO_BE_FIXED
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: openvswitch
     version: 0.1.0
     skipDepUpdate: true

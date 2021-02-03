@@ -112,10 +112,9 @@ spec:
         interval: TO_BE_FIXED
     kubeEtcd:
       enabled: true
-      serviceMonitor:
-        interval: TO_BE_FIXED
       endpoints: [] # TO_BE_FIXED
       serviceMonitor:
+        interval: TO_BE_FIXED
         caFile: /etc/prometheus/secrets/etcd-client-cert/etcd-ca
         certFile: /etc/prometheus/secrets/etcd-client-cert/etcd-client
         insecureSkipVerify: false
@@ -810,10 +809,6 @@ spec:
       alerts:
         makeAlertRule: true
       nodeSelector: {} # TO_BE_FIXED
-    fluentbitOperator:
-      enabled: false
-      createCustomResource: false
-      cleanupCustomResource: false
     logExporter:
       enabled: false
   wait: true
