@@ -9,51 +9,51 @@ charts:
 - name: glance
   override:
     images.pull_policy: IfNotPresent
-    images.tags.bootstrap: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_drop: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_init: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.bootstrap: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_drop: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_init: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
-    images.tags.glance_api: $(registry)/stein/ubuntu-source-glance-api:taco-0.1.0
-    images.tags.glance_db_sync: $(registry)/stein/ubuntu-source-glance-api:taco-0.1.0
-    images.tags.glance_metadefs_load: $(registry)/stein/ubuntu-source-glance-api:taco-0.1.0
-    images.tags.glance_registry: $(registry)/stein/ubuntu-source-glance-registry:taco-0.1.0
-    images.tags.glance_storage_init: $(registry)/port/ceph-config-helper:v1.14.3
+    images.tags.glance_api: $(registry)/openstackhelm/glance:stein-ubuntu_bionic
+    images.tags.glance_db_sync: $(registry)/openstackhelm/glance:stein-ubuntu_bionic
+    images.tags.glance_metadefs_load: $(registry)/openstackhelm/glance:stein-ubuntu_bionic
+    images.tags.glance_registry: $(registry)/openstackhelm/glance:stein-ubuntu_bionic
+    images.tags.glance_storage_init: $(registry)/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
-    images.tags.ks_endpoints: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_service: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_user: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.ks_endpoints: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_service: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_user: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.rabbit_init: $(registry)/rabbitmq:3.7-management
-    images.tags.test: $(registry)/stein/ubuntu-source-rally:taco-0.1.0
+    images.tags.test: $(registry)/xrally/xrally-openstack:1.3.0
 
 - name: heat
   override:
     images.pull_policy: IfNotPresent
-    images.tags.bootstrap: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_drop: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_init: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.bootstrap: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_drop: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_init: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
-    images.tags.heat_api: $(registry)/stein/ubuntu-source-heat-api:taco-0.1.0
-    images.tags.heat_cfn: $(registry)/stein/ubuntu-source-heat-api:taco-0.1.0
-    images.tags.heat_cloudwatch: $(registry)/stein/ubuntu-source-heat-api:taco-0.1.0
-    images.tags.heat_db_sync: $(registry)/stein/ubuntu-source-heat-api:taco-0.1.0
-    images.tags.heat_engine: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.heat_engine_cleaner: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.heat_purge_deleted: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
+    images.tags.heat_api: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.heat_cfn: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.heat_cloudwatch: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.heat_db_sync: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.heat_engine: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.heat_engine_cleaner: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.heat_purge_deleted: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
-    images.tags.ks_endpoints: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_service: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_user: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.ks_endpoints: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_service: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_user: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.rabbit_init: $(registry)/rabbitmq:3.7-management
-    images.tags.test: $(registry)/stein/ubuntu-source-rally:taco-0.1.0
+    images.tags.test: $(registry)/xrally/xrally-openstack:1.3.0
  
 - name: horizon
   override:
     images.pull_policy: IfNotPresent
-    images.tags.db_drop: $(registry)/stein/ubuntu-source-horizon:taco-0.1.0
-    images.tags.db_init: $(registry)/stein/ubuntu-source-horizon:taco-0.1.0
+    images.tags.db_drop: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_init: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
-    images.tags.horizon: $(registry)/stein/ubuntu-source-horizon:taco-0.1.0
-    images.tags.horizon_db_sync: $(registry)/stein/ubuntu-source-horizon:taco-0.1.0
+    images.tags.horizon: $(registry)/openstackhelm/horizon:stein-ubuntu_bionic
+    images.tags.horizon_db_sync: $(registry)/openstackhelm/horizon:stein-ubuntu_bionic
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
     images.tags.test: $(registry)/openstackhelm/osh-selenium:latest-ubuntu_bionic
 
@@ -65,36 +65,36 @@ charts:
     images.tags.error_pages: $(registry)/google_containers/defaultbackend:1.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
     images.tags.ingress: $(registry)/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0
-    images.tags.ingress_module_init: $(registry)/stein/ubuntu-source-neutron-server:taco-0.1.0
-    images.tags.ingress_routed_vip: $(registry)/stein/ubuntu-source-neutron-server:taco-0.1.0
+    images.tags.ingress_module_init: $(registry)/openstackhelm/neutron:ocata-ubuntu_xenial
+    images.tags.ingress_routed_vip: $(registry)/openstackhelm/neutron:ocata-ubuntu_xenial
     images.tags.keepalived: $(registry)/osixia/keepalived:1.4.5
 
 - name: keystone
   override:
     images.pull_policy: IfNotPresent
-    images.tags.bootstrap: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_drop: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_init: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.bootstrap: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_drop: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_init: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
-    images.tags.keystone_api: $(registry)/stein/ubuntu-source-keystone:taco-0.1.0
-    images.tags.keystone_credential_cleanup: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
-    images.tags.keystone_credential_rotate: $(registry)/stein/ubuntu-source-keystone:taco-0.1.0
-    images.tags.keystone_credential_setup: $(registry)/stein/ubuntu-source-keystone:taco-0.1.0
-    images.tags.keystone_db_sync: $(registry)/stein/ubuntu-source-keystone:taco-0.1.0
-    images.tags.keystone_domain_manage: $(registry)/stein/ubuntu-source-keystone:taco-0.1.0
-    images.tags.keystone_fernet_rotate: $(registry)/stein/ubuntu-source-keystone:taco-0.1.0
-    images.tags.keystone_fernet_setup: $(registry)/stein/ubuntu-source-keystone:taco-0.1.0
-    images.tags.ks_user: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.keystone_api: $(registry)/openstackhelm/keystone:stein-ubuntu_bionic
+    images.tags.keystone_credential_cleanup: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.keystone_credential_rotate: $(registry)/openstackhelm/keystone:stein-ubuntu_bionic
+    images.tags.keystone_credential_setup: $(registry)/openstackhelm/keystone:stein-ubuntu_bionic
+    images.tags.keystone_db_sync: $(registry)/openstackhelm/keystone:stein-ubuntu_bionic
+    images.tags.keystone_domain_manage: $(registry)/openstackhelm/keystone:stein-ubuntu_bionic
+    images.tags.keystone_fernet_rotate: $(registry)/openstackhelm/keystone:stein-ubuntu_bionic
+    images.tags.keystone_fernet_setup: $(registry)/openstackhelm/keystone:stein-ubuntu_bionic
+    images.tags.ks_user: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.rabbit_init: $(registry)/rabbitmq:3.7-management
-    images.tags.test: $(registry)/stein/ubuntu-source-rally:taco-0.1.0
+    images.tags.test: $(registry)/xrally/xrally-openstack:1.3.0
 
 - name: libvirt
   override:
     images.pull_policy: IfNotPresent
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
-    images.tags.libvirt: $(registry)/stein/ubuntu-source-nova-libvirt:taco-0.1.0
+    images.tags.libvirt: $(registry)/openstackhelm/libvirt:ubuntu_xenial-20190903
 
 - name: mariadb
   override:
@@ -104,11 +104,11 @@ charts:
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
     images.tags.ingress: $(registry)/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0
     images.tags.mariadb: $(registry)/openstackhelm/mariadb:10.2.18
-    images.tags.mariadb_backup: $(registry)/openstackhelm/mariadb:latest-ubuntu_xenial
+    images.tags.mariadb_backup: $(registry)/openstackhelm/mariadb:ubuntu_xenial-20191031
     images.tags.prometheus_create_mysql_user: $(registry)/mariadb:10.2.13
     images.tags.prometheus_mysql_exporter: $(registry)/prom/mysqld-exporter:v0.10.0
-    images.tags.prometheus_mysql_exporter_helm_tests: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.scripted_test: $(registry)/openstackhelm/mariadb:latest-ubuntu_xenial
+    images.tags.prometheus_mysql_exporter_helm_tests: $(registry)/openstackhelm/heat:newton-ubuntu_xenial
+    images.tags.scripted_test: $(registry)/openstackhelm/mariadb:ubuntu_xenial-20191031
 
 - name: memcached
   override:
@@ -121,67 +121,68 @@ charts:
 - name: neutron
   override:
     images.pull_policy: IfNotPresent
-    images.tags.bootstrap: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_drop: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_init: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.bootstrap: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_drop: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_init: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
-    images.tags.ks_endpoints: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_service: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_user: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.neutron_bagpipe_bgp: $(registry)/stein/ubuntu-source-neutron-server:taco-0.1.0
-    images.tags.neutron_db_sync: $(registry)/stein/ubuntu-source-neutron-server:taco-0.1.0
-    images.tags.neutron_dhcp: $(registry)/stein/ubuntu-source-neutron-dhcp-agent:taco-0.1.0
-    images.tags.neutron_ironic_agent: $(registry)/stein/ubuntu-source-neutron-server:taco-0.1.0
-    images.tags.neutron_l2gw: $(registry)/stein/ubuntu-source-neutron-server:taco-0.1.0
-    images.tags.neutron_l3: $(registry)/stein/ubuntu-source-neutron-l3-agent:taco-0.1.0
-    images.tags.neutron_linuxbridge_agent: $(registry)/stein/ubuntu-source-neutron-linuxbridge-agent:taco-0.1.0
-    images.tags.neutron_metadata: $(registry)/stein/ubuntu-source-neutron-metadata-agent:taco-0.1.0
-    images.tags.neutron_openvswitch_agent: $(registry)/stein/ubuntu-source-neutron-openvswitch-agent:taco-0.1.0
-    images.tags.neutron_server: $(registry)/stein/ubuntu-source-neutron-server:taco-0.1.0.onos
-    images.tags.neutron_sriov_agent: $(registry)/stein/ubuntu-source-neutron-sriov-agent:taco-0.1.0
-    images.tags.neutron_sriov_agent_init: $(registry)/stein/ubuntu-source-neutron-sriov-agent:taco-0.1.0
+    images.tags.ks_endpoints: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_service: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_user: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.neutron_bagpipe_bgp: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_db_sync: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_dhcp: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_ironic_agent: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_l2gw: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_l3: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_linuxbridge_agent: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_metadata: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_openvswitch_agent: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_server: $(registry)/openstackhelm/neutron:stein-ubuntu_bionic
+    images.tags.neutron_sriov_agent: $(registry)/openstackhelm/neutron:stein-18.04-sriov
+    images.tags.neutron_sriov_agent_init: $(registry)/openstackhelm/neutron:stein-18.04-sriov
     images.tags.purge_test: $(registry)/openstackhelm/ospurge:latest
     images.tags.rabbit_init: $(registry)/rabbitmq:3.7-management
-    images.tags.test: $(registry)/xrally/xrally-openstack:1.5.0
+    images.tags.test: $(registry)/xrally/xrally-openstack:1.3.0
 
 - name: nova
   override:
     images.pull_policy: IfNotPresent
-    images.tags.bootstrap: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_drop: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_init: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.bootstrap: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_drop: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_init: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
-    images.tags.ks_endpoints: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_service: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_user: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.nova_api: $(registry)/stein/ubuntu-source-nova-api:taco-0.1.0
-    images.tags.nova_cell_setup: $(registry)/stein/ubuntu-source-nova-api:taco-0.1.0
-    images.tags.nova_cell_setup_init: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.nova_compute: $(registry)/stein/ubuntu-source-nova-compute:taco-0.1.0
-    images.tags.nova_compute_ironic: $(registry)/stein/ubuntu-source-nova-compute-ironic:taco-0.1.0
-    images.tags.nova_compute_ssh: $(registry)/stein/ubuntu-source-nova-ssh:taco-0.1.0
-    images.tags.nova_conductor: $(registry)/stein/ubuntu-source-nova-conductor:taco-0.1.0
-    images.tags.nova_consoleauth: $(registry)/stein/ubuntu-source-nova-consoleauth:taco-0.1.0
-    images.tags.nova_db_sync: $(registry)/stein/ubuntu-source-nova-api:taco-0.1.0
-    images.tags.nova_novncproxy: $(registry)/stein/ubuntu-source-nova-novncproxy:taco-0.1.0
-    images.tags.nova_novncproxy_assets: $(registry)/stein/ubuntu-source-nova-novncproxy:taco-0.1.0
-    images.tags.nova_placement: $(registry)/stein/ubuntu-source-nova-placement-api:taco-0.1.0
-    images.tags.nova_scheduler: $(registry)/stein/ubuntu-source-nova-scheduler:taco-0.1.0
-    images.tags.nova_service_cleaner: $(registry)/port/ceph-config-helper:v1.14.3
-    images.tags.nova_spiceproxy: $(registry)/stein/ubuntu-source-nova-spicehtml5proxy:taco-0.1.0
-    images.tags.nova_spiceproxy_assets: $(registry)/stein/ubuntu-source-nova-spicehtml5proxy:taco-0.1.0
+    images.tags.ks_endpoints: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_service: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_user: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.nova_api: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_cell_setup: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_cell_setup_init: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.nova_compute: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_compute_ironic: $(registry)/kolla/ubuntu-source-nova-compute-ironic:ocata
+    images.tags.nova_compute_ssh: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_conductor: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_consoleauth: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_db_sync: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_novncproxy: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_novncproxy_assets: $(registry)/kolla/ubuntu-source-nova-novncproxy:ocata
+    images.tags.nova_placement: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_scheduler: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_service_cleaner: $(registry)/openstackhelm/ceph-config-helper:latest-ubuntu_xenial
+    images.tags.nova_spiceproxy: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
+    images.tags.nova_spiceproxy_assets: $(registry)/openstackhelm/nova:stein-ubuntu_bionic
     images.tags.rabbit_init: $(registry)/rabbitmq:3.7-management
-    images.tags.test: $(registry)/stein/ubuntu-source-rally:taco-0.1.0
+    images.tags.test: $(registry)/xrally/xrally-openstack:1.3.0
+    images.tags.nova_wait_for_computes_init: $(registry)/google_containers/hyperkube-amd64:v1.11.6
 
 - name: prometheus-openstack-exporter
   override:
     images.pull_policy: IfNotPresent
-    dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
-    image_repo_sync: $(registry)/docker:17.07.0
-    ks_user: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    prometheus_openstack_exporter: $(registry)/openstackhelm/prometheus-openstack-exporter:ubuntu_bionic-20191017
+    images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
+    images.tags.image_repo_sync: $(registry)/docker:17.07.0
+    images.tags.ks_user: $(registry)/openstackhelm/heat:newton-ubuntu_xenial
+    images.tags.prometheus_openstack_exporter: $(registry)/openstackhelm/prometheus-openstack-exporter:ubuntu_bionic-20191017
 
 - name: rabbitmq
   override:
@@ -189,63 +190,63 @@ charts:
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
     images.tags.prometheus_rabbitmq_exporter: $(registry)/kbudde/rabbitmq-exporter:v0.21.0
-    images.tags.prometheus_rabbitmq_exporter_helm_tests: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.prometheus_rabbitmq_exporter_helm_tests: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
     images.tags.rabbitmq: $(registry)/rabbitmq:3.7.13
-    images.tags.rabbitmq_init: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.rabbitmq_init: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
     images.tags.scripted_test: $(registry)/rabbitmq:3.7.13-management
 
 - name: ceph-provisioners
   override:
     images.pull_policy: IfNotPresent
-    images.tags.ceph_bootstrap: $(registry)/openstackhelm/ceph-daemon:latest-ubuntu_xenial
-    images.tags.ceph_cephfs_provisioner: $(registry)/openstackhelm/ceph-cephfs-provisioner:latest-ubuntu_xenial
-    images.tags.ceph_config_helper: $(registry)/port/ceph-config-helper:v1.14.3
-    images.tags.ceph_rbd_provisioner: $(registry)/openstackhelm/ceph-rbd-provisioner:latest-ubuntu_xenial
+    images.tags.ceph_bootstrap: $(registry)/openstackhelm/ceph-daemon:ubuntu_xenial-20191119
+    images.tags.ceph_cephfs_provisioner: $(registry)/openstackhelm/ceph-cephfs-provisioner:ubuntu_xenial-20191119
+    images.tags.ceph_config_helper: $(registry)/openstackhelm/ceph-config-helper:ubuntu_xenial-20191119
+    images.tags.ceph_rbd_provisioner: $(registry)/openstackhelm/ceph-rbd-provisioner:ubuntu_xenial-20191119
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
 
 - name: cinder
   override:
     images.pull_policy: IfNotPresent
-    images.tags.bootstrap: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.cinder_api: $(registry)/stein/ubuntu-source-cinder-api:taco-0.1.0
-    images.tags.cinder_backup: $(registry)/stein/ubuntu-source-cinder-backup:taco-0.1.0
-    images.tags.cinder_backup_storage_init: $(registry)/port/ceph-config-helper:v1.14.3
-    images.tags.cinder_db_sync: $(registry)/stein/ubuntu-source-cinder-api:taco-0.1.0
-    images.tags.cinder_scheduler: $(registry)/stein/ubuntu-source-cinder-scheduler:taco-0.1.0
-    images.tags.cinder_storage_init: $(registry)/port/ceph-config-helper:v1.14.3
-    images.tags.cinder_volume: $(registry)/stein/ubuntu-source-cinder-volume:taco-0.1.0
-    images.tags.cinder_volume_usage_audit: $(registry)/stein/ubuntu-source-cinder-volume:taco-0.1.0
-    images.tags.db_drop: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_init: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.bootstrap: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.cinder_api: $(registry)/openstackhelm/cinder:stein-ubuntu_bionic
+    images.tags.cinder_backup: $(registry)/openstackhelm/cinder:stein-ubuntu_bionic
+    images.tags.cinder_backup_storage_init: $(registry)/openstackhelm/ceph-config-helper:ubuntu_bionic-20191216
+    images.tags.cinder_db_sync: $(registry)/openstackhelm/cinder:stein-ubuntu_bionic
+    images.tags.cinder_scheduler: $(registry)/openstackhelm/cinder:stein-ubuntu_bionic
+    images.tags.cinder_storage_init: $(registry)/openstackhelm/ceph-config-helper:ubuntu_bionic-20191216
+    images.tags.cinder_volume: $(registry)/openstackhelm/cinder:stein-ubuntu_bionic
+    images.tags.cinder_volume_usage_audit: $(registry)/openstackhelm/cinder:stein-ubuntu_bionic
+    images.tags.db_drop: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.db_init: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
-    images.tags.ks_endpoints: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_service: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_user: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.ks_endpoints: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_service: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
+    images.tags.ks_user: $(registry)/openstackhelm/heat:stein-ubuntu_bionic
     images.tags.rabbit_init: $(registry)/rabbitmq:3.7-management
-    images.tags.test: $(registry)/xrally/xrally-openstack:1.5.0
+    images.tags.test: $(registry)/xrally/xrally-openstack:1.3.0
 
 - name: ironic
   override:
     images.pull_policy: IfNotPresent
-    images.tags.bootstrap: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_drop: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.db_init: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.bootstrap: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
+    images.tags.db_drop: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
+    images.tags.db_init: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
-    images.tags.ironic_api: $(registry)/stein/ubuntu-source-ironic-api:taco-0.1.0
-    images.tags.ironic_conductor: $(registry)/stein/ubuntu-source-ironic-conductor:taco-0.1.0
-    images.tags.ironic_db_sync: $(registry)/stein/ubuntu-source-ironic-api:taco-0.1.0
-    images.tags.ironic_manage_cleaning_network: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ironic_pxe: $(registry)/stein/ubuntu-source-ironic-pxe:taco-0.1.0
+    images.tags.ironic_api: $(registry)/openstackhelm/ironic:ocata-ubuntu_xenial
+    images.tags.ironic_conductor: $(registry)/openstackhelm/ironic:ocata-ubuntu_xenial
+    images.tags.ironic_db_sync: $(registry)/openstackhelm/ironic:ocata-ubuntu_xenial
+    images.tags.ironic_manage_cleaning_network: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
+    images.tags.ironic_pxe: $(registry)/openstackhelm/ironic:ocata-ubuntu_xenial
     images.tags.ironic_pxe_http: $(registry)/nginx:1.13.3
-    images.tags.ironic_pxe_init: $(registry)/stein/ubuntu-source-ironic-pxe:taco-0.1.0
-    images.tags.ironic_retrive_cleaning_network: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ironic_retrive_swift_config: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_endpoints: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_service: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
-    images.tags.ks_user: $(registry)/stein/ubuntu-source-heat-engine:taco-0.1.0
+    images.tags.ironic_pxe_init: $(registry)/openstackhelm/ironic:ocata-ubuntu_xenial
+    images.tags.ironic_retrive_cleaning_network: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
+    images.tags.ironic_retrive_swift_config: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
+    images.tags.ks_endpoints: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
+    images.tags.ks_service: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
+    images.tags.ks_user: $(registry)/openstackhelm/heat:ocata-ubuntu_xenial
     images.tags.rabbit_init: $(registry)/rabbitmq:3.7-management
 
 - name: sona
@@ -258,7 +259,7 @@ charts:
 - name: openvswitch
   override:
     images.pull_policy: IfNotPresent
-    images.tags.openvswitch_db_server: $(registry)/kolla/ubuntu-source-openvswitch-db-server:8.0.3
-    images.tags.openvswitch_vswitchd: $(registry)/kolla/ubuntu-source-openvswitch-vswitchd:8.0.3
+    images.tags.openvswitch_db_server: $(registry)/openstackhelm/openvswitch:ubuntu_bionic-20191031
+    images.tags.openvswitch_vswitchd: $(registry)/openstackhelm/openvswitch:ubuntu_bionic-20191031
     images.tags.dep_check: $(registry)/airshipit/kubernetes-entrypoint:v1.0.0
     images.tags.image_repo_sync: $(registry)/docker:17.07.0
