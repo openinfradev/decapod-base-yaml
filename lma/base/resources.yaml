@@ -8,66 +8,50 @@ spec:
   helmVersion: v3
   chart:
     repository: https://prometheus-community.github.io/helm-charts
-    name: prometheus-operator
-    version: 9.3.2
+    name: kube-prometheus-stack
+    version: 13.7.2
   releaseName: prometheus-operator
   targetNamespace: lma
   values:
-    alertmanager:
-      enabled: false
-    coreDns:
-      enabled: false
     defaultRules:
       create: false
+    global:
+      rbac:
+        create: true
+    alertmanager:
+      enabled: false
     grafana:
       enabled: false
     kubeApiServer:
       enabled: false
+    kubelet:
+      enabled: false
     kubeControllerManager:
+      enabled: false
+    coreDns:
       enabled: false
     kubeDns:
       enabled: false
-    kubeProxy:
+    kubeEtcd:
       enabled: false
     kubeScheduler:
       enabled: false
+    kubeProxy:
+      enabled: false
     kubeStateMetrics:
       enabled: false
-    kubelet:
-      enabled: false
+#   kube-state-metrics: # subchart configuration
     nodeExporter:
       enabled: false
+#   prometheus-node-exporter: # subchart configuration
     prometheusOperator:
       enabled: true
       nodeSelector: {}  # TO_BE_FIXED
       createCustomResource: true
       cleanupCustomResource: true
       cleanupCustomResourceBeforeInstall: true
-      hyperkubeImage:
-        tag: v1.17.6
     prometheus:
       enabled: false
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: eck-operator
-  name: eck-operator
-spec:
-  helmVersion: v3
-  chart:
-    repository: https://helm.elastic.co
-    name: eck-operator
-    version: 1.3.1
-  releaseName: eck-operator
-  targetNamespace: elastic-system
-  values:
-    installCRDs: true
-    replicaCount: 1
-    config:
-      containerRegistry: docker.elastic.co
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -80,26 +64,31 @@ spec:
   helmVersion: v3
   chart:
     repository: https://prometheus-community.github.io/helm-charts
-    name: prometheus-operator
-    version: 9.3.2
+    name: kube-prometheus-stack
+    version: 13.7.2
   releaseName: prometheus
   targetNamespace: lma
   values:
-    alertmanager:
-      enabled: false
-    coreDns:
-      enabled: true
-      serviceMonitor:
-        interval: TO_BE_FIXED
     defaultRules:
       create: false
+    global:
+      rbac:
+        create: true
+    alertmanager:
+      enabled: false
     grafana:
       enabled: false
     kubeApiServer:
       enabled: true
       serviceMonitor:
         interval: TO_BE_FIXED
+    kubelet:
+      enabled: false
     kubeControllerManager:
+      enabled: true
+      serviceMonitor:
+        interval: TO_BE_FIXED
+    coreDns:
       enabled: true
       serviceMonitor:
         interval: TO_BE_FIXED
@@ -118,21 +107,25 @@ spec:
         keyFile: /etc/prometheus/secrets/etcd-client-cert/etcd-client-key
         scheme: https
         serverName: localhost
-    kubeProxy:
+    kubeScheduler:
       enabled: true
       serviceMonitor:
         interval: TO_BE_FIXED
-    kubeScheduler:
+    kubeProxy:
       enabled: true
       serviceMonitor:
         interval: TO_BE_FIXED
     kubeStateMetrics:
       enabled: false
-    kubelet:
-      enabled: false
+#   kube-state-metrics: # subchart configuration
     nodeExporter:
       enabled: false
+#   prometheus-node-exporter: # subchart configuration
     fullnameOverride: lma
+    prometheusOperator:
+      admissionWebhooks:
+        enabled: false
+      enabled: false
     prometheus:
       prometheusSpec:
         retention: TO_BE_FIXED
@@ -159,27 +152,21 @@ spec:
           matchLabels:
             name: lma
         serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
         thanos:
-          version: v0.11.0
+          version: v0.18.0
       service:
         nodePort: 30008
         type: NodePort
-        additionalPorts:
-        - name: grpc
-          protocol: TCP
-          port: 10901
-          targetPort: grpc
-          nodePort: 30901
-
-    prometheusOperator:
-      admissionWebhooks:
+      thanosService:
         enabled: false
-      cleanupCustomResource: false
-      cleanupCustomResourceBeforeInstall: false
-      createCustomResource: false
-      enabled: false
-      hyperkubeImage:
-        tag: v1.17.6
+        annotations: {}
+        labels: {}
+        portName: grpc
+        port: 10901
+        targetPort: "grpc"
+        nodePort: 30901
+        type: NodePort
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -192,11 +179,16 @@ spec:
   helmVersion: v3
   chart:
     repository: https://prometheus-community.github.io/helm-charts
-    name: prometheus-operator
-    version: 9.3.2
+    name: kube-prometheus-stack
+    version: 13.7.2
   releaseName: prometheus-fed-master
   targetNamespace: fed
   values:
+    defaultRules:
+      create: false
+    global:
+      rbac:
+        create: true
     alertmanager:
       alertmanagerSpec:
         nodeSelector: {} # TO_BE_FIXED
@@ -264,31 +256,32 @@ spec:
               severity: page
             receiver: slack-alert
       enabled: true
-    coreDns:
-      enabled: false
-    defaultRules:
-      create: false
-    fullnameOverride: fed-master
     grafana:
       enabled: false
     kubeApiServer:
       enabled: false
+    kubelet:
+      enabled: false
     kubeControllerManager:
+      enabled: false
+    coreDns:
       enabled: false
     kubeDns:
       enabled: false
     kubeEtcd:
       enabled: false
-    kubeProxy:
-      enabled: false
     kubeScheduler:
+      enabled: false
+    kubeProxy:
       enabled: false
     kubeStateMetrics:
       enabled: false
-    kubelet:
-      enabled: false
+#   kube-state-metrics: # subchart configuration
     nodeExporter:
       enabled: false
+#   prometheus-node-exporter: # subchart configuration
+
+    fullnameOverride: fed-master
     prometheus:
       prometheusSpec:
         externalLabels:
@@ -303,6 +296,7 @@ spec:
           matchLabels:
             name: fed
         serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
         storageSpec:
           volumeClaimTemplate:
             spec:
@@ -318,12 +312,28 @@ spec:
     prometheusOperator:
       admissionWebhooks:
         enabled: false
-      cleanupCustomResource: false
-      cleanupCustomResourceBeforeInstall: false
-      createCustomResource: false
       enabled: false
-      hyperkubeImage:
-        tag: v1.17.6
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: eck-operator
+  name: eck-operator
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://helm.elastic.co
+    name: eck-operator
+    version: 1.3.1
+  releaseName: eck-operator
+  targetNamespace: elastic-system
+  values:
+    installCRDs: true
+    replicaCount: 1
+    config:
+      containerRegistry: docker.elastic.co
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -651,6 +661,12 @@ spec:
       - name: syslog
         tag: syslog.*
         path: /var/log/messages
+        type: syslog
+        index: syslog
+        parser: syslog-rfc5424
+      - name: syslog-ubuntu
+        tag: syslog.*
+        path: /var/log/syslog
         type: syslog
         index: syslog
         parser: syslog-rfc5424
@@ -1054,8 +1070,6 @@ spec:
     objstoreConfig: TO_BE_FIXED
     query:
       nodeSelector: {}
-    querier:
-      stores: TO_BE_FIXED
     queryFrontend:
       nodeSelector: {}
       service:
@@ -1138,10 +1152,6 @@ spec:
         enabled: false
     volumePermissions:
       enabled: false
-      image:
-        registry: docker.io
-        repository: bitnami/minideb
-        tag: buster
     minio:
       enabled: true
       accessKey:
@@ -1152,4 +1162,8 @@ spec:
       service:
         type: NodePort
         nodePort: 30002
+      persistence:
+        storageClass: TO_BE_FIXED
+        accessMode: TO_BE_FIXED
+        size: TO_BE_FIXED
   wait: true

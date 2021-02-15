@@ -159,7 +159,7 @@ charts:
 - name: thanos
   override:
     global.storageClass: $(storageClassName)
-    clusterDomain: cluster.local
+    clusterDomain: $(clusterName)
     objstoreConfig: |-
       type: s3
       config:
@@ -190,4 +190,7 @@ charts:
     ruler.persistence.size: 8Gi
     minio.accessKey.password: $(defaultUser)
     minio.secretKey.password: $(defaultPassword)
-    minio.defaultBuckets: 'thanos'
+    minio.defaultBuckets: thanos
+    minio.persistence.storageClass: $(storageClassName)
+    minio.persistence.accessMode: ReadWriteOnce
+    minio.persistence.size: 8Gi
