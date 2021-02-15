@@ -834,7 +834,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: lma-addons
-    version: 1.0.6
+    version: 1.0.7
   releaseName: addons
   targetNamespace: lma
   values:
@@ -885,7 +885,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: lma-addons
-    version: 1.0.6
+    version: 1.0.7
   releaseName: fed-addons
   targetNamespace: fed
   values:
