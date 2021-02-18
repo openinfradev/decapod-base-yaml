@@ -560,7 +560,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: fluentbit-operator
-    version: 1.0.9
+    version: 1.0.10
     skipDepUpdate: true
   releaseName: fluentbit-operator
   targetNamespace: lma
@@ -603,7 +603,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: fluentbit-operator
-    version: 1.0.9
+    version: 1.0.10
     skipDepUpdate: true
   releaseName: fluentbit
   targetNamespace: lma
