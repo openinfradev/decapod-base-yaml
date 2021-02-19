@@ -89,19 +89,13 @@ charts:
     alertmanager.alertmanagerSpec.image.repository: $(registry)/prometheus/alertmanager
     alertmanager.alertmanagerSpec.image.tag: v0.21.0
     prometheusOperator.admissionWebhooks.patch.image.repository: $(registry)/kube-webhook-certgen
-    prometheusOperator.admissionWebhooks.patch.image.tag: v1.2.1
-    prometheusOperator.configmapReloadImage.repository: $(registry)/jimmidyson/configmap-reload
-    prometheusOperator.configmapReloadImage.tag: v0.3.0
-    prometheusOperator.hyperkubeImage.repository: $(registry)/hyperkube
-    prometheusOperator.hyperkubeImage.tag: v1.17.6
-    prometheusOperator.image.repository: $(registry)/coreos/prometheus-operator
-    prometheusOperator.image.tag: v0.38.1
-    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/coreos/prometheus-config-reloader
-    prometheusOperator.prometheusConfigReloaderImage.tag: v0.38.1
-    prometheusOperator.tlsProxy.image.repository: $(registry)/ghostunnel
-    prometheusOperator.tlsProxy.image.tag: v1.5.2
+    prometheusOperator.admissionWebhooks.patch.image.tag: v1.5.0
+    prometheusOperator.image.repository: $(registry)/prometheus-operator/prometheus-operator
+    prometheusOperator.image.tag: v0.45.0
+    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/prometheus-operator/prometheus-config-reloader
+    prometheusOperator.prometheusConfigReloaderImage.tag: v0.45.0
     prometheus.prometheusSpec.image.repository: $(registry)/prometheus/prometheus
-    prometheus.prometheusSpec.image.tag: v2.18.2
+    prometheus.prometheusSpec.image.tag: v2.24.0
 
 - name: prometheus-adapter
   override:
@@ -113,19 +107,13 @@ charts:
     alertmanager.alertmanagerSpec.image.repository: $(registry)/prometheus/alertmanager
     alertmanager.alertmanagerSpec.image.tag: v0.21.0
     prometheusOperator.admissionWebhooks.patch.image.repository: $(registry)/kube-webhook-certgen
-    prometheusOperator.admissionWebhooks.patch.image.tag: v1.2.1
-    prometheusOperator.configmapReloadImage.repository: $(registry)/jimmidyson/configmap-reload
-    prometheusOperator.configmapReloadImage.tag: v0.3.0
-    prometheusOperator.hyperkubeImage.repository: $(registry)/hyperkube
-    prometheusOperator.hyperkubeImage.tag: v1.17.6
-    prometheusOperator.image.repository: $(registry)/coreos/prometheus-operator
-    prometheusOperator.image.tag: v0.38.1
-    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/coreos/prometheus-config-reloader
-    prometheusOperator.prometheusConfigReloaderImage.tag: v0.38.1
-    prometheusOperator.tlsProxy.image.repository: $(registry)/ghostunnel
-    prometheusOperator.tlsProxy.image.tag: v1.5.2
+    prometheusOperator.admissionWebhooks.patch.image.tag: v1.5.0
+    prometheusOperator.image.repository: $(registry)/prometheus-operator/prometheus-operator
+    prometheusOperator.image.tag: v0.45.0
+    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/prometheus-operator/prometheus-config-reloader
+    prometheusOperator.prometheusConfigReloaderImage.tag: v0.45.0
     prometheus.prometheusSpec.image.repository: $(registry)/prometheus/prometheus
-    prometheus.prometheusSpec.image.tag: v2.18.2
+    prometheus.prometheusSpec.image.tag: v2.24.0
 
 - name: prometheus-node-exporter
   override:
@@ -137,19 +125,13 @@ charts:
     alertmanager.alertmanagerSpec.image.repository: $(registry)/prometheus/alertmanager
     alertmanager.alertmanagerSpec.image.tag: v0.21.0
     prometheusOperator.admissionWebhooks.patch.image.repository: $(registry)/kube-webhook-certgen
-    prometheusOperator.admissionWebhooks.patch.image.tag: v1.2.1
-    prometheusOperator.configmapReloadImage.repository: $(registry)/jimmidyson/configmap-reload
-    prometheusOperator.configmapReloadImage.tag: v0.3.0
-    prometheusOperator.hyperkubeImage.repository: $(registry)/hyperkube
-    prometheusOperator.hyperkubeImage.tag: v1.17.6
-    prometheusOperator.image.repository: $(registry)/coreos/prometheus-operator
-    prometheusOperator.image.tag: v0.38.1
-    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/coreos/prometheus-config-reload
-    prometheusOperator.prometheusConfigReloaderImage.tag: v0.38.1
-    prometheusOperator.tlsProxy.image.repository: $(registry)/ghostunnel
-    prometheusOperator.tlsProxy.image.tag: v1.5.2
+    prometheusOperator.admissionWebhooks.patch.image.tag: v1.5.0
+    prometheusOperator.image.repository: $(registry)/prometheus-operator/prometheus-operator
+    prometheusOperator.image.tag: v0.45.0
+    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/prometheus-operator/prometheus-config-reloader
+    prometheusOperator.prometheusConfigReloaderImage.tag: v0.45.0
     prometheus.prometheusSpec.image.repository: $(registry)/prometheus/prometheus
-    prometheus.prometheusSpec.image.tag: v2.18.2
+    prometheus.prometheusSpec.image.tag: v2.24.0
 
 - name: prometheus-process-exporter
   override:
@@ -173,3 +155,20 @@ charts:
     image.repository: sktdev/taco-watcher
     image.tag: latest
 
+- name: thanos
+  override:
+    image.registry: $(registry)
+    image.repository: bitnami/thanos
+    image.tag: 0.17.2-scratch-r1
+    volumePermissions.image.registry: $(registry)
+    volumePermissions.image.repository: bitnami/minideb
+    volumePermissions.image.tag: buster
+    minio.image.registry: $(registry)
+    minio.image.repository: bitnami/minio
+    minio.image.tag: 2021.2.14-debian-10-r0
+    minio.clientImage.registry: $(registry)
+    minio.clientImage.repository: bitnami/minio-client
+    minio.clientImage.tag: 2021.2.14-debian-10-r0
+    minio.volumePermissions.image.registry: $(registry)
+    minio.volumePermissions.image.repository: bitnami/minideb
+    minio.volumePermissions.image.tag: buster
