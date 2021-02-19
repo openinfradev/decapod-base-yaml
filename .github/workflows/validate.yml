@@ -22,6 +22,14 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Run render.sh
+        run: |
+          set -xe
+          chmod +x .github/workflows/render.sh
+          .github/workflows/render.sh lma
+          .github/workflows/render.sh openstack
+          .github/workflows/render.sh cloud-console
+
       - name: install helm
         run: |
           mkdir bin && curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
