@@ -1128,7 +1128,7 @@ spec:
     ruler:
       enabled: true
       logLevel: info
-      alertmanagers: TO_BE_FIXED
+      alertmanagers: [] # TO_BE_FIXED
       evalInterval: 1m
       config: TO_BE_FIXED
       replicaCount: 1
