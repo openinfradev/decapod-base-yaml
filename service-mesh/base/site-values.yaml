@@ -1,0 +1,155 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+global:
+  nodeSelector:
+    taco-lma: enabled
+  clusterName: cluster.local
+  storageClassName: ceph
+  serviceScrapeInterval: 10s
+  federateScrapeInterval: 10s
+
+charts:
+- name: prometheus-operator
+  override:
+    prometheusOperator.nodeSelector: $(nodeSelector)
+
+- name: prometheus
+  override:
+    kubeEtcd.endpoints: [TO_BE_FIXED]
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 200Gi
+    prometheus.prometheusSpec.retention: 10d
+    prometheus.prometheusSpec.externalLabels.taco_cluster: $(clusterName)
+    prometheus.prometheusSpec.nodeSelector: $(nodeSelector)
+    coreDns.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeApiServer.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeControllerManager.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeDns.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeEtcd.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeProxy.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeScheduler.serviceMonitor.interval: $(serviceScrapeInterval)
+    
+- name: prometheus-fed-master  
+  override:
+    alertmanager.alertmanagerSpec.nodeSelector: $(nodeSelector)
+    alertmanager.alertmanagerSpec.retention: 120h
+    alertmanager.config.global.slack_api_url: https://hooks.slack.com/services/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
+    prometheus.prometheusSpec.nodeSelector: $(nodeSelector)
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 500Gi
+  
+- name: kube-state-metrics
+  override:
+    nodeSelector: $(nodeSelector)
+    collectors.verticalpodautoscalers: false
+
+- name: prometheus-pushgateway
+  override:
+    nodeSelector: $(nodeSelector)
+
+- name: prometheus-node-exporter
+
+- name: prometheus-process-exporter
+
+- name: eck-resource
+  override:
+    kibana.nodeSelector: $(nodeSelector)
+    kibana.limitCpu: 4
+    kibana.limitMem: 8Gi
+
+    elasticsearch.adminPassword: tacoword
+    elasticsearch.nodeSets.master.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.master.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.master.limitCpu: 2
+    elasticsearch.nodeSets.master.limitMem: 4Gi
+    elasticsearch.nodeSets.master.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.master.pvc.size: 2Gi
+
+    elasticsearch.nodeSets.hotdata.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.hotdata.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.hotdata.limitCpu: 2
+    elasticsearch.nodeSets.hotdata.limitMem: 4Gi
+    elasticsearch.nodeSets.hotdata.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.hotdata.pvc.size: 100Gi
+
+    elasticsearch.nodeSets.warmdata.enabled: false
+    elasticsearch.nodeSets.warmdata.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.warmdata.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.warmdata.limitCpu: 1
+    elasticsearch.nodeSets.warmdata.limitMem: 2Gi
+    elasticsearch.nodeSets.warmdata.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.warmdata.pvc.size: 200Gi
+
+    elasticsearch.nodeSets.client.enabled: true
+    elasticsearch.nodeSets.client.count: 1
+    elasticsearch.nodeSets.client.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.client.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.client.limitCpu: 2
+    elasticsearch.nodeSets.client.limitMem: 4Gi
+    elasticsearch.nodeSets.client.pvc.storageClassName: $(storageClassName)
+
+- name: grafana
+  override:
+    adminPassword: password
+    persistence.storageClassName: $(storageClassName)
+
+- name: fluentbit-operator
+  override:
+    global.base_cluster_url: $(clusterName)
+    fluentbitOperator.nodeSelector: $(nodeSelector)
+    logExporter.nodeSelector: $(nodeSelector)
+
+- name: fluentbit
+  override:
+    global.base_cluster_url: $(clusterName)
+    global.nodeSelector: $(nodeSelector)
+    fluentbit.clusterName: $(clusterName)
+    fluentbit.outputs.es.host: eck-elasticsearch-es-http.lma.svc.$(clusterName)
+    fluentbit.outputs.kafka:
+      enabled: false
+      broker: "YOUR_BORKER_INFO"
+      topic: "YOUR_TACO_LOG_INFO"
+    fluentbit.esTemplate.url: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
+    fluentbit.nodeSelector: $(nodeSelector)
+
+- name: addons
+  override:
+    serviceMonitor.processExporter.interval: $(serviceScrapeInterval)
+    serviceMonitor.ceph.interval: $(serviceScrapeInterval)
+    serviceMonitor.calico.interval: $(serviceScrapeInterval)
+    serviceMonitor.kubeStateMetrics.interval: $(serviceScrapeInterval)
+    serviceMonitor.nodeExporter.interval: $(serviceScrapeInterval)
+    serviceMonitor.kubelet.interval: $(serviceScrapeInterval)
+
+- name: fed-addons
+  override:
+    metricbeat.elasticsearch.host: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
+    metricbeat.kibana.host: eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
+    metricbeat.prometheus.hosts:
+    - fed-master-prometheus.fed.svc.$(clusterName):9090
+    tacoWatcher.host: taco-watcher.fed.svc.$(clusterName)
+    tacoWatcher.joinCluster.body.kibanaUrl: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
+    tacoWatcher.joinCluster.body.grafanaUrl: http://grafana.fed.svc.$(clusterName)
+    tacoWatcher.joinCluster.body.k8sUrl: https://kubernetes.default.svc.$(clusterName)
+    kibanaInit.url: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
+    serviceMonitor.grafana.interval: $(serviceScrapeInterval)
+    serviceMonitor.federations: 
+    - name: dev-federate
+      interval: $(federateScrapeInterval)
+      namespace: lma
+      selector:
+        app: prometheus
+        prometheus: lma-prometheus
+      port: 9090
+
+- name: prometheus-adapter
+  override:
+    nodeSelector: $(nodeSelector)
+
+- name: kubernetes-event-exporter
+  override:
+    conf.default.hosts:
+    - TO_BE_FIXED

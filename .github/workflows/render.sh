@@ -12,10 +12,3 @@ build_result=$?
 if [ $build_result != 0 ]; then
   exit $build_result
 fi
-
-if [ -f "$OUTPUT_PATH" ]; then
-  echo "[$i] Successfully Completed!"
-else
-  echo "[$i] Failed to render $APP_NAME-manifest.yaml"
-  exit 1
-fi
