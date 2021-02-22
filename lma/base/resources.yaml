@@ -456,7 +456,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: eck-resource
-    version: 1.0.0
+    version: 1.0.1
   releaseName: eck-resource
   targetNamespace: lma
   values:
