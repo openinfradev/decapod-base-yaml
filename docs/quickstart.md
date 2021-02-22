@@ -9,10 +9,10 @@
 $ git clone https://github.com/openinfradev/decapod-base-yaml.git
 
 $ # build lma
-$ docker run --rm -i -v decapod-base-yaml:/decapod-base-yaml sktdev/decapod-kustomize:latest kustomize build --enable_alpha_plugins /decapod-base-yaml/lma/base
+$ docker run --rm -i -v $(pwd)/decapod-base-yaml:/decapod-base-yaml sktdev/decapod-kustomize:latest kustomize build --enable_alpha_plugins /decapod-base-yaml/lma/base
 
 $ # build openstack
-$ docker run --rm -i -v decapod-base-yaml:/decapod-base-yaml sktdev/decapod-kustomize:latest kustomize build --enable_alpha_plugins /decapod-base-yaml/openstack
+$ docker run --rm -i -v $(pwd)/decapod-base-yaml:/decapod-base-yaml sktdev/decapod-kustomize:latest kustomize build --enable_alpha_plugins /decapod-base-yaml/openstack/base
 ```
 
 ## Render decapod-site-yaml
