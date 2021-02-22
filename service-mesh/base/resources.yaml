@@ -1,0 +1,67 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: istio-operator
+  name: istio-operator
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://openinfradev.github.io/hanu-helm-repo
+    name: istio-operator
+    version: 1.7.0
+  releaseName: istio-operator
+  targetNamespace: istio-system
+  values:
+    operatorNamespace: istio-operator
+    watchedNamespace: istio-system  # namespace list seperated with comma
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: jaeger-operator
+  name: jaeger-operator
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://jaegertracing.github.io/helm-charts
+    name: jaeger-operator
+    version: 2.19.1
+  releaseName: jaeger-operator
+  targetNamespace: observability
+  values:
+    jeager:
+      create: true
+      namespace:
+      spec:
+        strategy: production
+        storage:
+          type: elasticsearch
+          options:
+            es:
+              server-urls: https://eck-elasticsearch-es-http:9200
+              username: TO_BE_FIXED
+              password: TO_BE_FIXED
+      nodeSelector: {}
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: service-mesh-resource
+  name: service-mesh-resource
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://jabbukka.github.io/helm-charts
+    name: service-mesh-resource
+    version: 0.1.0
+  releaseName: service-mesh-resource
+  targetNamespace: istio-system
+  values:
+    enabled: true
+    profile: demo
+    istioNamespace: istio-namespace1
