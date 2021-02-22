@@ -469,11 +469,6 @@ spec:
         service:
           spec:
             type: NodePort
-            ports:
-            - name: https
-              nodePort: 30002
-              targetPort: 9200
-              port: 9200
       nodeSets:
         master:
           enabled: true
