@@ -72,12 +72,39 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
+    name: kiali
+  name: kiali
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://kiali.org/helm-charts
+    name: kiali-server
+    version: 1.29.0
+  releaseName: kiali
+  targetNamespace: istio-system
+  values:
+    auth:
+      strategy: anonymous
+    deployment:
+      pod_annotations:
+        sidecar.istio.io/inject: "false"
+      accessible_namespaces:
+      - '**'
+      image_version: v1.29
+      ingress_enabled: false
+    login_token:
+      signing_key: CHANGEME
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
     name: service-mesh-resource
   name: service-mesh-resource
 spec:
   helmVersion: v3
   chart:
-    repository: https://jabbukka.github.io/helm-charts
+    repository: https://openinfradev.github.io/hanu-helm-repo
     name: service-mesh-resource
     version: 0.1.1
   releaseName: service-mesh-resource
