@@ -30,20 +30,41 @@ spec:
     name: jaeger-operator
     version: 2.19.1
   releaseName: jaeger-operator
-  targetNamespace: observability
+  targetNamespace: lma
   values:
-    jeager:
+    jaeger:
       create: true
-      namespace:
+      namespace: lma
       spec:
-        strategy: production
+        strategy: production # production, allInOne, streaming
         storage:
           type: elasticsearch
+          esIndexCleaner:
+            enabled: true
+            numberOfDays: 7
+            schedule: "55 04 * * *"
           options:
             es:
-              server-urls: https://eck-elasticsearch-es-http:9200
+              server-urls: TO_BE_FIXED
+              tls.ca: /etc/ssl/certs/tls.crt
               username: TO_BE_FIXED
               password: TO_BE_FIXED
+              index-prefix: jaeger
+        collector:
+          maxReplicas: 5
+          resources:
+            limits:
+              cpu: 300m
+              memory: 256Mi
+        agent:
+          strategy: Sidecar
+        volumeMounts:
+        - name: es-tls
+          mountPath: /etc/ssl/certs
+        volumes:
+        - name: es-tls
+          secret:
+            secretName: eck-elasticsearch-es-http-certs-public
       nodeSelector: {}
   wait: true
 ---
@@ -58,7 +79,7 @@ spec:
   chart:
     repository: https://jabbukka.github.io/helm-charts
     name: service-mesh-resource
-    version: 0.1.0
+    version: 0.1.1
   releaseName: service-mesh-resource
   targetNamespace: istio-system
   values:

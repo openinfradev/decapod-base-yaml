@@ -6,7 +6,7 @@ metadata:
 charts:
 - name: jaeger-operator
   override:
-    spec.storage.options.es:
+    jaeger.spec.storage.options.es:
       server-urls: https://eck-elasticsearch-es-http:9200
       username: elastic
       password: tacoword
