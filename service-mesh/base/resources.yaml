@@ -90,8 +90,20 @@ spec:
         deployment:
           accessible_namespaces:
           - '**'
+        external_services:
+          custom_dashboards:
+            enabled: true
+          prometheus:
+            url: "http://lma-prometheus.lma:9090"
+          tracing:
+            enabled: true
+            url: "http://jaeger-operator-jaeger-query.lma:16686"
+            namespace_selector: true
+        istio_component_namespaces:
+          prometheus: lma
         auth:
           strategy: anonymous #openid, token, openshift, header, anonymous
+        istio_namespace: istio-namespace1
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
