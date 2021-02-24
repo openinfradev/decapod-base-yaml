@@ -13,7 +13,7 @@ spec:
   releaseName: istio-operator
   targetNamespace: istio-system
   values:
-    operatorNamespace: istio-operator
+    operatorNamespace: istio-system
     watchedNamespace: istio-system  # namespace list seperated with comma
   wait: true
 ---
@@ -72,28 +72,26 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: kiali
-  name: kiali
+    name: kiali-operator
+  name: kiali-operator
 spec:
   helmVersion: v3
   chart:
     repository: https://kiali.org/helm-charts
-    name: kiali-server
-    version: 1.29.0
-  releaseName: kiali
+    name: kiali-operator
+    version: 1.30.0
+  releaseName: kiali-operator
   targetNamespace: istio-system
   values:
-    auth:
-      strategy: anonymous
-    deployment:
-      pod_annotations:
-        sidecar.istio.io/inject: "false"
-      accessible_namespaces:
-      - '**'
-      image_version: v1.29
-      ingress_enabled: false
-    login_token:
-      signing_key: CHANGEME
+    cr:
+      create: true
+      name: kiali
+      spec:
+        deployment:
+          accessible_namespaces:
+          - '**'
+        auth:
+          strategy: anonymous #openid, token, openshift, header, anonymous
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
