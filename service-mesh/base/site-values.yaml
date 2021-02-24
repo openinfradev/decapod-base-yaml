@@ -1,0 +1,12 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+charts:
+- name: jaeger-operator
+  override:
+    jaeger.spec.storage.options.es:
+      server-urls: https://eck-elasticsearch-es-http:9200
+      username: elastic
+      password: tacoword

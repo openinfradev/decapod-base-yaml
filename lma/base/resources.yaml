@@ -858,7 +858,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: lma-addons
-    version: 1.0.7
+    version: 1.1.0
   releaseName: addons
   targetNamespace: lma
   values:
@@ -893,6 +893,12 @@ spec:
       kubelet:
         enabled: true
         interval: TO_BE_FIXED
+      istio:
+        enabled: true
+        interval: TO_BE_FIXED
+      jaeger:
+        enabled: true
+        interval: TO_BE_FIXED
     tacoWatcher:
       rbac:
         create: false
@@ -909,7 +915,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: lma-addons
-    version: 1.0.7
+    version: 1.1.0
   releaseName: fed-addons
   targetNamespace: fed
   values:
@@ -929,6 +935,10 @@ spec:
       sidecar:
         datasources:
           prometheusAddress: "fed-master-prometheus:9090"
+      istio:
+        enabled: true
+      jaeger:
+        enabled: true
     serviceMonitor:
       calico:
         enabled: false

@@ -125,6 +125,8 @@ charts:
     serviceMonitor.kubeStateMetrics.interval: $(serviceScrapeInterval)
     serviceMonitor.nodeExporter.interval: $(serviceScrapeInterval)
     serviceMonitor.kubelet.interval: $(serviceScrapeInterval)
+    serviceMonitor.istio.interval: $(serviceScrapeInterval)
+    serviceMonitor.jaeger.interval: $(serviceScrapeInterval)
 
 - name: fed-addons
   override:

@@ -1,0 +1,125 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: istio-operator
+  name: istio-operator
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://openinfradev.github.io/hanu-helm-repo
+    name: istio-operator
+    version: 1.7.0
+  releaseName: istio-operator
+  targetNamespace: istio-system
+  values:
+    operatorNamespace: istio-system
+    watchedNamespace: istio-system  # namespace list seperated with comma
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: jaeger-operator
+  name: jaeger-operator
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://jaegertracing.github.io/helm-charts
+    name: jaeger-operator
+    version: 2.19.1
+  releaseName: jaeger-operator
+  targetNamespace: lma
+  values:
+    jaeger:
+      create: true
+      namespace: lma
+      spec:
+        strategy: production # production, allInOne, streaming
+        storage:
+          type: elasticsearch
+          esIndexCleaner:
+            enabled: true
+            numberOfDays: 7
+            schedule: "55 04 * * *"
+          options:
+            es:
+              server-urls: TO_BE_FIXED
+              tls.ca: /etc/ssl/certs/tls.crt
+              username: TO_BE_FIXED
+              password: TO_BE_FIXED
+              index-prefix: jaeger
+        collector:
+          maxReplicas: 5
+          resources:
+            limits:
+              cpu: 300m
+              memory: 256Mi
+        agent:
+          strategy: Sidecar
+        volumeMounts:
+        - name: es-tls
+          mountPath: /etc/ssl/certs
+        volumes:
+        - name: es-tls
+          secret:
+            secretName: eck-elasticsearch-es-http-certs-public
+      nodeSelector: {}
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: kiali-operator
+  name: kiali-operator
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://kiali.org/helm-charts
+    name: kiali-operator
+    version: 1.30.0
+  releaseName: kiali-operator
+  targetNamespace: istio-system
+  values:
+    cr:
+      create: true
+      name: kiali
+      spec:
+        deployment:
+          accessible_namespaces:
+          - '**'
+        external_services:
+          custom_dashboards:
+            enabled: true
+          prometheus:
+            url: "http://lma-prometheus.lma:9090"
+          tracing:
+            enabled: true
+            url: "http://jaeger-operator-jaeger-query.lma:16686"
+            namespace_selector: true
+        istio_component_namespaces:
+          prometheus: lma
+        auth:
+          strategy: anonymous #openid, token, openshift, header, anonymous
+        istio_namespace: istio-namespace1
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: service-mesh-resource
+  name: service-mesh-resource
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://openinfradev.github.io/hanu-helm-repo
+    name: service-mesh-resource
+    version: 0.1.1
+  releaseName: service-mesh-resource
+  targetNamespace: istio-system
+  values:
+    enabled: true
+    profile: demo
+    istioNamespace: istio-namespace1
