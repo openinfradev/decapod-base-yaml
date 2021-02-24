@@ -85,9 +85,7 @@ spec:
     kubelet:
       enabled: false
     kubeControllerManager:
-      enabled: true
-      serviceMonitor:
-        interval: TO_BE_FIXED
+      enabled: false
     coreDns:
       enabled: true
       serviceMonitor:
@@ -108,9 +106,7 @@ spec:
         scheme: https
         serverName: localhost
     kubeScheduler:
-      enabled: true
-      serviceMonitor:
-        interval: TO_BE_FIXED
+      enabled: false
     kubeProxy:
       enabled: true
       serviceMonitor:
