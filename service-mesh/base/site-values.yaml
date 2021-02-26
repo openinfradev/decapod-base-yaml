@@ -10,3 +10,7 @@ charts:
       server-urls: https://eck-elasticsearch-es-http:9200
       username: elastic
       password: tacoword
+
+- name: service-mesh-resource
+  override:
+    meshConfig.sampling: 100
