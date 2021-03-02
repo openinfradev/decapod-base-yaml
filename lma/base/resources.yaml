@@ -13,6 +13,7 @@ spec:
   releaseName: prometheus-operator
   targetNamespace: lma
   values:
+    fullnameOverride: prometheus-operator
     defaultRules:
       create: false
     global:
