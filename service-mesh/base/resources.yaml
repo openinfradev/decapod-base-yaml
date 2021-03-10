@@ -114,17 +114,20 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    #repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://jabbukka.github.io/helm-charts
     name: service-mesh-resource
-    version: 0.1.2
+    version: 0.1.7
   releaseName: service-mesh-resource
   targetNamespace: istio-system
   values:
-    enabled: true
-    profile: demo
-    istioNamespace: istio-namespace1
-    meshConfig:
-      enableAccessLog: true
-      enableTracing: true
-      sampling: TO_BE_FIXED # 0.0 ~ 100.0
-    tracing_url: jaeger-operator-jaeger-collector.lma.svc:9411
+    IstioOperator:
+      enabled: true
+      istioNamespace: istio-namespace1
+      meshConfig:
+        enableAccessLog: true
+        enableTracing: true
+        sampling: TO_BE_FIXED # 0.0 ~ 100.0
+      tracing_url: jaeger-operator-jaeger-collector.lma.svc:9411
+      ingressGateways: [] # TO_BE_FIXED
+      egressGateways: [] # TO_BE_FIXED
