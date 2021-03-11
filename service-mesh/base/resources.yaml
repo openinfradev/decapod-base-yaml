@@ -57,6 +57,7 @@ spec:
               cpu: 300m
               memory: 256Mi
         query:
+          replicas: 1
           resources:
             limits:
               cpu: 300m
@@ -102,6 +103,7 @@ spec:
             limits:
               cpu: 500m
               memory: 1024Mi
+          replicas: 1
         external_services:
           custom_dashboards:
             enabled: true
