@@ -152,6 +152,10 @@ spec:
         podMonitorSelectorNilUsesHelmValues: false
         thanos:
           version: v0.18.0
+          objectStorageConfig:
+            key: thanos.yaml 
+            name: thanos-objstore-config # secret name
+          minTime: 2h
       service:
         nodePort: 30008
         type: NodePort
@@ -1081,6 +1085,10 @@ spec:
     objstoreConfig: TO_BE_FIXED
     query:
       nodeSelector: {}
+      dnsDiscovery:
+        enabled: true
+        sidecarsService: TO_BE_FIXED
+        sidecarsNamespace: lma
     queryFrontend:
       nodeSelector: {}
       service:
