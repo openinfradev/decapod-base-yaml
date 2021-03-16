@@ -1101,10 +1101,14 @@ spec:
     compactor:
       enabled: true
       logLevel: info
-      retentionResolutionRaw: 30d
-      retentionResolution5m: 30d
-      retentionResolution1h: 10y
-      consistencyDelay: 30m
+      retentionResolutionRaw: TO_BE_FIXED
+      retentionResolution5m: TO_BE_FIXED
+      retentionResolution1h: TO_BE_FIXED
+      consistencyDelay: TO_BE_FIXED
+      resources:
+        limits:
+          memory: TO_BE_FIXED
+          cpu: TO_BE_FIXED
       nodeSelector: {}
       service:
         type: ClusterIP
@@ -1115,6 +1119,18 @@ spec:
         accessModes:
           - ReadWriteOnce
         size: TO_BE_FIXED
+      extraFlags: TO_BE_FIXED
+        # Compaction 수행 관련 커맨트
+        # 아래와 같은 block stream들이 있을때
+        # external_labels: {cluster="eu1", replica="1", receive="true", environment="production"}
+        # external_labels: {cluster="eu1", replica="2", receive="true", environment="production"}
+        # external_labels: {cluster="us1", replica="1", receive="true", environment="production"}
+        # external_labels: {cluster="us1", replica="1", receive="true", environment="staging"}
+        # --compact.enable-vertical-compaction 와 함께 --deduplication.replica-label="replica" 라고 설정하면 아래와 같이 compcation됨
+        # external_labels: {cluster="eu1", receive="true", environment="production"} (2 streams, resulted in one)
+        # external_labels: {cluster="us1", receive="true", environment="production"}
+        # external_labels: {cluster="us1", receive="true", environment="staging"}
+
     storegateway:
       enabled: true
       logLevel: info

@@ -179,10 +179,17 @@ charts:
     storegateway.nodeSelector: $(nodeSelector)
     ruler.nodeSelector: $(nodeSelector)      
 
+    compactor.retentionResolutionRaw: 30d
+    compactor.retentionResolution5m: 30d
+    compactor.retentionResolution1h: 10y
+    compactor.consistencyDelay: 30m
+    compactor.resources.limits.memory: 1024Mi
+    compactor.resources.limits.cpu: 1000m
     compactor.persistence.size: 8Gi
+    compactor.extraFlags:  
     storegateway.persistence.size: 8Gi
     ruler.alertmanagers:
-      - http://prometheus-operator-alertmanager:9093
+    - http://fed-master-alertmanager:9093
     ruler.config: |-
         groups:
           - name: "metamonitoring"
