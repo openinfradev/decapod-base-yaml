@@ -196,3 +196,15 @@ charts:
     minio.persistence.storageClass: $(storageClassName)
     minio.persistence.accessMode: ReadWriteOnce
     minio.persistence.size: 8Gi
+    query.sidecarsService: thanos-sidecars
+
+- name: thanos-config
+  override:
+    objectStorage:
+      bucketName: thanos
+      endpoint: thanos-minio.fed.svc.cluster.local:9000
+      access_key: $(defaultUser)
+      secret_key: $(defaultPassword)
+    sidecarsService.name: thanos-sidecars
+    sidecarsService.endpoints: 
+      - 172.16.50.114
