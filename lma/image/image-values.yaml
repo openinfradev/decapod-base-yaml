@@ -172,3 +172,6 @@ charts:
     minio.volumePermissions.image.registry: $(registry)
     minio.volumePermissions.image.repository: bitnami/minideb
     minio.volumePermissions.image.tag: buster
+
+- name: thanos-config
+  override: {}

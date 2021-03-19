@@ -12,6 +12,7 @@ global:
   federateScrapeInterval: 10s
   defaultPassword: password
   defaultUser: taco
+  thanosObjstoreSecret: taco-objstore-secret
 
 charts:
 - name: prometheus-operator
@@ -26,6 +27,7 @@ charts:
     prometheus.prometheusSpec.retention: 10d
     prometheus.prometheusSpec.externalLabels.taco_cluster: $(clusterName)
     prometheus.prometheusSpec.nodeSelector: $(nodeSelector)
+    prometheus.prometheusSpec.thanos.objectStorageConfig.name: $(thanosObjstoreSecret)
     coreDns.serviceMonitor.interval: $(serviceScrapeInterval)
     kubeApiServer.serviceMonitor.interval: $(serviceScrapeInterval)
     kubeControllerManager.serviceMonitor.interval: $(serviceScrapeInterval)
@@ -196,3 +198,16 @@ charts:
     minio.persistence.storageClass: $(storageClassName)
     minio.persistence.accessMode: ReadWriteOnce
     minio.persistence.size: 8Gi
+    query.sidecarsService: thanos-sidecars
+
+- name: thanos-config
+  override:
+    objectStorage:
+      name: $(thanosObjstoreSecret)
+      bucketName: thanos
+      endpoint: thanos-minio.fed.svc.cluster.local:9000
+      access_key: $(defaultUser)
+      secret_key: $(defaultPassword)
+    sidecarsService.name: thanos-sidecars
+    sidecarsService.endpoints: 
+      - 172.16.50.114

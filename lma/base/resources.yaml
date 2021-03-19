@@ -152,11 +152,15 @@ spec:
         podMonitorSelectorNilUsesHelmValues: false
         thanos:
           version: v0.18.0
+          objectStorageConfig:
+            key: objstore.yml 
+            name: TO_BE_FIXED # secret name
+          minTime: 2h
       service:
         nodePort: 30008
         type: NodePort
       thanosService:
-        enabled: false
+        enabled: true
         annotations: {}
         labels: {}
         portName: grpc
@@ -1081,6 +1085,10 @@ spec:
     objstoreConfig: TO_BE_FIXED
     query:
       nodeSelector: {}
+      dnsDiscovery:
+        enabled: true
+        sidecarsService: TO_BE_FIXED
+        sidecarsNamespace: lma
     queryFrontend:
       nodeSelector: {}
       service:
@@ -1177,4 +1185,33 @@ spec:
         storageClass: TO_BE_FIXED
         accessMode: TO_BE_FIXED
         size: TO_BE_FIXED
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: thanos-config
+  name: thanos-config
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://openinfradev.github.io/hanu-helm-repo
+    name: thanos-config
+    version: 0.1.3
+  releaseName: thanos-config
+  targetNamespace: lma
+  values:
+    objectStorage:
+      enabled: true
+      secretName: TO_BE_FIXED
+      bucketName: TO_BE_FIXED
+      endpoint: thanos-minio.fed.svc.cluster.local:9000
+      access_key: TO_BE_FIXED
+      secret_key: TO_BE_FIXED
+    sidecarsService:
+      enabled: true
+      name: TO_BE_FIXED
+      port: 30901
+      endpoints: [] # TO_BE_FIXED
   wait: true
