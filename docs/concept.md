@@ -3,7 +3,7 @@
 ## Background
 There are tons of resources and helm charts to deploy in several environment (dev, stage, production...).  
 Configuring YAML files according to the complex requirments takes a considerable amount of time and is easy to make a mistake.  
-To improve this, `decapod-base-yaml` and `decapod-site-yaml` is designed to maintain base resources and site values seperately. 
+To improve this, `decapod-base-yaml` and `decapod-site` is designed to maintain base resources and site values seperately. 
 
 ## Decapod-yaml Design
 ![decapod-yaml-design](assets/decapod-yaml-design.png)

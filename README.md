@@ -1,6 +1,6 @@
 # decapod-base-yaml
 This project provides an easy way to create/maintain complex YAML files using kustomize and kustomize plugin.  
-It works with [decapod-site-yaml](https://github.com/openinfradev/decapod-site-yaml) which contain differences between each environment (_e.g. development, staging and production environment_).  
+It works with [decapod-site](https://github.com/openinfradev/decapod-site) which contain differences between each environment (_e.g. development, staging and production environment_).  
 
 ## Features
 * `base-yaml` and `site-yaml` structure
@@ -20,7 +20,7 @@ It works with [decapod-site-yaml](https://github.com/openinfradev/decapod-site-y
 ## Layout 
 An example of decapod-base-yaml:
 ```
- product
+ openstack
  ├── base
  │   ├── kustomization.yaml
  │   ├── resources.yaml
@@ -32,15 +32,13 @@ An example of decapod-base-yaml:
      └── local-path.yaml
 ```
 
-An example of decapod-site-yaml:
+An example of decapod-site:
 ```
- product
- ├── site
- │   ├── kustomization.yaml
- │   ├── ceph.yaml
- │   └── site-values.yaml
- └── output
-     └── product-manifest.yaml 
+ dev // site name
+ ├── openstack
+     ├── kustomization.yaml
+     ├── ceph.yaml
+     └── site-values.yaml
 ```
 ## Example
 
@@ -64,7 +62,7 @@ base(1) + site(2) => [variant](https://kubectl.docs.kubernetes.io/references/kus
          nodeSelector: {} # TO_BE_FIXED
    ```
 
-2. _decapod-site-yaml/lma/site/dev/site-values.yaml_:
+2. _decapod-site/dev/lma/site-values.yaml_:
    ```yaml
    apiVersion: openinfradev.github.com/v1
    kind: HelmValuesTransformer
@@ -81,7 +79,7 @@ base(1) + site(2) => [variant](https://kubectl.docs.kubernetes.io/references/kus
       elasticsearchOperator.nodeSelector: $(nodeSelector)
    ```
 
-3. _decapod-site-yaml/lma/output/dev/lma-manifest.yaml_:
+3. _decapod-site/dev/lma/lma-manifest.yaml_:
    ```yaml
    apiVersion: helm.fluxcd.io/v1
    kind: HelmRelease
