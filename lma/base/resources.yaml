@@ -935,7 +935,7 @@ spec:
       enabled: true
       sidecar:
         datasources:
-          prometheusAddress: "fed-master-prometheus:9090"
+          prometheusAddress: "thanos-query-frontend:9090"
       istio:
         enabled: true
       jaeger:
