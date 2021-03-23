@@ -135,7 +135,7 @@ charts:
     metricbeat.elasticsearch.host: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
     metricbeat.kibana.host: eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     metricbeat.prometheus.hosts:
-    - fed-master-prometheus.fed.svc.$(clusterName):9090
+    - thanos-query-frontend.fed.svc.$(clusterName):9090
     tacoWatcher.host: taco-watcher.fed.svc.$(clusterName)
     tacoWatcher.joinCluster.body.kibanaUrl: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     tacoWatcher.joinCluster.body.grafanaUrl: http://grafana.fed.svc.$(clusterName)
