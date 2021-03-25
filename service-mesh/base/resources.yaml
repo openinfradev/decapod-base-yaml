@@ -123,24 +123,43 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: service-mesh-resource
-  name: service-mesh-resource
+    name: service-mesh-controlplane
+  name: service-mesh-controlplane
 spec:
   helmVersion: v3
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: service-mesh-resource
     version: 0.1.7
-  releaseName: service-mesh-resource
+  releaseName: service-mesh-controlplane
   targetNamespace: istio-system
   values:
     IstioOperator:
-      enabled: true
-      istioNamespace: istio-namespace1
+      enableControlplane: true
+      enableGateways: false
       meshConfig:
         enableAccessLog: true
         enableTracing: true
-        sampling: TO_BE_FIXED # 0.0 ~ 100.0
-      tracing_url: jaeger-operator-jaeger-collector.lma.svc:9411
+        tracingSampling: 100 # TO_BE_FIXED (0.0 ~ 100.0)
+        tracingUrl: jaeger-operator-jaeger-collector.lma.svc:9411
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: service-mesh-gateways
+  name: service-mesh-gateways
+spec:
+  helmVersion: v3
+  chart:
+    repository: https://openinfradev.github.io/hanu-helm-repo
+    name: service-mesh-resource
+    version: 0.1.7
+  releaseName: service-mesh-gateways
+  targetNamespace: istio-system
+  values:
+    IstioOperator:
+      enableControlplane: false
+      enableGateways: true
       ingressGateways: [] # TO_BE_FIXED
       egressGateways: [] # TO_BE_FIXED
