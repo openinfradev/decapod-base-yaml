@@ -130,7 +130,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: service-mesh-resource
-    version: 0.1.7
+    version: 0.1.8
   releaseName: service-mesh-controlplane
   targetNamespace: istio-system
   values:
@@ -147,15 +147,15 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: service-mesh-gateways
-  name: service-mesh-gateways
+    name: service-mesh-gateway
+  name: service-mesh-gateway
 spec:
   helmVersion: v3
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: service-mesh-resource
-    version: 0.1.7
-  releaseName: service-mesh-gateways
+    version: 0.1.8
+  releaseName: service-mesh-gateway
   targetNamespace: istio-system
   values:
     IstioOperator:
