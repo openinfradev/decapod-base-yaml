@@ -130,7 +130,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: service-mesh-resource
-    version: 0.1.8
+    version: 0.1.9
   releaseName: service-mesh-controlplane
   targetNamespace: istio-system
   values:
@@ -154,7 +154,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: service-mesh-resource
-    version: 0.1.8
+    version: 0.1.9
   releaseName: service-mesh-gateway
   targetNamespace: istio-system
   values:
