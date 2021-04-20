@@ -1100,6 +1100,16 @@ spec:
         http:
           port: 9090
           nodePort: TO_BE_FIXED
+      config: |-
+        type: IN-MEMORY
+        config:
+          max_size: TO_BE_FIXED
+          max_size_items: TO_BE_FIXED
+          validity: TO_BE_FIXED
+      extraFlags:
+        query-range.split-interval: TO_BE_FIXED
+        query-range.max-retries-per-request: TO_BE_FIXED
+        query-frontend.log-queries-longer-than: TO_BE_FIXED
     bucketweb:
       enabled: true
       logLevel: info

@@ -181,6 +181,17 @@ charts:
     storegateway.nodeSelector: $(nodeSelector)
     ruler.nodeSelector: $(nodeSelector)      
 
+    queryFrontend.config: |-
+        type: IN-MEMORY
+        config:
+          max_size: 100
+          max_size_items: 512MB
+          validity: 100s
+
+    queryFrontend.extraFlags.query-range.split-interval: 24h
+    queryFrontend.extraFlags.query-range.max-retries-per-request: 3
+    queryFrontend.extraFlags.query-frontend.log-queries-longer-than: 60
+
     compactor.retentionResolutionRaw: 30d
     compactor.retentionResolution5m: 30d
     compactor.retentionResolution1h: 10y
