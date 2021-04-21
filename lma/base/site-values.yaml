@@ -188,9 +188,10 @@ charts:
           max_size_items: 512MB
           validity: 100s
 
-    queryFrontend.extraFlags.query-range.split-interval: 24h
-    queryFrontend.extraFlags.query-range.max-retries-per-request: 3
-    queryFrontend.extraFlags.query-frontend.log-queries-longer-than: 60
+    queryFrontend.extraFlags: 
+      - --query-range.split-interval=24h
+      - --query-range.max-retries-per-request=3
+      - --query-frontend.log-queries-longer-than=60
 
     compactor.retentionResolutionRaw: 30d
     compactor.retentionResolution5m: 30d
@@ -199,7 +200,7 @@ charts:
     compactor.resources.limits.memory: 1024Mi
     compactor.resources.limits.cpu: 1000m
     compactor.persistence.size: 8Gi
-    compactor.extraFlags:  
+    compactor.extraFlags: 
     storegateway.persistence.size: 8Gi
     ruler.alertmanagers:
     - http://fed-master-alertmanager:9093
