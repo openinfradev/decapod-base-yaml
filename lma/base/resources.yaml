@@ -1106,10 +1106,10 @@ spec:
           max_size: TO_BE_FIXED
           max_size_items: TO_BE_FIXED
           validity: TO_BE_FIXED
-      extraFlags:
-        query-range.split-interval: TO_BE_FIXED
-        query-range.max-retries-per-request: TO_BE_FIXED
-        query-frontend.log-queries-longer-than: TO_BE_FIXED
+      extraFlags: []
+        # query-range.split-interval: TO_BE_FIXED
+        # query-range.max-retries-per-request: TO_BE_FIXED
+        # query-frontend.log-queries-longer-than: TO_BE_FIXED
     bucketweb:
       enabled: true
       logLevel: info
@@ -1141,7 +1141,7 @@ spec:
         accessModes:
           - ReadWriteOnce
         size: TO_BE_FIXED
-      extraFlags: TO_BE_FIXED
+      extraFlags: []
         # Compaction 수행 관련 커맨트
         # 아래와 같은 block stream들이 있을때
         # external_labels: {cluster="eu1", replica="1", receive="true", environment="production"}
