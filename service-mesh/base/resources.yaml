@@ -10,8 +10,8 @@ spec:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: istio-operator
     version: 1.7.0
-  releaseName: istio-operator
-  targetNamespace: istio-operator
+  releaseName: istio-system
+  targetNamespace: istio-system
   values:
     operatorNamespace: istio-system
     watchedNamespace: istio-system  # namespace list seperated with comma
