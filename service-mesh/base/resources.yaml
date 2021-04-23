@@ -37,6 +37,8 @@ spec:
       namespace: lma
       spec:
         strategy: production # production, allInOne, streaming
+        ingress:
+          enabled: false
         storage:
           type: elasticsearch
           esIndexCleaner:
