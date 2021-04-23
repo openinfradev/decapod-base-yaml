@@ -339,6 +339,9 @@ spec:
     replicaCount: 1
     config:
       containerRegistry: docker.elastic.co
+    internal:
+      manifestGen: true
+      kubeVersion: 1.18.8
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
