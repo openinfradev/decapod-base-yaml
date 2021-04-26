@@ -476,7 +476,7 @@ spec:
             type: NodePort
             ports:
             - name: http
-              nodePort: 30002
+              nodePort: 30011
               targetPort: 9200
               port: 9200
       nodeSets:
