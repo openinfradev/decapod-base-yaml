@@ -138,7 +138,7 @@ spec:
   values:
     IstioOperator:
       enableControlplane: true
-      enableGateways: false
+      enableGateway: false
       meshConfig:
         enableAccessLog: true
         enableTracing: true
@@ -162,6 +162,6 @@ spec:
   values:
     IstioOperator:
       enableControlplane: false
-      enableGateways: true
+      enableGateway: true
       ingressGateways: [] # TO_BE_FIXED
       egressGateways: [] # TO_BE_FIXED
