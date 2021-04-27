@@ -184,8 +184,8 @@ charts:
     queryFrontend.config: |-
         type: IN-MEMORY
         config:
-          max_size: 100
-          max_size_items: 512MB
+          max_size: 512MB
+          max_size_items: 100
           validity: 100s
 
     queryFrontend.extraFlags: 
