@@ -1161,7 +1161,6 @@ spec:
         # external_labels: {cluster="eu1", receive="true", environment="production"} (2 streams, resulted in one)
         # external_labels: {cluster="us1", receive="true", environment="production"}
         # external_labels: {cluster="us1", receive="true", environment="staging"}
-
     storegateway:
       enabled: true
       logLevel: info
@@ -1172,11 +1171,17 @@ spec:
           port: 9090
         grpc:
           port: 10901
+      config: |-
+        type: IN-MEMORY
+        config:
+          max_size: TO_BE_FIXED
+          max_item_size: TO_BE_FIXED
       persistence:
         enabled: true
         accessModes:
           - ReadWriteOnce
         size: TO_BE_FIXED
+      replicaCount: 1
       autoscaling:
         enabled: false
         #  minReplicas: 1
