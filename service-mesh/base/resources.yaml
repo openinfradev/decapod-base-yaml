@@ -119,7 +119,7 @@ spec:
           prometheus: lma
         auth:
           strategy: anonymous #openid, token, openshift, header, anonymous
-        istio_namespace: istio-namespace1
+        istio_namespace: istio-system
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
