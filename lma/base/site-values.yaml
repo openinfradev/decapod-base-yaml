@@ -184,14 +184,14 @@ charts:
     queryFrontend.config: |-
         type: IN-MEMORY
         config:
-          max_size: 100
-          max_size_items: 512MB
+          max_size: 512MB
+          max_size_items: 100
           validity: 100s
 
     queryFrontend.extraFlags: 
       - --query-range.split-interval=24h
       - --query-range.max-retries-per-request=3
-      - --query-frontend.log-queries-longer-than=60
+      - --query-frontend.log-queries-longer-than=60s
 
     compactor.retentionResolutionRaw: 30d
     compactor.retentionResolution5m: 30d
