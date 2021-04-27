@@ -201,6 +201,11 @@ charts:
     compactor.resources.limits.cpu: 1000m
     compactor.persistence.size: 8Gi
     compactor.extraFlags: 
+    storegateway.config: |-
+        type: IN-MEMORY
+        config:
+          max_size: 250MB
+          max_item_size: 125MB
     storegateway.persistence.size: 8Gi
     ruler.alertmanagers:
     - http://fed-master-alertmanager:9093
