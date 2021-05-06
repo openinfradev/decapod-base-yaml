@@ -871,7 +871,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: lma-addons
-    version: 1.4.0
+    version: 1.5.0
   releaseName: addons
   targetNamespace: lma
   values:
@@ -928,7 +928,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/hanu-helm-repo
     name: lma-addons
-    version: 1.4.0
+    version: 1.5.0
   releaseName: fed-addons
   targetNamespace: fed
   values:
@@ -952,6 +952,10 @@ spec:
       istio:
         enabled: true
       jaeger:
+        enabled: true
+      tacoCustomDashboard:
+        enabled: true
+      ceph:
         enabled: true
     serviceMonitor:
       calico:
