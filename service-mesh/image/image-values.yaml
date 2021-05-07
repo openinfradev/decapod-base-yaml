@@ -1,0 +1,28 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: image
+global:
+  registry: private-registry:5000
+
+charts:
+- name: istio-operator
+  override:
+    hub: $(registry)/istio-testing
+    tag: latest
+
+- name: jaeger-operator
+  override:
+    image.repository: $(registry)jaegertracing/jaeger-operator
+    image.tag: 1.21.2
+
+- name: kiali-operator
+  override:
+    image.repo: $(registry)/kiali/kiali-operator
+    image.tag: v1.30.0
+
+- name: service-mesh-controlplane
+  override: {}
+
+- name: service-mesh-gateway
+  override: {}
