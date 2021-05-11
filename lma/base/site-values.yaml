@@ -222,7 +222,7 @@ charts:
     minio.persistence.storageClass: $(storageClassName)
     minio.persistence.accessMode: ReadWriteOnce
     minio.persistence.size: 8Gi
-    query.sidecarsService: thanos-sidecars
+    query.dnsDiscovery.sidecarsService: thanos-sidecars
 
 - name: thanos-config
   override:
