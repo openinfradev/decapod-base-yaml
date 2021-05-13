@@ -420,7 +420,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: prometheus-process-exporter
     version: 0.1.0
     skipDepUpdate: true
@@ -462,7 +462,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: eck-resource
     version: 1.1.0
   releaseName: eck-resource
@@ -593,7 +593,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-operator
     version: 1.0.10
     skipDepUpdate: true
@@ -636,7 +636,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-operator
     version: 1.0.10
     skipDepUpdate: true
@@ -869,7 +869,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: lma-addons
     version: 1.5.0
   releaseName: addons
@@ -926,7 +926,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: lma-addons
     version: 1.5.0
   releaseName: fed-addons
@@ -1028,7 +1028,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: kubernetes-event-exporter
     version: 1.0.0
   releaseName: kubernetes-event-exporter
@@ -1055,7 +1055,7 @@ metadata:
 spec:
   helmVersion: v3 
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: taco-watcher
     version: 0.1.0
   releaseName: taco-watcher
@@ -1244,7 +1244,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: thanos-config
     version: 0.1.3
   releaseName: thanos-config
