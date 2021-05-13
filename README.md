@@ -52,7 +52,7 @@ base(1) + site(2) => [variant](https://kubectl.docs.kubernetes.io/references/kus
    name: elasticsearch-operator
    spec:
    chart:
-      repository: https://openinfradev.github.io/hanu-helm-repo
+      repository: https://openinfradev.github.io/helm-repo
       name: elasticsearch-operator
       version: 1.0.3
    releaseName: elasticsearch-operator
@@ -87,7 +87,7 @@ base(1) + site(2) => [variant](https://kubectl.docs.kubernetes.io/references/kus
    name: elasticsearch-operator
    spec:
    chart:
-      repository: https://openinfradev.github.io/hanu-helm-repo
+      repository: https://openinfradev.github.io/helm-repo
       name: elasticsearch-operator
       version: 1.0.3
    releaseName: elasticsearch-operator

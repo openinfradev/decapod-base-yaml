@@ -7,7 +7,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: istio-operator
     version: 1.7.0
   releaseName: istio-operator
@@ -130,7 +130,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: service-mesh-resource
     version: 0.1.9
   releaseName: service-mesh-controlplane
@@ -154,7 +154,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
     name: service-mesh-resource
     version: 0.1.9
   releaseName: service-mesh-gateway
