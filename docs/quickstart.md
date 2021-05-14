@@ -51,7 +51,7 @@ metadata:
 spec:
   chart:
     name: lma-addons
-    repository: https://openinfradev.github.io/hanu-helm-repo
+    repository: https://openinfradev.github.io/helm-repo
 ```
 
 ## Make your own site-yaml

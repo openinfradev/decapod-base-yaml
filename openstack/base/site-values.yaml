@@ -6,7 +6,7 @@ metadata:
 global:
   clusterName: cluster.local
   storageClassName: rbd
-  repository: https://github.com/openinfradev/hanu-helm-repo/
+  repository: https://github.com/openinfradev/helm-repo/
   externalIP: 192.168.0.7
   ceph_keyring: AQCpRKFe/cWLFBAANOQ71DEm+GGI/vGvdK1Zvw==
   cinder_keyring: AQAin8tU0CFgEhAATb7sYgtWsh+S5HEbg6MrGg==
