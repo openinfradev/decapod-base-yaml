@@ -13,8 +13,8 @@ spec:
   releaseName: istio-operator
   targetNamespace: istio-operator
   values:
-    operatorNamespace: istio-system
-    watchedNamespace: istio-system  # namespace list seperated with comma
+    operatorNamespace: istio-operator
+    watchedNamespaces: istio-system,istio-gateway  # namespace list seperated with comma
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
