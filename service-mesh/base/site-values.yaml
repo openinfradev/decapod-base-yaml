@@ -21,7 +21,7 @@ charts:
 - name: service-mesh-gateway
   override:
     IstioOperator.ingressGateways:
-      - name: istio-ingressgateway
+      - name: default
         resources:
           requests_cpu: 1000m
           requests_memory: 1024Mi
@@ -29,4 +29,5 @@ charts:
           limits_memory: 2048Mi
         hpaMaxReplicas: 10
         hpaTargetCpuUtilization: 80
+        serviceType: NodePort
     IstioOperator.egressGateways: []
