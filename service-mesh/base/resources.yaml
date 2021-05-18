@@ -13,8 +13,8 @@ spec:
   releaseName: istio-operator
   targetNamespace: istio-system
   values:
-    operatorNamespace: istio-system
-    watchedNamespace: istio-system  # namespace list seperated with comma
+    operatorNamespace: istio-operator
+    watchedNamespaces: istio-system,istio-gateway  # namespace list seperated with comma
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -132,7 +132,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/helm-repo
     name: service-mesh-resource
-    version: 0.1.9
+    version: 0.2.1
   releaseName: service-mesh-controlplane
   targetNamespace: istio-system
   values:
@@ -156,7 +156,7 @@ spec:
   chart:
     repository: https://openinfradev.github.io/helm-repo
     name: service-mesh-resource
-    version: 0.1.9
+    version: 0.2.1
   releaseName: service-mesh-gateway
   targetNamespace: istio-system
   values:
