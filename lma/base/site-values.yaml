@@ -13,6 +13,7 @@ global:
   defaultPassword: password
   defaultUser: taco
   thanosObjstoreSecret: taco-objstore-secret
+  thanosPrimaryCluster: true
 
 charts:
 - name: prometheus-operator
@@ -193,6 +194,8 @@ charts:
       - --query-range.max-retries-per-request=3
       - --query-frontend.log-queries-longer-than=60s
 
+    bucketweb.enabled: $(thanosPrimaryCluster)
+    compactor.enabled: $(thanosPrimaryCluster)
     compactor.retentionResolutionRaw: 30d
     compactor.retentionResolution5m: 30d
     compactor.retentionResolution1h: 10y
@@ -207,6 +210,7 @@ charts:
           max_size: 250MB
           max_item_size: 125MB
     storegateway.persistence.size: 8Gi
+    ruler.enabled: $(thanosPrimaryCluster)
     ruler.alertmanagers:
     - http://fed-master-alertmanager:9093
     ruler.config: |-
