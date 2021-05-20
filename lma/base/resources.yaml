@@ -1107,6 +1107,7 @@ spec:
         sidecarsService: TO_BE_FIXED
         sidecarsNamespace: lma
     queryFrontend:
+      enabled: false
       nodeSelector: {}
       service:
         type: TO_BE_FIXED
@@ -1124,7 +1125,7 @@ spec:
         # query-range.max-retries-per-request: TO_BE_FIXED
         # query-frontend.log-queries-longer-than: TO_BE_FIXED
     bucketweb:
-      enabled: true
+      enabled: TO_BE_FIXED
       logLevel: info
       refresh: 30m
       timeout: 5m
@@ -1134,7 +1135,7 @@ spec:
         http:
           port: 8080
     compactor:
-      enabled: true
+      enabled: TO_BE_FIXED
       logLevel: info
       retentionResolutionRaw: TO_BE_FIXED
       retentionResolution5m: TO_BE_FIXED
@@ -1193,7 +1194,7 @@ spec:
         #  targetCPU: 50
         #  targetMemory: 50
     ruler:
-      enabled: true
+      enabled: TO_BE_FIXED
       logLevel: info
       alertmanagers: [] # TO_BE_FIXED
       evalInterval: 1m
