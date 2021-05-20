@@ -38,6 +38,9 @@ charts:
     
 - name: prometheus-fed-master  
   override:
+    alertmanager.service.type: NodePort
+    alertmanager.service.nodePort: 30111
+    alertmanager.alertmanagerSpec.alertmanagerConfigSelector.matchLabels.alertmanagerConfig: example
     alertmanager.alertmanagerSpec.nodeSelector: $(nodeSelector)
     alertmanager.alertmanagerSpec.retention: 120h
     alertmanager.config.global.slack_api_url: https://hooks.slack.com/services/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
