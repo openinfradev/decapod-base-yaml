@@ -4,14 +4,20 @@ metadata:
   name: site
 
 global:
+  # Specify nodes to install workload
   nodeSelector:
     taco-lma: enabled
+  # Specify cluster name. It is useful in multi-cluster env.
   clusterName: cluster.local
+  # Storageclass to install persistant
   storageClassName: ceph
+  # Intervals to scrap the metrics in prometheuses
   serviceScrapeInterval: 10s
   federateScrapeInterval: 10s
+  # Default user/password to use the object storage
   defaultPassword: password
   defaultUser: taco
+  # Secret name to connect the object storage
   thanosObjstoreSecret: taco-objstore-secret
 
 charts:
@@ -23,8 +29,10 @@ charts:
   override:
     kubeEtcd.endpoints: [TO_BE_FIXED]
     prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
+    # Define specifications for storing metrics
     prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 200Gi
     prometheus.prometheusSpec.retention: 10d
+
     prometheus.prometheusSpec.externalLabels.taco_cluster: $(clusterName)
     prometheus.prometheusSpec.nodeSelector: $(nodeSelector)
     prometheus.prometheusSpec.thanos.objectStorageConfig.name: $(thanosObjstoreSecret)
@@ -42,9 +50,12 @@ charts:
     alertmanager.service.nodePort: 30111
     alertmanager.alertmanagerSpec.alertmanagerConfigSelector.matchLabels.alertmanagerConfig: example
     alertmanager.alertmanagerSpec.nodeSelector: $(nodeSelector)
-    alertmanager.alertmanagerSpec.retention: 2h
+    # Define the slack target to send alerts
     alertmanager.config.global.slack_api_url: https://hooks.slack.com/services/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
+
     prometheus.prometheusSpec.nodeSelector: $(nodeSelector)
+    # Define for storing alert
+    alertmanager.alertmanagerSpec.retention: 120h
     prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
     prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 500Gi
   
@@ -68,6 +79,9 @@ charts:
     kibana.limitMem: 8Gi
 
     elasticsearch.adminPassword: tacoword
+
+    # ElasticSearch Deployment Architecture
+    # Master nodes
     elasticsearch.nodeSets.master.nodeSelector: $(nodeSelector)
     elasticsearch.nodeSets.master.javaOpts: "-Xms2g -Xmx2g"
     elasticsearch.nodeSets.master.limitCpu: 2
@@ -75,6 +89,7 @@ charts:
     elasticsearch.nodeSets.master.pvc.storageClassName: $(storageClassName)
     elasticsearch.nodeSets.master.pvc.size: 2Gi
 
+    # Hot nodes
     elasticsearch.nodeSets.hotdata.nodeSelector: $(nodeSelector)
     elasticsearch.nodeSets.hotdata.javaOpts: "-Xms2g -Xmx2g"
     elasticsearch.nodeSets.hotdata.limitCpu: 2
@@ -82,6 +97,7 @@ charts:
     elasticsearch.nodeSets.hotdata.pvc.storageClassName: $(storageClassName)
     elasticsearch.nodeSets.hotdata.pvc.size: 100Gi
 
+    # Warm nodes
     elasticsearch.nodeSets.warmdata.enabled: false
     elasticsearch.nodeSets.warmdata.nodeSelector: $(nodeSelector)
     elasticsearch.nodeSets.warmdata.javaOpts: "-Xms2g -Xmx2g"
@@ -90,6 +106,7 @@ charts:
     elasticsearch.nodeSets.warmdata.pvc.storageClassName: $(storageClassName)
     elasticsearch.nodeSets.warmdata.pvc.size: 200Gi
 
+    # Client nodes
     elasticsearch.nodeSets.client.enabled: true
     elasticsearch.nodeSets.client.count: 1
     elasticsearch.nodeSets.client.nodeSelector: $(nodeSelector)
@@ -114,6 +131,8 @@ charts:
     global.base_cluster_url: $(clusterName)
     global.nodeSelector: $(nodeSelector)
     fluentbit.clusterName: $(clusterName)
+
+    # Define a endpoint to store logs
     fluentbit.outputs.es.host: eck-elasticsearch-es-http.lma.svc.$(clusterName)
     fluentbit.outputs.kafka:
       enabled: false
@@ -135,16 +154,23 @@ charts:
 
 - name: fed-addons
   override:
+    # Configure the connection from prometheus to elasticsearch (It not used)
     metricbeat.elasticsearch.host: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
     metricbeat.kibana.host: eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     metricbeat.prometheus.hosts:
     - thanos-query-frontend.fed.svc.$(clusterName):9090
+
+    # Configure for the Taco Watcher
     tacoWatcher.host: taco-watcher.fed.svc.$(clusterName)
     tacoWatcher.joinCluster.body.kibanaUrl: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     tacoWatcher.joinCluster.body.grafanaUrl: http://grafana.fed.svc.$(clusterName)
     tacoWatcher.joinCluster.body.k8sUrl: https://kubernetes.default.svc.$(clusterName)
+
+    # Initialize the kibana index
     kibanaInit.url: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     serviceMonitor.grafana.interval: $(serviceScrapeInterval)
+
+    # Setting the prometheus federation
     serviceMonitor.federations: 
     - name: dev-federate
       interval: $(federateScrapeInterval)
