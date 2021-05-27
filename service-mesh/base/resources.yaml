@@ -11,9 +11,9 @@ spec:
     name: istio-operator
     version: 1.7.0
   releaseName: istio-operator
-  targetNamespace: istio-operator
+  targetNamespace: istio-system
   values:
-    operatorNamespace: istio-system
+    operatorNamespace: istio-operator
     watchedNamespaces: istio-system,istio-gateway  # namespace list seperated with comma
   wait: true
 ---
