@@ -179,6 +179,11 @@ charts:
         app: prometheus
         prometheus: lma-prometheus
       port: 9090
+    # - name: stage-federation
+    #   addresses:
+    #   - 192.168.97.22
+    #   port: 30008
+    #   interval: 30s
 
 - name: prometheus-adapter
   override:
