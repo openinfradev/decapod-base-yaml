@@ -187,7 +187,7 @@ spec:
     name: kube-prometheus-stack
     version: 14.5.0
   releaseName: prometheus-fed-master
-  targetNamespace: fed
+  targetNamespace: lma
   values:
     defaultRules:
       create: false
@@ -556,7 +556,7 @@ spec:
     name: grafana
     version: 5.5.7
   releaseName: grafana
-  targetNamespace: fed
+  targetNamespace: lma
   values:
     adminPassword: password
     sidecar:
@@ -912,6 +912,8 @@ spec:
       jaeger:
         enabled: true
         interval: TO_BE_FIXED
+      pushgateway:
+        enabled: true
     tacoWatcher:
       rbac:
         create: false
@@ -930,9 +932,9 @@ spec:
     name: lma-addons
     version: 1.5.0
   releaseName: fed-addons
-  targetNamespace: fed
+  targetNamespace: lma
   values:
-    createNamespace: true
+    createNamespace: false
     metricbeat:
       enabled: true
       elasticsearch:
@@ -946,6 +948,7 @@ spec:
       addtionalModules: []
     grafanaDashboard:
       enabled: true
+      namespace: lma
       sidecar:
         datasources:
           prometheusAddress: "fed-master-prometheus:9090"
@@ -970,6 +973,8 @@ spec:
       kubeStateMetrics:
         enabled: false
       nodeExporter:
+        enabled: false
+      pushgateway:
         enabled: false
       federations: [] # TO_BE_FIXED
     tacoWatcher:
@@ -1059,7 +1064,7 @@ spec:
     name: taco-watcher
     version: 0.1.0
   releaseName: taco-watcher
-  targetNamespace: fed
+  targetNamespace: lma
   values:
     config:
       grafana:
@@ -1094,12 +1099,12 @@ spec:
     name: thanos
     version: 3.4.0
   releaseName: thanos
-  targetNamespace: fed
+  targetNamespace: lma
   values:
     global:
       storageClass: local-path
     clusterDomain: TO_BE_FIXED
-    objstoreConfig: TO_BE_FIXED
+    existingObjstoreSecret: TO_BE_FIXED
     query:
       nodeSelector: {}
       dnsDiscovery:
@@ -1255,7 +1260,7 @@ spec:
       enabled: true
       secretName: TO_BE_FIXED
       bucketName: TO_BE_FIXED
-      endpoint: thanos-minio.fed.svc.cluster.local:9000
+      endpoint: thanos-minio:9000
       access_key: TO_BE_FIXED
       secret_key: TO_BE_FIXED
     sidecarsService:
