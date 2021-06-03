@@ -331,7 +331,7 @@ spec:
   chart:
     repository: https://helm.elastic.co
     name: eck-operator
-    version: 1.3.1
+    version: 1.6.0
   releaseName: eck-operator
   targetNamespace: elastic-system
   values:
@@ -342,6 +342,9 @@ spec:
     internal:
       manifestGen: true
       kubeVersion: 1.18.8
+      createOperatorNamespace: false
+    softMultiTenancy:
+      enabled: false
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
