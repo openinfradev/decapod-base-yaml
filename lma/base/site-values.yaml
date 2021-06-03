@@ -139,10 +139,10 @@ charts:
     metricbeat.elasticsearch.host: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
     metricbeat.kibana.host: eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     metricbeat.prometheus.hosts:
-    - thanos-query-frontend.fed.svc.$(clusterName):9090
-    tacoWatcher.host: taco-watcher.fed.svc.$(clusterName)
+    - thanos-query-frontend.lma.svc.$(clusterName):9090
+    tacoWatcher.host: taco-watcher.lma.svc.$(clusterName)
     tacoWatcher.joinCluster.body.kibanaUrl: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
-    tacoWatcher.joinCluster.body.grafanaUrl: http://grafana.fed.svc.$(clusterName)
+    tacoWatcher.joinCluster.body.grafanaUrl: http://grafana.lma.svc.$(clusterName)
     tacoWatcher.joinCluster.body.k8sUrl: https://kubernetes.default.svc.$(clusterName)
     kibanaInit.url: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     serviceMonitor.grafana.interval: $(serviceScrapeInterval)
@@ -168,14 +168,7 @@ charts:
   override:
     global.storageClass: $(storageClassName)
     clusterDomain: $(clusterName)
-    objstoreConfig: |-
-      type: s3
-      config:
-        bucket: thanos
-        endpoint: {{ include "thanos.minio.fullname" . }}.fed.svc.$(clusterName):9000
-        access_key: $(defaultUser)
-        secret_key: $(defaultPassword)
-        insecure: true
+    existingObjstoreSecret: $(thanosObjstoreSecret)
     query.nodeSelector: $(nodeSelector)
     queryFrontend.nodeSelector: $(nodeSelector)
     queryFrontend.service.type: NodePort
@@ -235,7 +228,7 @@ charts:
   override:
     objectStorage:
       bucketName: thanos
-      endpoint: thanos-minio.fed.svc.cluster.local:9000
+      endpoint: thanos-minio.lma.svc.$(clusterName):9000
       access_key: $(defaultUser)
       secret_key: $(defaultPassword)
       secretName: $(thanosObjstoreSecret)
