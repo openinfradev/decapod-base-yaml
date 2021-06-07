@@ -136,6 +136,7 @@ spec:
   releaseName: service-mesh-controlplane
   targetNamespace: istio-system
   values:
+    createNamespace: true
     IstioOperator:
       enableControlplane: true
       enableGateway: false
