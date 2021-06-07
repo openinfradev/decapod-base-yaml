@@ -1268,6 +1268,8 @@ spec:
       secret_key: TO_BE_FIXED
     sidecarsService:
       enabled: true
+      type: NodePort
+      nodePort: 30007
       name: TO_BE_FIXED
       port: 30901
       endpoints: [] # TO_BE_FIXED
