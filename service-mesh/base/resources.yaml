@@ -26,9 +26,10 @@ metadata:
 spec:
   helmVersion: v3
   chart:
-    repository: https://jaegertracing.github.io/helm-charts
+    #repository: https://jaegertracing.github.io/helm-charts
+    repository: https://openinfradev.github.io/helm-repo
     name: jaeger-operator
-    version: 2.19.1
+    version: 2.21.2
   releaseName: jaeger-operator
   targetNamespace: lma
   values:
