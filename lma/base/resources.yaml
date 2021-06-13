@@ -158,7 +158,7 @@ spec:
           objectStorageConfig:
             key: objstore.yml 
             name: TO_BE_FIXED # secret name
-          minTime: 2h
+          minTime: -3h
       service:
         nodePort: 30008
         type: NodePort
@@ -1267,7 +1267,7 @@ spec:
       access_key: TO_BE_FIXED
       secret_key: TO_BE_FIXED
     sidecarsService:
-      enabled: true
+      enabled: false
       type: NodePort
       nodePort: 30007
       name: TO_BE_FIXED
