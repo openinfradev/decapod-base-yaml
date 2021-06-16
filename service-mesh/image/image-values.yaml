@@ -3,7 +3,7 @@ kind: HelmValuesTransformer
 metadata:
   name: image
 global:
-  registry: private-registry:5000
+  registry: LOCAL_REGISTRY
 
 charts:
 - name: istio-operator
@@ -13,8 +13,16 @@ charts:
 
 - name: jaeger-operator
   override:
-    image.repository: $(registry)jaegertracing/jaeger-operator
+    image.repository: $(registry)/jaegertracing/jaeger-operator
     image.tag: 1.21.2
+    collectorImage.repository: $(registry)/jaegertracing/jaeger-collector
+    collectorImage.tag: 1.21.0
+    agentImage.repository: $(registry)/jaegertracing/jaeger-agent
+    agentImage.tag: 1.21.0
+    ingesterImage.repository: $(registry)/jaegertracing/jaeger-ingester
+    ingesterImage.tag: 1.21.0
+    queryImage.repository: $(registry)/jaegertracing/jaeger-collector
+    queryImage.tag: 1.21.0
 
 - name: kiali-operator
   override:
@@ -22,7 +30,11 @@ charts:
     image.tag: v1.30.0
 
 - name: service-mesh-controlplane
-  override: {}
+  override: 
+    IstioOperator.image.hub: $(registry)/istio-testing
+    IstioOperator.image.tag: 1.11-alpha.aa439f6e4772aa52acafa11ac7a5fbdfbb160357
 
 - name: service-mesh-gateway
-  override: {}
+  override:
+    IstioOperator.image.hub: $(registry)/istio-testing
+    IstioOperator.image.tag: 1.11-alpha.aa439f6e4772aa52acafa11ac7a5fbdfbb160357
