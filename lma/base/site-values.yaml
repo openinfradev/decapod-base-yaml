@@ -145,17 +145,6 @@ charts:
 
 - name: addons
   override:
-    serviceMonitor.processExporter.interval: $(serviceScrapeInterval)
-    serviceMonitor.ceph.interval: $(serviceScrapeInterval)
-    serviceMonitor.calico.interval: $(serviceScrapeInterval)
-    serviceMonitor.kubeStateMetrics.interval: $(serviceScrapeInterval)
-    serviceMonitor.nodeExporter.interval: $(serviceScrapeInterval)
-    serviceMonitor.kubelet.interval: $(serviceScrapeInterval)
-    serviceMonitor.istio.interval: $(serviceScrapeInterval)
-    serviceMonitor.jaeger.interval: $(serviceScrapeInterval)
-
-- name: fed-addons
-  override:
     # Configure the connection from prometheus to elasticsearch (It not used)
     metricbeat.elasticsearch.host: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
     metricbeat.kibana.host: eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
@@ -171,6 +160,14 @@ charts:
     # Initialize the kibana index
     kibanaInit.url: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     serviceMonitor.grafana.interval: $(serviceScrapeInterval)
+    serviceMonitor.processExporter.interval: $(serviceScrapeInterval)
+    serviceMonitor.ceph.interval: $(serviceScrapeInterval)
+    serviceMonitor.calico.interval: $(serviceScrapeInterval)
+    serviceMonitor.kubeStateMetrics.interval: $(serviceScrapeInterval)
+    serviceMonitor.nodeExporter.interval: $(serviceScrapeInterval)
+    serviceMonitor.kubelet.interval: $(serviceScrapeInterval)
+    serviceMonitor.istio.interval: $(serviceScrapeInterval)
+    serviceMonitor.jaeger.interval: $(serviceScrapeInterval)
 
     # Setting the prometheus federation
     serviceMonitor.federations: 

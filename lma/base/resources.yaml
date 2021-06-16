@@ -879,77 +879,6 @@ spec:
   targetNamespace: lma
   values:
     grafanaDashboard:
-      enabled: false
-    metricbeat:
-      enabled: false
-      loglevel: error
-    prometheusRules:
-      aggregation:
-        enabled: true
-      alert:
-        enabled: false
-    serviceMonitor:
-      processExporter:
-        enabled: true
-        interval: TO_BE_FIXED
-        selector:
-          matchLabels:
-            application: process_exporter
-            component: metrics
-            release_group: prometheus-process-exporter
-      grafana:
-        enabled: false
-      ceph:
-        enabled: false  #FIXME
-        interval: TO_BE_FIXED
-        mon_hosts: []
-      calico:
-        enabled: true
-        interval: TO_BE_FIXED
-      kubelet:
-        enabled: true
-        interval: TO_BE_FIXED
-      istio:
-        enabled: true
-        interval: TO_BE_FIXED
-      jaeger:
-        enabled: true
-        interval: TO_BE_FIXED
-      pushgateway:
-        enabled: true
-    tacoWatcher:
-      rbac:
-        create: false
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: fed-addons
-  name: fed-addons
-spec:
-  helmVersion: v3
-  chart:
-    repository: https://openinfradev.github.io/helm-repo
-    name: lma-addons
-    version: 1.5.0
-  releaseName: fed-addons
-  targetNamespace: lma
-  values:
-    createNamespace: false
-    metricbeat:
-      enabled: true
-      elasticsearch:
-        host: TO_BE_FIXED
-        username: elastic
-        password: tacoword
-      kibana:
-        host: TO_BE_FIXED
-      prometheus:
-        hosts: [] # TO_BE_FIXED
-      addtionalModules: []
-    grafanaDashboard:
       enabled: true
       namespace: lma
       sidecar:
@@ -965,21 +894,42 @@ spec:
         enabled: true
     serviceMonitor:
       calico:
-        enabled: false
+        enabled: true
+        interval: TO_BE_FIXED
       processExporter:
-        enabled: false
+        enabled: true
+        interval: TO_BE_FIXED
+        selector:
+          matchLabels:
+            application: process_exporter
+            component: metrics
+            release_group: prometheus-process-exporter
+      istio:
+        enabled: true
+        interval: TO_BE_FIXED
+      jaeger:
+        enabled: true
+        interval: TO_BE_FIXED
       grafana:
         enabled: true
         interval: TO_BE_FIXED
       ceph:
-        enabled: false
+        enabled: false  #FIXME
+        interval: TO_BE_FIXED
+        mon_hosts: []
       kubeStateMetrics:
         enabled: false
       nodeExporter:
         enabled: false
       pushgateway:
-        enabled: false
+        enabled: true
+      kubelet:
+        enabled: true
+        interval: TO_BE_FIXED
       federations: [] # TO_BE_FIXED
+    metricbeat:
+      enabled: false
+      loglevel: error
     tacoWatcher:
       host: TO_BE_FIXED
       port: 32000
@@ -999,7 +949,7 @@ spec:
       url: TO_BE_FIXED
     prometheusRules:
       aggregation:
-        enabled: false
+        enabled: true
       alert:
         enabled: true
   wait: true
