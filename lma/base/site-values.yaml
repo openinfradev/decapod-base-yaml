@@ -194,13 +194,16 @@ charts:
     clusterDomain: $(clusterName)
     existingObjstoreSecret: $(thanosObjstoreSecret)
     query.nodeSelector: $(nodeSelector)
+    query.dnsDiscovery.sidecarsService: lma-thanos-discovery
+    # query.stores:
+    #   - lma-thanos-discovery.lma.svc.$(clusterName)
     queryFrontend.nodeSelector: $(nodeSelector)
     queryFrontend.service.type: NodePort
     queryFrontend.service.http.nodePort: 30007
     bucketweb.nodeSelector: $(nodeSelector)
     compactor.nodeSelector: $(nodeSelector)
     storegateway.nodeSelector: $(nodeSelector)
-    ruler.nodeSelector: $(nodeSelector)      
+    ruler.nodeSelector: $(nodeSelector)
 
     queryFrontend.config: |-
         type: IN-MEMORY
@@ -246,7 +249,6 @@ charts:
     minio.persistence.storageClass: $(storageClassName)
     minio.persistence.accessMode: ReadWriteOnce
     minio.persistence.size: 8Gi
-    query.dnsDiscovery.sidecarsService: thanos-sidecars
 
 - name: thanos-config
   override:
