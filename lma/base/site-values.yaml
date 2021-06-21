@@ -10,7 +10,7 @@ global:
   # Specify cluster name. It is useful in multi-cluster env.
   clusterName: cluster.local
   # Storageclass to install persistant
-  storageClassName: ceph
+  storageClassName: taco-storage
   # Intervals to scrap the metrics in prometheuses
   serviceScrapeInterval: 10s
   federateScrapeInterval: 10s

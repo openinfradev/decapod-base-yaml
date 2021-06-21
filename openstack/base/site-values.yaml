@@ -5,7 +5,7 @@ metadata:
 
 global:
   clusterName: cluster.local
-  storageClassName: rbd
+  storageClassName: taco-storage
   repository: https://github.com/openinfradev/helm-repo/
   externalIP: 192.168.0.7
   ceph_keyring: AQCpRKFe/cWLFBAANOQ71DEm+GGI/vGvdK1Zvw==
