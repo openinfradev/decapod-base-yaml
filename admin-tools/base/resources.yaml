@@ -7,6 +7,7 @@ metadata:
   name: keycloak
 spec:
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: keycloak
     version: 8.2.2
@@ -54,6 +55,7 @@ metadata:
   name: cloud-console
 spec:
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: cloud-console
     version: 1.0.7
@@ -119,6 +121,7 @@ metadata:
   name: custom-network
 spec:
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: custom-network
     version: 1.0.10
@@ -141,6 +144,7 @@ metadata:
   name: taco-registry
 spec:
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: taco-registry
     version: 1.0.6
@@ -279,6 +283,7 @@ metadata:
   name: site-mirror-registry
 spec:
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: site-mirror-registry
     version: 0.0.3
@@ -311,6 +316,7 @@ metadata:
   name: cronjob-backup-cloudconsole
 spec:
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: cronjob-backup-cloudconsole
     version: 1.0.0
@@ -337,6 +343,7 @@ metadata:
   name: cronjob-backup-keycloak
 spec:
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: cronjob-backup-keycloak
     version: 1.0.2

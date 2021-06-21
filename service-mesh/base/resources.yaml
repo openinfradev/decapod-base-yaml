@@ -7,6 +7,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: istio-operator
     version: 1.7.0
@@ -26,6 +27,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     #repository: https://jaegertracing.github.io/helm-charts
     repository: https://openinfradev.github.io/helm-repo
     name: jaeger-operator
@@ -86,6 +88,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://kiali.org/helm-charts
     name: kiali-operator
     version: 1.30.0
@@ -131,6 +134,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: service-mesh-resource
     version: 0.2.1
@@ -156,6 +160,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: service-mesh-resource
     version: 0.2.1

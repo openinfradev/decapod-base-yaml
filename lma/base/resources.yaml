@@ -7,6 +7,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: kube-prometheus-stack
     version: 14.5.0
@@ -64,6 +65,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: kube-prometheus-stack
     version: 14.5.0
@@ -183,6 +185,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: kube-prometheus-stack
     version: 14.5.0
@@ -329,6 +332,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://helm.elastic.co
     name: eck-operator
     version: 1.6.0
@@ -356,6 +360,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     # repository: https://kubernetes.github.io/kube-state-metrics
     # --------------------------------------------------------------------
     # this repo is not working on 2021.1.6
@@ -383,6 +388,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-node-exporter
     version: 1.11.2
@@ -402,6 +408,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-pushgateway
     version: 1.5.1
@@ -423,6 +430,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: prometheus-process-exporter
     version: 0.1.0
@@ -465,6 +473,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: eck-resource
     version: 1.1.0
@@ -555,6 +564,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://grafana.github.io/helm-charts
     name: grafana
     version: 5.5.7
@@ -596,6 +606,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-operator
     version: 1.0.10
@@ -639,6 +650,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-operator
     version: 1.0.10
@@ -872,6 +884,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: lma-addons
     version: 1.5.0
@@ -963,6 +976,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-adapter
     version: 2.5.1
@@ -986,6 +1000,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: kubernetes-event-exporter
     version: 1.0.0
@@ -1013,6 +1028,7 @@ metadata:
 spec:
   helmVersion: v3 
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: taco-watcher
     version: 0.1.0
@@ -1048,6 +1064,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://charts.bitnami.com/bitnami
     name: thanos
     version: 3.4.0
@@ -1203,6 +1220,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: thanos-config
     version: 0.1.3
