@@ -14,8 +14,145 @@ spec:
   releaseName: istio-operator
   targetNamespace: istio-system
   values:
+    hub: docker.io/istio
+    tag: 1.10.2
     operatorNamespace: istio-operator
     watchedNamespaces: istio-system,istio-gateway  # namespace list seperated with comma
+  wait: true
+
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: servicemesh-controlplane
+  name: servicemesh-controlplane
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: servicemesh-istio-resource
+    version: 1.7.0
+  releaseName: servicemesh-controlplane
+  targetNamespace: istio-system
+  values:
+    createNamespace: false
+    IstioOperator:
+      image:
+        hub: docker.io/istio
+        tag: 1.10.2
+      enableControlplane: true
+      enableGateway: false
+      profile: default 
+      revision: "1-9-1"
+      meshConfig:
+        enableAccessLog: true
+        enableTracing: true
+        enablePrometheusMerge: true
+        enableAutoMtls: false
+        extensionProviders:
+          envoyExtAuthzGrpc:
+            service: jaeger-operator-jaeger-collector.istio-system
+            port: 14250
+        defaultConfig:
+          discoveryAddress: istiod-1-9-1.istio-system.svc:15012
+          tracing:
+            zipkin:
+              address: jaeger-operator-jaeger-collector.istio-system:9411
+            sampling: 100.0 # TO_BE_FIXED (0.0 ~ 100.0)
+      values:
+        global:
+          logging:
+            level: "default:info"
+          istioNamespace: istio-system
+      components:
+        pilot:
+          k8s:
+            resources:
+              requests:
+                cpu: 1000m
+                memory: 1024Mi
+            hpaSpec:
+              maxReplicas: 10
+              minReplicas: 2
+            nodeSelector:
+              servicemesh: enabled
+        ingressGateways:
+          enabled: false
+        egressGateways:
+          enabled: false
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: servicemesh-gateway
+  name: servicemesh-gateway
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: servicemesh-istio-resource
+    version: 1.7.0
+  releaseName: servicemesh-gateway
+  targetNamespace: istio-system
+  values:
+    createNamespace: false
+    IstioOperator:
+      enableControlplane: false
+      enableGateway: true
+      revision: "1-9-1"
+      profile: empty
+      values:
+        global:
+          logging:
+            level: "default:info"
+          istioNamespace: istio-system
+      components:
+        ingressGateways:
+          name: istio-ingress-gateway
+          namespace: istio-system
+          label:
+            gateway: taco-ingress
+          enabled: true
+          k8s:
+            resources:
+              requests:
+                cpu: 1000m
+                memory: 1024Mi
+            hpaSpec:
+              maxReplicas: 10
+              minReplicas: 2
+            nodeSelector:
+              taco-ingress-gateway: enabled
+            service:
+              type: NodePort
+              ports:
+                httpNodePort: 31081
+                httpsNodePort: 31443
+        egressGateways:
+          name: istio-egress-gateway
+          namespace: istio-system
+          label:
+            gateway: taco-egress
+          enabled: false
+          k8s:
+            resources:
+              requests:
+                cpu: 1000m
+                memory: 1024Mi
+              limits:
+                cpu: 4000m
+                memory: 4096Mi
+            hpaSpec:
+              maxReplicas: 10
+              minReplicas: 2
+              targetAverageUtilization: 80
+            nodeSelector:
+              taco-egress-gateway: enabled
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -28,55 +165,78 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    #repository: https://jaegertracing.github.io/helm-charts
     repository: https://openinfradev.github.io/helm-repo
+    version: 2.20.0
     name: jaeger-operator
-    version: 2.21.2
   releaseName: jaeger-operator
-  targetNamespace: lma
+  targetNamespace: istio-system
   values:
     jaeger:
+      create: false
+      namespace: istio-system
+    rbac:
       create: true
-      namespace: lma
-      spec:
-        strategy: production # production, allInOne, streaming
-        ingress:
-          enabled: false
-        storage:
-          type: elasticsearch
-          esIndexCleaner:
-            enabled: true
-            numberOfDays: 7
-            schedule: "55 04 * * *"
-          options:
-            es:
-              server-urls: TO_BE_FIXED
-              tls.ca: /etc/ssl/certs/tls.crt
-              username: TO_BE_FIXED
-              password: TO_BE_FIXED
-              index-prefix: jaeger
-        collector:
-          maxReplicas: 5
-          resources:
-            limits:
-              cpu: 300m
-              memory: 256Mi
-        query:
-          replicas: 1
-          resources:
-            limits:
-              cpu: 300m
-              memory: 256Mi
-        agent:
-          strategy: Sidecar
-        volumeMounts:
-        - name: es-tls
-          mountPath: /etc/ssl/certs
-        volumes:
-        - name: es-tls
-          secret:
-            secretName: eck-elasticsearch-es-http-certs-public
-      nodeSelector: {}
+      clusterRole: true
+    nodeSelector:
+      servicemesh: enabled
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: servicemesh-jaeger-resource
+  name: servicemesh-jaeger-resource
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: servicemesh-jaeger-resource
+    version: 2.21.2
+  releaseName: servicemesh-jaeger-resource
+  targetNamespace: istio-system
+  values:
+    namespace: istio-system
+    strategy: production
+    logLevel: debug
+    ingress:
+      enabled: false
+    collector:
+      maxReplicas: 5
+      resources:
+        requests:
+          cpu: 500m
+          memory: 1Gi
+        limits:
+          cpu: '1'
+          memory: 2Gi
+    storage:
+      esIndexCleaner:
+        enabled: true
+        numberOfDays: 7
+        schedule: "55 04 * * *"
+      options:
+        es:
+          index-prefix: jaeger
+          username: TO_BE_FIXED
+          password: TO_BE_FIXED
+          tlsCa: /etc/ssl/certs/tls.crt
+          serverUrls: https://eck-elasticsearch-es-http.lma.svc:9200
+          secretName: eck-elasticsearch-es-http-certs-public
+    JaegerIngress:
+      enabled: true
+      namespace: istio-system
+      rules:
+      - host: jaeger.k2-node01
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jaeger-operator-jaeger-query
+                port:
+                  number: 16686
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -91,84 +251,156 @@ spec:
     type: helmrepo
     repository: https://kiali.org/helm-charts
     name: kiali-operator
-    version: 1.30.0
+    version: 1.34.0
   releaseName: kiali-operator
   targetNamespace: istio-system
   values:
+    nodeSelector:
+      servicemesh: enabled
+    clusterRoleCreator: true
     cr:
-      create: true
-      name: kiali
-      spec:
-        deployment:
-          accessible_namespaces:
-          - '**'
-          resources:
-            requests:
-              cpu: 500m
-              memory: 512Mi
-            limits:
-              cpu: 500m
-              memory: 1024Mi
-          replicas: 1
-        external_services:
-          custom_dashboards:
-            enabled: true
-          prometheus:
-            url: "http://lma-prometheus.lma:9090"
-          tracing:
-            enabled: true
-            url: "http://jaeger-operator-jaeger-query.lma:16686"
-            namespace_selector: true
-        istio_component_namespaces:
-          prometheus: lma
+      create: false
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: servicemesh-kiali-resource
+  name: servicemesh-kiali-resource
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: servicemesh-kiali-resource
+    version: 1.34.0
+  releaseName: servicemesh-kiali-resource
+  targetNamespace: istio-system
+  values:
+    nameOverride: "kiali"
+    fullnameOverride: "kiali"
+    istioComponentNamespaces:
+      prometheus: lma
+    istioNamespace: istio-system
+    deployment:
+      accessible_namespaces:
+      - '**'
+      namespace: istio-system
+      replicas: 1
+      resources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
+        limits:
+          cpu: 500m
+          memory: 1024Mi
+      nodeSelector:
+        servicemesh: enabled
+      serviceType: ClusterIP
+    auth:
+      strategy: anonymous
+    externalServices:
+      customDashboards:
+        enabled: true
+      istio:
+        configMapName: istio-1-9-1
+        istioIdentityDomain: "svc.cluster.local"
+      prometheus:
+        url: http://prometheus-kube-prometheus-prometheus.prometheus.svc:9090
+      tracing:
+        enabled: true
+        namespaceSelector: true
+        inClusterUrl: http://jaeger-operator-jaeger-query.istio-system:16686
+      grafana:
         auth:
-          strategy: anonymous #openid, token, openshift, header, anonymous
-        istio_namespace: istio-system
+          password: TO_BE_FIXED
+          type: basic
+          useKialiToken: false
+          username: TO_BE_FIXED
+        enabled: true
+        inClusterUrl: http://grafana.istio-system.svc:3000
+        url: http://k1-master01:30099
+    server:
+      metricsEnabled: true
+      metricsPort: 9090
+      port: 20001
+      webRoot: /kiali
+    KialiIngress:
+      enabled: true
+      namespace: istio-system
+      rules:
+      - host: kiali.k2-node01
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kiali
+                port:
+                  number: 20001
+
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: service-mesh-controlplane
-  name: service-mesh-controlplane
+    name: servicemesh-grafana-dashboard
+  name: servicemesh-grafana-dashboard
 spec:
   helmVersion: v3
   chart:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
-    name: service-mesh-resource
-    version: 0.2.1
-  releaseName: service-mesh-controlplane
+    name: servicemesh-grafana-dashboard
+    version: 1.7.0
+  releaseName: servicemesh-grafana-dashboard
   targetNamespace: istio-system
   values:
-    createNamespace: true
-    IstioOperator:
-      enableControlplane: true
-      enableGateway: false
-      meshConfig:
-        enableAccessLog: true
-        enableTracing: true
-        tracingSampling: 100 # TO_BE_FIXED (0.0 ~ 100.0)
-        tracingUrl: jaeger-operator-jaeger-collector.lma.svc:9411
+    namespace: istio-system
+
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: service-mesh-gateway
-  name: service-mesh-gateway
+    name: servicemesh-prometheusmonitor
+  name: servicemesh-prometheusmonitor
 spec:
   helmVersion: v3
   chart:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
-    name: service-mesh-resource
-    version: 0.2.1
-  releaseName: service-mesh-gateway
+    name: servicemesh-prometheusmonitor
+    version: 1.7.0
+  releaseName: servicemesh-prometheusmonitor
   targetNamespace: istio-system
   values:
-    IstioOperator:
-      enableControlplane: false
-      enableGateway: true
-      ingressGateways: [] # TO_BE_FIXED
-      egressGateways: [] # TO_BE_FIXED
+    namespace: istio-system
+    istio:
+      interval: "15s"
+    jaeger:
+      interval: "15s"
+
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: servicemesh-prometheusrule
+  name: servicemesh-prometheusrule
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: servicemesh-prometheusrule
+    version: 1.7.0
+  releaseName: servicemesh-prometheusrule
+  targetNamespace: istio-system
+  values:
+    namespace: istio-system
+    aggregation:
+      interval: "5s"
+    optimization:
+      interval: "5s"
