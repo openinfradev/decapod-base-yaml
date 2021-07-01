@@ -7,6 +7,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     name: glance
     repository: TO_BE_FIXED
     version: 0.1.0
@@ -94,6 +95,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     name: heat
     repository: TO_BE_FIXED
     version: 0.1.0
@@ -158,6 +160,7 @@ spec:
   helmVersion: v3
   timeout: 30000
   chart:
+    type: helmrepo
     name: horizon
     repository: TO_BE_FIXED
     version: 0.1.0
@@ -253,6 +256,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     name: ingress
     repository: TO_BE_FIXED
     version: 0.1.0
@@ -293,6 +297,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: keystone
     version: 0.1.0
@@ -347,6 +352,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     name: libvirt
     repository: TO_BE_FIXED
     version: 0.1.0
@@ -388,6 +394,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     name: mariadb
     repository: TO_BE_FIXED
     version: 0.1.1
@@ -428,6 +435,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     name: memcached
     repository: TO_BE_FIXED
     version: 0.1.0
@@ -454,6 +462,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     name: neutron
     repository: TO_BE_FIXED
     version: 0.1.0
@@ -618,6 +627,7 @@ spec:
   helmVersion: v3
   timeout: 30000
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: nova
     version: 0.1.0
@@ -765,6 +775,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: prometheus-openstack-exporter
     version: 0.1.0
@@ -807,6 +818,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     name: rabbitmq
     repository: TO_BE_FIXED
     version: 0.1.0
@@ -843,6 +855,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: ceph-provisioners
     version: 0.1.0
@@ -889,6 +902,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: cinder
     version: 0.1.1
@@ -990,6 +1004,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: ironic
     version: 0.1.0
@@ -1109,6 +1124,7 @@ metadata:
 spec:
   helmVersion: v3
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: sona
     version: 0.1.0
@@ -1154,6 +1170,7 @@ metadata:
   name: openvswitch
 spec:
   chart:
+    type: helmrepo
     repository: TO_BE_FIXED
     name: openvswitch
     version: 0.1.0
