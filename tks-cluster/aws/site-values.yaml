@@ -21,3 +21,5 @@ charts:
     machinePool.replicas: 3
     machinePool.machineType: $(awsMachineType)
     machinePool.rootVolume.size: 16
+    machinePool.subnets:
+    - subnets-xxxxxxxxxx
