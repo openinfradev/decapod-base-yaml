@@ -1,0 +1,23 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+global:
+  awsMachineType: t3.large
+
+charts:
+- name: cluster-api-aws
+  override:
+    sshKeyName: default
+    cluster:
+      name: CLUSTER_NAME
+      region: ap-northeast-2
+      networkSpec:
+        vpc: vpc-00000000000
+    kubernetesVersion: v1.18.16
+    kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
+    kubeadmControlPlane.rootVolume.size: 16
+    machinePool.replicas: 3
+    machinePool.machineType: $(awsMachineType)
+    machinePool.rootVolume.size: 16
