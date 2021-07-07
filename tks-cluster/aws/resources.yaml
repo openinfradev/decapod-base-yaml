@@ -1,0 +1,40 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: cluster-api-aws
+  name: cluster-api-aws
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: cluster-api-aws
+    version: 0.1.0
+  releaseName: cluster-api-aws
+  targetNamespace: capa-system
+  values:
+    sshKeyName: TO_BE_FIXED
+    cluster:
+      name: TO_BE_FIXED
+      region: TO_BE_FIXED
+      networkSpec:
+        vpc: TO_BE_FIXED
+    kubernetesVersion: v1.18.16
+    kubeadmControlPlane:
+      replicas: 3
+      controlPlaneMachineType: t3.large
+      rootVolume:
+        size: 8 # GB
+        type: gp2
+    machinePool:
+      enabled: true
+      machineType: t3.large
+      replicas: 3
+      minSize: 1
+      maxSize: 10
+      rootVolume:
+        size: 8 # GB
+        type: gp2
+      subnets: []
+  wait: true
