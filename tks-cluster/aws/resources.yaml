@@ -19,7 +19,9 @@ spec:
       name: TO_BE_FIXED
       region: TO_BE_FIXED
       networkSpec:
-        vpc: TO_BE_FIXED
+        vpc:
+          id: TO_BE_FIXED
+        subnets: []
     kubernetesVersion: v1.18.16
     kubeadmControlPlane:
       replicas: 3
