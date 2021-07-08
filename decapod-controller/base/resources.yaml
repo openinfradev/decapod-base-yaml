@@ -1,0 +1,91 @@
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: prepare-decapod-controller
+  name: prepare-decapod-controller
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: prepare-decopod-controller
+    version: 0.1.0
+  releaseName: prepare-decopod-controller
+  targetNamespace: argo
+  values:
+    postgres:
+      secretName: argo-postgres-config
+      username: postgres
+      password: tacopassword
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: postgresql
+  name: postgresql
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://charts.bitnami.com/bitnami
+    name: postgresql
+    version: 10.5.2
+  releaseName: postgresql
+  targetNamespace: argo
+  values:
+    # This secret name should be same as the one created by prepare-decapod-controller chart
+    existingSecret: argo-postgres-config
+    postgresqlConfiguration: {"listen_addresses": '*'}
+    ##########################################################################
+    # NOTE: This doesn't seem to be necessary at init time.                  #
+    # Just leave it in case it's necessary for connection from argo-wf later #
+    ##########################################################################
+    #pgHbaConfiguration: |-
+    #  host all all 127.0.0.1/32 password
+    #  host all all 10.233.0.1/16 password
+    postgresqlDatabase: postgres
+    persistence:
+      storageClass: "rbd"
+      size: 10Gi
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: argo-workflows
+  name: argo-workflows
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://argoproj.github.io/argo-helm
+    name: argo-workflows
+    version: 0.2.6
+  releaseName: argo-workflows
+  targetNamespace: argo
+  values:
+    server:
+      serviceType: NodePort
+    controller:
+      persistence:
+        nodeStatusOffLoad: true
+        archive: true
+        postgresql:
+          host: postgresql.argo # Set this to postgresql pod's service name
+          port: 5432
+          database: postgres
+          tableName: argo_workflows
+          # This secret name should be same as the one created by prepare-decapod-controller chart
+          # In addition, the secrets must be in the same namespace of the controller
+          userNameSecret:
+            name: argo-postgres-config
+            key: postgresql-username
+          passwordSecret:
+            name: argo-postgres-config
+            key: postgresql-password
+  wait: true

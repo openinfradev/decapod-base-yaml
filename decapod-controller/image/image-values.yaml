@@ -1,0 +1,28 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: image
+global:
+  registry: LOCAL_REGISTRY
+
+charts:
+- name: postgresql
+  override: 
+    image.registry: $(registry)
+    image.repository: bitnami/postgresql
+    image.tag: 11.12.0-debian-10-r44
+    volumePermissions.image.registry: $(registry)
+    volumePermissions.image.repository: bitnami/bitnami-shell
+    volumePermissions.image.tag: 10-debian-10-r125
+
+- name: argo-workflows
+  override:
+    controller.image.registry: $(registry)
+    controller.image.repository: argoproj/workflow-controller
+    controller.image.tag: ""
+    executor.image.registry: $(registry)
+    executor.image.repository: argoproj/argoexec
+    executor.image.tag: ""
+    server.image.registry: $(registry)
+    server.image.repository: argoproj/argocli
+    server.image.tag: ""
