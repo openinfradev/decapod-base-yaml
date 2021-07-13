@@ -1,0 +1,21 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+charts:
+- name: prepare-decapod-controller
+  override:
+    postgres.username: postgres
+    postgres.password: tacopassword
+
+- name: postgresql
+  override:
+    persistence.storageClass: taco-storage
+    persistence.size: 10Gi
+
+- name: argo-workflows
+  override:
+    controller.persistence.nodeStatusOffLoad: true
+    controller.persistence.archive: true
+    controller.persistence.postgresql.host: postgresql.argo
