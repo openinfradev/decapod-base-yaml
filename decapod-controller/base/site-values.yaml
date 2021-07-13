@@ -11,7 +11,7 @@ charts:
 
 - name: postgresql
   override:
-    persistence.storageClass: rbd
+    persistence.storageClass: taco-storage
     persistence.size: 10Gi
 
 - name: argo-workflows
