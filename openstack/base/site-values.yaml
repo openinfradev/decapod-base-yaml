@@ -6,7 +6,7 @@ metadata:
 global:
   clusterName: cluster.local
   storageClassName: taco-storage
-  repository: https://github.com/openinfradev/helm-repo/
+  repository: https://openinfradev.github.io/helm-repo
   externalIP: 192.168.0.7
   ceph_keyring: AQCpRKFe/cWLFBAANOQ71DEm+GGI/vGvdK1Zvw==
   cinder_keyring: AQAin8tU0CFgEhAATb7sYgtWsh+S5HEbg6MrGg==
