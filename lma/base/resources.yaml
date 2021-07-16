@@ -346,7 +346,7 @@ spec:
     internal:
       manifestGen: true
       kubeVersion: 1.18.8
-      createOperatorNamespace: false
+      createOperatorNamespace: true
     softMultiTenancy:
       enabled: false
   wait: true
