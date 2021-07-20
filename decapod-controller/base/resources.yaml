@@ -72,7 +72,7 @@ spec:
     server:
       serviceType: NodePort
     controller:
-      containerRuntimeExecutor: kubelet
+      containerRuntimeExecutor: k8sapi
       persistence:
         nodeStatusOffLoad: true
         archive: true
