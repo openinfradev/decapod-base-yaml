@@ -58,7 +58,7 @@ kind: HelmRelease
 metadata:
   labels:
     name: argo-workflows
-  name: argo-workflows
+  name: argo-workflows-operator
 spec:
   helmVersion: v3
   chart:
