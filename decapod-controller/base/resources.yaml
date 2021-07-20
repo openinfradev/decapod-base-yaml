@@ -72,6 +72,7 @@ spec:
     server:
       serviceType: NodePort
     controller:
+      containerRuntimeExecutor: kubelet
       persistence:
         nodeStatusOffLoad: true
         archive: true
