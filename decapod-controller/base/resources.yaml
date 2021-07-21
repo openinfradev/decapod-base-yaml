@@ -3,8 +3,8 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: prepare-decapod-controller
-  name: prepare-decapod-controller
+    name: db-secret-argo
+  name: db-secret-argo
 spec:
   helmVersion: v3
   chart:
@@ -12,7 +12,7 @@ spec:
     repository: https://openinfradev.github.io/helm-repo
     name: prepare-decapod-controller
     version: 0.1.0
-  releaseName: prepare-decapod-controller
+  releaseName: db-secret-argo
   targetNamespace: argo
   values:
     postgres:
@@ -25,8 +25,8 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: decapod-db-secret
-  name: decapod-db-secret
+    name: db-secret-decapod-db
+  name: db-secret-decapod-db
 spec:
   helmVersion: v3
   chart:
@@ -34,7 +34,7 @@ spec:
     repository: https://openinfradev.github.io/helm-repo
     name: prepare-decapod-controller
     version: 0.1.0
-  releaseName: decapod-db-secret
+  releaseName: db-secret-decapod-db
   targetNamespace: decapod-db
   values:
     postgres:
@@ -99,7 +99,7 @@ spec:
         nodeStatusOffLoad: true
         archive: true
         postgresql:
-          host: postgresql.argo # Set this to postgresql pod's service name
+          host: postgresql.decapod-db # Set this to postgresql pod's service name
           port: 5432
           database: postgres
           tableName: argo_workflows

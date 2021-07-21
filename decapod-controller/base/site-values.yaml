@@ -4,7 +4,12 @@ metadata:
   name: site
 
 charts:
-- name: prepare-decapod-controller
+- name: db-secret-argo
+  override:
+    postgres.username: postgres
+    postgres.password: tacopassword
+
+- name: db-secret-decapod-db
   override:
     postgres.username: postgres
     postgres.password: tacopassword
