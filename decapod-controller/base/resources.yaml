@@ -25,6 +25,28 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
+    name: decapod-db-secret
+  name: decapod-db-secret
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: prepare-decapod-controller
+    version: 0.1.0
+  releaseName: decapod-db-secret
+  targetNamespace: decapod-db
+  values:
+    postgres:
+      secretName: argo-postgres-config
+      username: postgres
+      password: tacopassword
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
     name: postgresql
   name: postgresql
 spec:
