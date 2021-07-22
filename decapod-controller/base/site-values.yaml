@@ -23,4 +23,4 @@ charts:
   override:
     controller.persistence.nodeStatusOffLoad: true
     controller.persistence.archive: true
-    controller.persistence.postgresql.host: postgresql.argo
+    controller.persistence.postgresql.host: postgresql.decapod-db
