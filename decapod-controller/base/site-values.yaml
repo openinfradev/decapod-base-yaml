@@ -24,3 +24,6 @@ charts:
     controller.persistence.nodeStatusOffLoad: true
     controller.persistence.archive: true
     controller.persistence.postgresql.host: postgresql.decapod-db
+    controller.telemetryConfig.enabled: true
+    controller.metricsConfig.enabled: true 
+    server.servicePortName: http
