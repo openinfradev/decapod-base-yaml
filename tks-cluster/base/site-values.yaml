@@ -13,20 +13,6 @@ charts:
     cluster:
       name: CLUSTER_NAME
       region: ap-northeast-2
-      networkSpec:
-        vpc:
-          ################################################################################
-          ## id is a vpc-id of the VPC this provider should use to create resources. 
-          ## it must set to an actual value.
-          ################################################################################
-          id: TO_BE_FIXED # vpc-00000000000
-        ################################################################################
-        ## subnets is an array of subnet configurations in VPC.
-        ## it must set to an actual value.
-        ################################################################################
-        subnets: 
-        - TO_BE_FIXED
-        # - id: subnets-xxxxxxxxx
     kubernetesVersion: v1.18.16
     kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
     kubeadmControlPlane.rootVolume.size: 16
@@ -39,20 +25,6 @@ charts:
     cluster:
       name: CLUSTER_NAME
       region: ap-northeast-2
-      networkSpec:
-        vpc:
-          ################################################################################
-          ## id is a vpc-id of the VPC this provider should use to create resources. 
-          ## it must set to an actual value.
-          ################################################################################
-          id: TO_BE_FIXED # vpc-00000000000
-        ################################################################################
-        ## subnets is an array of subnet configurations in VPC.
-        ## it must set to an actual value.
-        ################################################################################
-        subnets:
-        - TO_BE_FIXED
-        # - id: subnets-xxxxxxxxx
     kubernetesVersion: v1.18.16
     kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
     kubeadmControlPlane.rootVolume.size: 16
@@ -60,6 +32,7 @@ charts:
     machinePool.replicas: 3
     machinePool.machineType: $(awsMachineType)
     machinePool.rootVolume.size: 16
+
     ################################################################################
     ## machinePool.subnets is an array of subnet configurations in VPC.
     ## cluster api controller deploy machines in multi AZ based on provided subnets.
@@ -68,8 +41,9 @@ charts:
     machinePool.subnets:
     - TO_BE_FIXED
     # - id: subnets-xxxxxxxxxx    
+
     machineDeployment.enable: false
     machineDeployment.replicas: 3
     machineDeployment.machineType: $(awsMachineType)
-    machineDeployment.rootVolume.size: 8
+    machineDeployment.rootVolume.size: 16
 
