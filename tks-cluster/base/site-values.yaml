@@ -16,8 +16,8 @@ charts:
     kubernetesVersion: v1.18.16
     kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
     kubeadmControlPlane.rootVolume.size: 16
-    machinePool.enable: false
-    machineDeployment.enable: false
+    machinePool.enabled: false
+    machineDeployment.enabled: false
 
 - name: cluster-aws-node
   override:
@@ -28,7 +28,7 @@ charts:
     kubernetesVersion: v1.18.16
     kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
     kubeadmControlPlane.rootVolume.size: 16
-    machinePool.enable: true
+    machinePool.enabled: true
     machinePool.replicas: 3
     machinePool.machineType: $(awsMachineType)
     machinePool.rootVolume.size: 16
@@ -42,7 +42,7 @@ charts:
     - TO_BE_FIXED
     # - id: subnets-xxxxxxxxxx    
 
-    machineDeployment.enable: false
+    machineDeployment.enabled: false
     machineDeployment.replicas: 3
     machineDeployment.machineType: $(awsMachineType)
     machineDeployment.rootVolume.size: 16
