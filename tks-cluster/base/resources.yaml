@@ -9,7 +9,7 @@ spec:
   chart:
     type: helmrepo
     #repository: https://opendevinfra.github.io/helm-repo
-    repository: https://ktkfree.github.io/test-helm-repo
+    repository: https://ktkfree.github.io/test-helm-chart
     name: cluster-api-aws
     version: 0.1.2
   releaseName: cluster-aws-controlplane
@@ -43,7 +43,7 @@ spec:
   chart:
     type: helmrepo
     #repository: https://opendevinfra.github.io/helm-repo
-    repository: https://ktkfree.github.io/test-helm-repo
+    repository: https://ktkfree.github.io/test-helm-chart
     name: cluster-api-aws
     version: 0.1.2
   releaseName: cluster-aws-node
@@ -64,7 +64,7 @@ spec:
       enabled: true
       machineType: t3.large
       replicas: 3
-      minSize: 1
+      minSize: 3
       maxSize: 10
       rootVolume:
         size: 8 # GB
