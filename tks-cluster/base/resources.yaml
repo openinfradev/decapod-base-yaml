@@ -12,7 +12,7 @@ spec:
     repository: https://ktkfree.github.io/test-helm-repo
     name: cluster-api-aws
     version: 0.1.2
-  releaseName: cluster-api-aws
+  releaseName: cluster-aws-controlplane
   targetNamespace: capa-system
   values:
     sshKeyName: TO_BE_FIXED
@@ -46,7 +46,7 @@ spec:
     repository: https://ktkfree.github.io/test-helm-repo
     name: cluster-api-aws
     version: 0.1.2
-  releaseName: cluster-api-aws
+  releaseName: cluster-aws-node
   targetNamespace: capa-system
   values:
     sshKeyName: TO_BE_FIXED
