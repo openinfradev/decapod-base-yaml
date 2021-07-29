@@ -69,4 +69,7 @@ charts:
     - TO_BE_FIXED
     # - id: subnets-xxxxxxxxxx    
     machineDeployment.enable: false
+    machineDeployment.replicas: 3
+    machineDeployment.machineType: $(awsMachineType)
+    machineDeployment.rootVolume.size: 8
 

@@ -71,7 +71,7 @@ spec:
         type: gp2
       subnets: []
     machineDeployment:
-      enablec: true
+      enabled: true
       replicas: 3
       selector:
         matchLabels: null
