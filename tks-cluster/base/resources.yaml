@@ -8,8 +8,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    #repository: https://opendevinfra.github.io/helm-repo
-    repository: https://ktkfree.github.io/test-helm-chart
+    repository: https://opendevinfra.github.io/helm-repo
     name: cluster-api-aws
     version: 0.1.2
   releaseName: cluster-aws-controlplane
@@ -42,8 +41,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    #repository: https://opendevinfra.github.io/helm-repo
-    repository: https://ktkfree.github.io/test-helm-chart
+    repository: https://opendevinfra.github.io/helm-repo
     name: cluster-api-aws
     version: 0.1.2
   releaseName: cluster-aws-node
