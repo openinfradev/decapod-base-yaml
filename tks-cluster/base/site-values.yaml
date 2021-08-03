@@ -14,6 +14,7 @@ charts:
       name: CLUSTER_NAME
       region: ap-northeast-2
     kubernetesVersion: v1.18.16
+    kubeadmControlPlane.enabled: true
     kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
     kubeadmControlPlane.rootVolume.size: 16
     machinePool.enabled: false
@@ -26,8 +27,7 @@ charts:
       name: CLUSTER_NAME
       region: ap-northeast-2
     kubernetesVersion: v1.18.16
-    kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
-    kubeadmControlPlane.rootVolume.size: 16
+    kubeadmControlPlane.enabled: false
     machinePool.enabled: true
     machinePool.replicas: 3
     machinePool.machineType: $(awsMachineType)
@@ -41,7 +41,6 @@ charts:
     machinePool.subnets:
     - TO_BE_FIXED
     # - id: subnets-xxxxxxxxxx    
-
     machineDeployment.enabled: false
     machineDeployment.replicas: 3
     machineDeployment.machineType: $(awsMachineType)

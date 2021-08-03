@@ -53,6 +53,7 @@ spec:
       region: TO_BE_FIXED
     kubernetesVersion: v1.18.16
     kubeadmControlPlane:
+      enabled: true
       replicas: 3
       controlPlaneMachineType: t3.large
       rootVolume:
