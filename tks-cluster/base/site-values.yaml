@@ -5,14 +5,17 @@ metadata:
 
 global:
   awsMachineType: t3.large
+  sshKeyName: taco
+  clusterName: hanu-reference
+  clusterResion: ap-northeast-2
 
 charts:
 - name: cluster-aws-controlplane
   override:
-    sshKeyName: default
+    sshKeyName: $(sshKeyName)
     cluster:
-      name: CLUSTER_NAME
-      region: ap-northeast-2
+      name: $(clusterName)
+      region: $(clusterResion)
     kubernetesVersion: v1.18.16
     kubeadmControlPlane.enabled: true
     kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
@@ -22,10 +25,10 @@ charts:
 
 - name: cluster-aws-node
   override:
-    sshKeyName: default
+    sshKeyName: $(sshKeyName)
     cluster:
-      name: CLUSTER_NAME
-      region: ap-northeast-2
+      name: $(clusterName)
+      region: $(clusterResion)
     kubernetesVersion: v1.18.16
     kubeadmControlPlane.enabled: false
     machinePool.enabled: true
