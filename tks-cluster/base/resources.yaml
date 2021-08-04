@@ -1,0 +1,72 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: cluster-aws-controlplane
+  name: cluster-aws-controlplane
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://opendevinfra.github.io/helm-repo
+    name: cluster-api-aws
+    version: 0.2.1
+  releaseName: cluster-aws-controlplane
+  targetNamespace: capa-system
+  values:
+    sshKeyName: TO_BE_FIXED
+    cluster:
+      name: TO_BE_FIXED
+      region: TO_BE_FIXED
+    kubernetesVersion: v1.18.16
+    kubeadmControlPlane:
+      enabled: true
+      replicas: 3
+      controlPlaneMachineType: t3.large
+      rootVolume:
+        size: 8 # GB
+        type: gp2
+    machinePool:
+      enabled: false
+    machineDeployment:
+      enabled: false
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: cluster-aws-node
+  name: cluster-aws-node
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://opendevinfra.github.io/helm-repo
+    name: cluster-api-aws
+    version: 0.2.1
+  releaseName: cluster-aws-node
+  targetNamespace: capa-system
+  values:
+    sshKeyName: TO_BE_FIXED
+    cluster:
+      name: TO_BE_FIXED
+      region: TO_BE_FIXED
+    kubernetesVersion: v1.18.16
+    kubeadmControlPlane:
+      enabled: false
+    machinePool:
+      enabled: true
+      machineType: t3.large
+      replicas: 3
+      minSize: 3
+      maxSize: 10
+      rootVolume:
+        size: 8 # GB
+        type: gp2
+      subnets:
+      - TO_BE_FIXED
+    machineDeployment:
+      enabled: false
+  wait: true
+

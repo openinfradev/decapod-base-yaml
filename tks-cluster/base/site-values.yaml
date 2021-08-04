@@ -1,0 +1,52 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+global:
+  awsMachineType: t3.large
+  sshKeyName: taco
+  clusterName: hanu-reference
+  clusterRegion: ap-northeast-2
+  kubernetesVersion: v1.18.16
+
+charts:
+- name: cluster-aws-controlplane
+  override:
+    sshKeyName: $(sshKeyName)
+    cluster:
+      name: $(clusterName)
+      region: $(clusterRegion)
+    kubernetesVersion: $(kubernetesVersion)
+    kubeadmControlPlane.enabled: true
+    kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
+    kubeadmControlPlane.rootVolume.size: 16
+    machinePool.enabled: false
+    machineDeployment.enabled: false
+
+- name: cluster-aws-node
+  override:
+    sshKeyName: $(sshKeyName)
+    cluster:
+      name: $(clusterName)
+      region: $(clusterRegion)
+    kubernetesVersion: $(kubernetesVersion)
+    kubeadmControlPlane.enabled: false
+    machinePool.enabled: true
+    machinePool.replicas: 3
+    machinePool.machineType: $(awsMachineType)
+    machinePool.rootVolume.size: 16
+
+    ################################################################################
+    ## machinePool.subnets is an array of subnet configurations in VPC.
+    ## cluster api controller deploy machines in multi AZ based on provided subnets.
+    ## it must set to an actual value.
+    ################################################################################
+    machinePool.subnets:
+    - TO_BE_FIXED
+    # - id: subnets-xxxxxxxxxx    
+    machineDeployment.enabled: false
+    machineDeployment.replicas: 3
+    machineDeployment.machineType: $(awsMachineType)
+    machineDeployment.rootVolume.size: 16
+
