@@ -7,7 +7,8 @@ global:
   awsMachineType: t3.large
   sshKeyName: taco
   clusterName: hanu-reference
-  clusterResion: ap-northeast-2
+  clusterRegion: ap-northeast-2
+  kubernetesVersion: v1.18.16
 
 charts:
 - name: cluster-aws-controlplane
@@ -15,8 +16,8 @@ charts:
     sshKeyName: $(sshKeyName)
     cluster:
       name: $(clusterName)
-      region: $(clusterResion)
-    kubernetesVersion: v1.18.16
+      region: $(clusterRegion)
+    kubernetesVersion: $(kubernetesVersion)
     kubeadmControlPlane.enabled: true
     kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
     kubeadmControlPlane.rootVolume.size: 16
@@ -28,8 +29,8 @@ charts:
     sshKeyName: $(sshKeyName)
     cluster:
       name: $(clusterName)
-      region: $(clusterResion)
-    kubernetesVersion: v1.18.16
+      region: $(clusterRegion)
+    kubernetesVersion: $(kubernetesVersion)
     kubeadmControlPlane.enabled: false
     machinePool.enabled: true
     machinePool.replicas: 3
