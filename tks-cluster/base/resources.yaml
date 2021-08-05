@@ -65,7 +65,7 @@ spec:
         size: 8 # GB
         type: gp2
       subnets:
-      - TO_BE_FIXED
+      - id: TO_BE_FIXED
     machineDeployment:
       enabled: false
   wait: true

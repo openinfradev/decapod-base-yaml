@@ -43,7 +43,7 @@ charts:
     ## it must set to an actual value.
     ################################################################################
     machinePool.subnets:
-    - TO_BE_FIXED
+    - id: TO_BE_FIXED
     # - id: subnets-xxxxxxxxxx    
     machineDeployment.enabled: false
     machineDeployment.replicas: 3
