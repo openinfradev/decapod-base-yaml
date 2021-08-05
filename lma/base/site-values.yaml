@@ -45,9 +45,7 @@ charts:
     kubeEtcd.serviceMonitor.interval: $(serviceScrapeInterval)
     kubeProxy.serviceMonitor.interval: $(serviceScrapeInterval)
     kubeScheduler.serviceMonitor.interval: $(serviceScrapeInterval)
-    
-- name: prometheus-fed-master  
-  override:
+
     alertmanager.service.type: NodePort
     alertmanager.service.nodePort: 30111
     alertmanager.alertmanagerSpec.alertmanagerConfigSelector.matchLabels.alertmanagerConfig: example
@@ -55,12 +53,9 @@ charts:
     # Define the slack target to send alerts
     alertmanager.config.global.slack_api_url: https://hooks.slack.com/services/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
 
-    prometheus.prometheusSpec.nodeSelector: $(nodeSelector)
     # Define for storing alert
     alertmanager.alertmanagerSpec.retention: 120h
-    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
-    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 500Gi
-  
+
 - name: kube-state-metrics
   override:
     nodeSelector: $(nodeSelector)
@@ -171,16 +166,6 @@ charts:
     serviceMonitor.istio.interval: $(serviceScrapeInterval)
     serviceMonitor.jaeger.interval: $(serviceScrapeInterval)
 
-    # Setting the prometheus federation
-    serviceMonitor.federations: 
-    - name: dev-federate
-      interval: $(federateScrapeInterval)
-      namespace: lma
-      selector:
-        app: prometheus
-        prometheus: lma-prometheus
-      port: 9090
-
 - name: prometheus-adapter
   override:
     nodeSelector: $(nodeSelector)
@@ -237,7 +222,7 @@ charts:
     storegateway.persistence.size: 8Gi
     ruler.enabled: $(thanosPrimaryCluster)
     ruler.alertmanagers:
-    - http://fed-master-alertmanager:9093
+    - http://alertmanager-operated:9093
     ruler.config: |-
         groups:
           - name: "metamonitoring"

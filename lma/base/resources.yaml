@@ -78,7 +78,72 @@ spec:
       rbac:
         create: true
     alertmanager:
-      enabled: false
+      alertmanagerSpec:
+        nodeSelector: {} # TO_BE_FIXED
+        retention: TO_BE_FIXED
+      config:
+        global:
+          slack_api_url: TO_BE_FIXED
+          smtp_auth_password: null
+          smtp_auth_username: null
+          smtp_from: null
+          smtp_smarthost: null
+        receivers:
+        - name: default-alert
+          slack_configs:
+          - channel: '#doj-noti'
+            send_resolved: true
+            text: |-
+              {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
+                {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
+              {{ else }}
+              {{ if gt (len .Alerts.Firing) 0 }}
+              *Alerts Firing:*
+                {{ range .Alerts.Firing }}- {{ .Labels.alertname  }}: {{ .Annotations.message }}
+              {{ end }}{{ end }}
+              {{ if gt (len .Alerts.Resolved) 0 }}
+              *Alerts Resolved:*
+                {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
+              {{ end }}{{ end }}
+              {{ end }}
+            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len.Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
+            username: Prometheus
+        - name: slack-alert
+          slack_configs:
+          - channel: '#doj-critical-alert' #FIXME
+            send_resolved: true
+            text: |-
+              {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
+                {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
+              {{ else }}
+              {{ if gt (len .Alerts.Firing) 0 }}
+              *Alerts Firing:*
+                {{ range .Alerts.Firing }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
+              {{ end }}{{ end }}
+              {{ if gt (len .Alerts.Resolved) 0 }}
+              *Alerts Resolved:*
+                {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
+              {{ end }}{{ end }}
+              {{ end }}
+            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len.Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
+            username: Prometheus
+        - name: telegram-alert
+          webhook_configs:
+          - send_resolved: true
+            url: http://prometheus-bot:9087/alert/-GROUP_ID
+        route:
+          group_by:
+          - alertname
+          group_wait: 10s
+          receiver: default-alert
+          repeat_interval: 1h
+          routes:
+          - group_by:
+            - alertname
+            match:
+              severity: page
+            receiver: slack-alert
+      enabled: true
     grafana:
       enabled: false
     kubeApiServer:
@@ -174,153 +239,6 @@ spec:
         nodePort: 30901
         type: NodePort
         clusterIP: ""
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: prometheus-fed-master
-  name: prometheus-fed-master
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://prometheus-community.github.io/helm-charts
-    name: kube-prometheus-stack
-    version: 14.5.0
-  releaseName: prometheus-fed-master
-  targetNamespace: lma
-  values:
-    defaultRules:
-      create: false
-    global:
-      rbac:
-        create: true
-    alertmanager:
-      alertmanagerSpec:
-        nodeSelector: {} # TO_BE_FIXED
-        retention: TO_BE_FIXED
-      config:
-        global:
-          slack_api_url: TO_BE_FIXED
-          smtp_auth_password: null
-          smtp_auth_username: null
-          smtp_from: null
-          smtp_smarthost: null
-        receivers:
-        - name: default-alert
-          slack_configs:
-          - channel: '#doj-noti'
-            send_resolved: true
-            text: |-
-              {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
-                {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
-              {{ else }}
-              {{ if gt (len .Alerts.Firing) 0 }}
-              *Alerts Firing:*
-                {{ range .Alerts.Firing }}- {{ .Labels.alertname  }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ if gt (len .Alerts.Resolved) 0 }}
-              *Alerts Resolved:*
-                {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ end }}
-            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len.Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
-            username: Prometheus
-        - name: slack-alert
-          slack_configs:
-          - channel: '#doj-critical-alert' #FIXME
-            send_resolved: true
-            text: |-
-              {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
-                {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
-              {{ else }}
-              {{ if gt (len .Alerts.Firing) 0 }}
-              *Alerts Firing:*
-                {{ range .Alerts.Firing }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ if gt (len .Alerts.Resolved) 0 }}
-              *Alerts Resolved:*
-                {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ end }}
-            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len.Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
-            username: Prometheus
-        - name: telegram-alert
-          webhook_configs:
-          - send_resolved: true
-            url: http://prometheus-bot:9087/alert/-GROUP_ID
-        route:
-          group_by:
-          - alertname
-          group_wait: 10s
-          receiver: default-alert
-          repeat_interval: 1h
-          routes:
-          - group_by:
-            - alertname
-            match:
-              severity: page
-            receiver: slack-alert
-      enabled: true
-    grafana:
-      enabled: false
-    kubeApiServer:
-      enabled: false
-    kubelet:
-      enabled: false
-    kubeControllerManager:
-      enabled: false
-    coreDns:
-      enabled: false
-    kubeDns:
-      enabled: false
-    kubeEtcd:
-      enabled: false
-    kubeScheduler:
-      enabled: false
-    kubeProxy:
-      enabled: false
-    kubeStateMetrics:
-      enabled: false
-#   kube-state-metrics: # subchart configuration
-    nodeExporter:
-      enabled: false
-#   prometheus-node-exporter: # subchart configuration
-
-    fullnameOverride: fed-master
-    prometheus:
-      prometheusSpec:
-        externalLabels:
-          taco_cluster: federation-master
-        nodeSelector: {} # TO_BE_FIXED
-        replicas: 1
-        ruleNamespaceSelector:
-          matchLabels:
-            name: fed
-        ruleSelectorNilUsesHelmValues: false
-        serviceMonitorNamespaceSelector:
-          matchLabels:
-            name: fed
-        serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorSelectorNilUsesHelmValues: false
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              accessModes:
-              - ReadWriteOnce
-              resources:
-                requests:
-                  storage: TO_BE_FIXED
-              storageClassName: TO_BE_FIXED
-      service:
-        nodePort: 30018
-        type: NodePort
-    prometheusOperator:
-      admissionWebhooks:
-        enabled: false
-      enabled: false
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -887,7 +805,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: lma-addons
-    version: 1.5.0
+    version: 1.6.0
   releaseName: addons
   targetNamespace: lma
   values:
@@ -896,7 +814,7 @@ spec:
       namespace: lma
       sidecar:
         datasources:
-          prometheusAddress: "fed-master-prometheus:9090"
+          prometheusAddress: "thanos-query:9090"
       istio:
         enabled: true
       jaeger:
@@ -931,42 +849,25 @@ spec:
         enabled: true
         interval: TO_BE_FIXED
       argocd:
-        enabled: false
+        enabled: true
         interval: TO_BE_FIXED
       argowf:
-        enabled: false
+        enabled: true
         interval: TO_BE_FIXED
       ceph:
         enabled: false  #FIXME
         interval: TO_BE_FIXED
         mon_hosts: []
       kubeStateMetrics:
-        enabled: false
+        enabled: true
       nodeExporter:
-        enabled: false
+        enabled: true
       pushgateway:
         enabled: true
       kubelet:
         enabled: true
         interval: TO_BE_FIXED
       federations: [] # TO_BE_FIXED
-    metricbeat:
-      enabled: false
-      loglevel: error
-    tacoWatcher:
-      host: TO_BE_FIXED
-      port: 32000
-      rbac:
-        create: true
-      joinCluster:
-        enabled: false
-        body:
-          isMain: true
-          kibanaUrl: TO_BE_FIXED
-          grafanaUrl: TO_BE_FIXED
-          k8sUrl: TO_BE_FIXED
-          menu:
-            enabled: true
     kibanaInit:
       enabled: true
       url: TO_BE_FIXED
