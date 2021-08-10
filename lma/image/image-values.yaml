@@ -175,3 +175,8 @@ charts:
 
 - name: thanos-config
   override: {}
+
+- name: prepare-etcd-secret
+  override:
+    image.repository: $(registry)/hyperkube
+    image.tag: v1.18.8
