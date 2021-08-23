@@ -10,34 +10,17 @@ charts:
 - name: cluster-api-aws
   override:
     sshKeyName: default
-    cluster:
-      name: CLUSTER_NAME
-      region: ap-northeast-2
-      networkSpec:
-        vpc:
-          ################################################################################
-          ## id is a vpc-id of the VPC this provider should use to create resources. 
-          ## it must set to an actual value.
-          ################################################################################
-          id: TO_BE_FIXED # vpc-00000000000
-        ################################################################################
-        ## subnets is an array of subnet configurations in VPC.
-        ## it must set to an actual value.
-        ################################################################################
-        subnets:
-        - TO_BE_FIXED
-        # - id: subnets-xxxxxxxxx
-    kubernetesVersion: v1.18.16
-    kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
+    cluster.name: TO_BE_FIXED
+    cluster.region: TO_BE_FIXED
+    cluster.bastion.enabled: false
+    kubeadmControlPlane.controlPlaneMachineType: t3.large
     kubeadmControlPlane.rootVolume.size: 16
     machinePool.replicas: 3
-    machinePool.machineType: $(awsMachineType)
+    machinePool.machineType: t3.2xlarge
     machinePool.rootVolume.size: 16
-    ################################################################################
-    ## machinePool.subnets is an array of subnet configurations in VPC.
-    ## cluster api controller deploy machines in multi AZ based on provided subnets.
-    ## it must set to an actual value.
-    ################################################################################
-    machinePool.subnets:
-    - TO_BE_FIXED
-    # - id: subnets-xxxxxxxxxx
+- name: kubernetes-addons
+  override:
+    cni.calico.enabled: true
+    csi.aws-ebs.enabled: true
+- name: ingress-nginx
+  override:

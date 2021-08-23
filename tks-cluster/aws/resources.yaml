@@ -1,3 +1,4 @@
+---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
@@ -10,7 +11,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: cluster-api-aws
-    version: 0.1.1
+    version: 0.3.0
   releaseName: cluster-api-aws
   targetNamespace: capa-system
   values:
@@ -18,25 +19,110 @@ spec:
     cluster:
       name: TO_BE_FIXED
       region: TO_BE_FIXED
-      networkSpec:
-        vpc:
-          id: TO_BE_FIXED
-        subnets: []
-    kubernetesVersion: v1.18.16
+      kubernetesVersion: v1.20.8
+      podCidrBlocks:
+      - 10.10.0.0/16
+      bastion:
+        enabled: TO_BE_FIXED
+        instanceType: t3.micro
     kubeadmControlPlane:
       replicas: 3
-      controlPlaneMachineType: t3.large
+      controlPlaneMachineType: TO_BE_FIXED
       rootVolume:
-        size: 8 # GB
+        size: 20 # GB
         type: gp2
-    machinePool:
-      enabled: true
-      machineType: t3.large
-      replicas: 3
-      minSize: 1
-      maxSize: 10
-      rootVolume:
-        size: 8 # GB
-        type: gp2
-      subnets: []
+    machinePool: []
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: kubernetes-addons
+  name: kubernetes-addons
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: kubernetes-addons
+    version: 0.1.0
+  releaseName: kubernetes-addons
+  targetNamespace: taco-system
+  values:
+    cni:
+      calico:
+        enabled: true
+    csi:
+      aws-ebs:
+        enabled: false
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: ingress-nginx
+  name: ingress-nginx
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://kubernetes.github.io/ingress-nginx
+    name: ingress-nginx
+    version: 3.36.0
+  releaseName: ingress-nginx
+  targetNamespace: taco-system
+  values:
+    controller:
+      hostPort:
+        enabled: true
+      service:
+        externalTrafficPolicy: Local
+        nodePorts:
+          http: 32080
+          https: 32443
+          tcp:
+            "10254": 32081
+        type: NodePort
+    tcp:
+      "10254": 10254:healthz
+  wait: true
+# ---
+# apiVersion: helm.fluxcd.io/v1
+# kind: HelmRelease
+# metadata:
+#   labels:
+#     name: kubeseal
+#   name: kubeseal
+# spec:
+#   helmVersion: v3
+#   chart:
+#     type: helmrepo
+#     repository: 
+#     name: kubeseal
+#     version: 0.1.0
+#   releaseName: kubeseal
+#   targetNamespace: taco-system
+#   values:
+
+#   wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: kubed 
+  name: kubed
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://charts.appscode.com/stable
+    name: kubed
+    version: v0.12.0
+  releaseName: kubed
+  targetNamespace: taco-system
+  values:
+
   wait: true
