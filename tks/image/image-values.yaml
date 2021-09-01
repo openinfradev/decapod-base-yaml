@@ -1,0 +1,22 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: image
+global:
+  registry: LOCAL_REGISTRY
+
+charts:
+- name: tks-contract
+  override:
+    image.repository: ghcr.io/openinfradev/tks-contract/tks-contract
+    image.tag: latest
+
+- name: tks-info
+  override:
+    image.repository: ghcr.io/openinfradev/tks-info/tks-info
+    image.tag: latest
+
+- name: tks-cluster-lcm
+  override:
+    image.repository: ghcr.io/openinfradev/tks-cluster-lcm/tks-cluster-lcm
+    image.tag: latest
