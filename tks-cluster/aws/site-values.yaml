@@ -4,40 +4,38 @@ metadata:
   name: site
 
 global:
-  awsMachineType: t3.large
+  # Specify cluster name. It is useful in multi-cluster env.
+  clusterName: TO_BE_FIXED
 
 charts:
 - name: cluster-api-aws
   override:
     sshKeyName: default
-    cluster:
-      name: CLUSTER_NAME
-      region: ap-northeast-2
-      networkSpec:
-        vpc:
-          ################################################################################
-          ## id is a vpc-id of the VPC this provider should use to create resources. 
-          ## it must set to an actual value.
-          ################################################################################
-          id: TO_BE_FIXED # vpc-00000000000
-        ################################################################################
-        ## subnets is an array of subnet configurations in VPC.
-        ## it must set to an actual value.
-        ################################################################################
-        subnets:
-        - TO_BE_FIXED
-        # - id: subnets-xxxxxxxxx
-    kubernetesVersion: v1.18.16
-    kubeadmControlPlane.controlPlaneMachineType: $(awsMachineType)
-    kubeadmControlPlane.rootVolume.size: 16
-    machinePool.replicas: 3
-    machinePool.machineType: $(awsMachineType)
-    machinePool.rootVolume.size: 16
-    ################################################################################
-    ## machinePool.subnets is an array of subnet configurations in VPC.
-    ## cluster api controller deploy machines in multi AZ based on provided subnets.
-    ## it must set to an actual value.
-    ################################################################################
-    machinePool.subnets:
-    - TO_BE_FIXED
-    # - id: subnets-xxxxxxxxxx
+    cluster.name: $(clusterName)
+    cluster.region: TO_BE_FIXED
+    cluster.bastion.enabled: false
+    kubeadmControlPlane.controlPlaneMachineType: t3.medium
+    machinePool:
+    - name: taco
+      machineType: t3.2xlarge
+      replicas: 3
+      minSize: 1
+      maxSize: 16
+      rootVolume:
+        size: 200
+        type: gp2
+      labels:
+        taco-lma: enabled
+        servicemesh: enabled
+        taco-ingress-gateway: enabled
+    job.taconode.enabled: true
+    job.argo.enabled: true
+    job.argo.url: argocd-v2.taco-cat.xyz
+    job.argo.password: aFgSFwjtrBRwKgci
+  
+- name: kubernetes-addons
+  override:
+    cni.calico.enabled: true
+    csi.aws-ebs.enabled: true
+- name: ingress-nginx
+  override:
