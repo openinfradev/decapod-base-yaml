@@ -93,8 +93,12 @@ spec:
   values:
     server:
       serviceType: NodePort
+      image:
+        tag: v3.1.0
     controller:
       containerRuntimeExecutor: k8sapi
+      image:
+        tag: v3.1.0
       persistence:
         nodeStatusOffLoad: true
         archive: true
