@@ -96,7 +96,7 @@ spec:
       image:
         tag: v3.1.9
       extraArgs:
-        - "-auth-mode=server"
+        - "--auth-mode=server"
     controller:
       containerRuntimeExecutor: k8sapi
       image:
