@@ -94,11 +94,13 @@ spec:
     server:
       serviceType: NodePort
       image:
-        tag: v3.1.0
+        tag: v3.1.9
+      extraArgs:
+        - "-auth-mode=server"
     controller:
       containerRuntimeExecutor: k8sapi
       image:
-        tag: v3.1.0
+        tag: v3.1.9
       persistence:
         nodeStatusOffLoad: true
         archive: true
@@ -115,4 +117,7 @@ spec:
           passwordSecret:
             name: argo-postgres-config
             key: postgresql-password
+    executor:
+      image:
+        tag: v3.1.9
   wait: true
