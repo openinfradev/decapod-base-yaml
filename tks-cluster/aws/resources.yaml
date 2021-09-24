@@ -13,7 +13,7 @@ spec:
     name: cluster-api-aws
     version: 0.3.1
   releaseName: cluster-api-aws
-  targetNamespace: default
+  targetNamespace: argo
   values:
     sshKeyName: TO_BE_FIXED
     cluster:

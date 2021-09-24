@@ -10,7 +10,7 @@ global:
 charts:
 - name: cluster-api-aws
   override:
-    sshKeyName: default
+    sshKeyName: taco
     cluster.name: $(clusterName)
     cluster.region: TO_BE_FIXED
     cluster.bastion.enabled: false
