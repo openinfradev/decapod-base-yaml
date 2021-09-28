@@ -1,0 +1,15 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: image
+global:
+  registry: LOCAL_REGISTRY
+
+charts:
+- name: sealed-secrets-controller
+  # TODO: override image url
+  override: 
+
+- name: kubed
+  # TODO: override image url
+  override:
