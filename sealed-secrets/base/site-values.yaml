@@ -1,0 +1,11 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+charts:
+- name: sealed-secrets-controller
+  override:
+
+- name: kubed
+  override:
