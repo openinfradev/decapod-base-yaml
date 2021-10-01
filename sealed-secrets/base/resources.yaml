@@ -3,8 +3,8 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: sealed-secrets-controller
-  name: sealed-secrets-controller
+    name: sealed-secrets-operator
+  name: sealed-secrets-operator
 spec:
   helmVersion: v3
   chart:
@@ -12,7 +12,7 @@ spec:
     repository: https://bitnami-labs.github.io/sealed-secrets
     name: sealed-secrets
     version: 1.16.1
-  releaseName: sealed-secrets-controller
+  releaseName: sealed-secrets-operator
   targetNamespace: kube-system
   wait: true
 ---
