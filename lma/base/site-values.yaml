@@ -131,11 +131,11 @@ charts:
 
     # Define a endpoint to store logs
     fluentbit.outputs.es.host: eck-elasticsearch-es-http.lma.svc.$(clusterName)
+    fluentbit.outputs.es.elasticPasswordSecret: eck-elasticsearch-es-elastic-user
     fluentbit.outputs.kafka:
       enabled: false
       broker: "YOUR_BORKER_INFO"
       topic: "YOUR_TACO_LOG_INFO"
-    fluentbit.esTemplate.url: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
     fluentbit.nodeSelector: $(nodeSelector)
 
 - name: addons
