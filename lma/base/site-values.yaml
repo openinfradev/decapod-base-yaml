@@ -116,6 +116,13 @@ charts:
   override:
     adminPassword: password
     persistence.storageClassName: $(storageClassName)
+    auth.generic.oauth.client_secret: TO_BE_FIXED #from keycloak
+    auth.generic.oauth.scopes: openid profile email
+    auth.generic.oauth.auth_url: TO_BE_FIXED #http://{KEYCLOAK_URL}/auth/realms/{GRAFANA_REALM}/protocol/openid-connect/auth
+    auth.generic.oauth.token_url: TO_BE_FIXED #http://{KEYCLOAK_URL}/auth/realms/{GRAFANA_REALM}/protocol/openid-connect/token
+    auth.generic.oauth.api_url: TO_BE_FIXED #http://{KEYCLOAK_URL}/auth/realms/{GRAFANA_REALM}/protocol/openid-connect/userinfo
+    server.root_url: TO_BE_FIXED #grafana full URL accessible from browser
+    security.cookie_secure: false #set to true if you host grafana behind HTTPS
 
 - name: fluentbit-operator
   override:

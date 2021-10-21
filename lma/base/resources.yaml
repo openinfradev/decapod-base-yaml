@@ -505,6 +505,25 @@ spec:
       size: 10G #FIXME
       storageClassName: TO_BE_FIXED
     grafana.ini:
+      auth:
+        oauth_auto_login: true
+        disable_login_form: true
+        disable_signout_menu: true
+      auth.generic.oauth:
+        enabled: true
+        name: keycloakOAuth
+        client_id: grafana
+        client_secret: TO_BE_FIXED #from keycloak
+        scopes: openid profile email
+        auth_url: TO_BE_FIXED #http://{KEYCLOAK_URL}/auth/realms/{GRAFANA_REALM}/protocol/openid-connect/auth
+        token_url: TO_BE_FIXED #http://{KEYCLOAK_URL}/auth/realms/{GRAFANA_REALM}/protocol/openid-connect/token
+        api_url: TO_BE_FIXED #http://{KEYCLOAK_URL}/auth/realms/{GRAFANA_REALM}/protocol/openid-connect/userinfo
+      server:
+        root_url: TO_BE_FIXED #grafana full URL accessible from browser
+      security:
+        cookie_secure: false #set to true if you host grafana behind HTTPS
+      user:
+        auto_assign_org: true #automatically add new users to the main organization
       plugins:
         vonage-status-panel: true
         grafana-piechart-panel: true
