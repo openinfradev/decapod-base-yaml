@@ -934,42 +934,6 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: taco-watcher
-  name: taco-watcher
-spec:
-  helmVersion: v3 
-  chart:
-    type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
-    name: taco-watcher
-    version: 0.1.0
-  releaseName: taco-watcher
-  targetNamespace: lma
-  values:
-    config:
-      grafana:
-        authkey: admin:password
-      initDB: true
-      kibana:
-        authkey: elastic:tacoword
-      password: password
-      username: taco
-    nodeSelector: {} # TO_BE_FIXED
-    resources:
-      storageClassName: TO_BE_FIXED
-    service:
-      nodePort: 32000
-      port: 32000
-      proxy_from: 32001
-      proxy_to: 32009
-      targetPort: 32000
-      type: NodePort
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
     name: thanos
   name: thanos
 spec:

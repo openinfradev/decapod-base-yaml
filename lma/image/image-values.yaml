@@ -24,8 +24,6 @@ charts:
     kibanaInit.image.tag: v4
     metricbeat.image.repository: $(registry)/metricbeat
     metricbeat.image.tag: taco-1.0.0
-    tacoWatcher.joinCluster.image.repository: $(registry)/curl
-    tacoWatcher.joinCluster.image.tag: latest
 
 - name: fed-addons
   override:
@@ -33,8 +31,6 @@ charts:
     kibanaInit.image.tag: v4
     metricbeat.image.repository: $(registry)/metricbeat
     metricbeat.image.tag: taco-1.0.0
-    tacoWatcher.joinCluster.image.repository: $(registry)/curl
-    tacoWatcher.joinCluster.image.tag: latest
 
 - name: fluentbit
   override:
@@ -149,11 +145,6 @@ charts:
     image.repository: $(registry)/siim/kubernetes-event-exporter
     image.tag: 0.1.0
     image.PullPolicy: IfNotPresent
-
-- name: taco-watcher
-  override:
-    image.repository: sktdev/taco-watcher
-    image.tag: latest
 
 - name: thanos
   override:
