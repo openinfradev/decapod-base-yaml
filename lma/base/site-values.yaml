@@ -146,12 +146,6 @@ charts:
     metricbeat.prometheus.hosts:
     - thanos-query-frontend.lma.svc.$(clusterName):9090
 
-    # Configure for the Taco Watcher
-    tacoWatcher.host: taco-watcher.lma.svc.$(clusterName)
-    tacoWatcher.joinCluster.body.kibanaUrl: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
-    tacoWatcher.joinCluster.body.grafanaUrl: http://grafana.lma.svc.$(clusterName)
-    tacoWatcher.joinCluster.body.k8sUrl: https://kubernetes.default.svc.$(clusterName)
-
     # Initialize the kibana index
     kibanaInit.url: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     serviceMonitor.grafana.interval: $(serviceScrapeInterval)
