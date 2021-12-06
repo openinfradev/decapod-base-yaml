@@ -253,7 +253,7 @@ spec:
     type: helmrepo
     repository: https://helm.elastic.co
     name: eck-operator
-    version: 1.6.0
+    version: 1.8.0
   releaseName: eck-operator
   targetNamespace: elastic-system
   values:
@@ -261,9 +261,9 @@ spec:
     replicaCount: 1
     config:
       containerRegistry: docker.elastic.co
-    internal:
+    global:
       manifestGen: true
-      kubeVersion: 1.18.8
+      kubeVersion: 1.22.2
       createOperatorNamespace: true
     softMultiTenancy:
       enabled: false
@@ -399,7 +399,8 @@ spec:
   targetNamespace: lma
   values:
     elasticsearch:
-      version: 7.5.1
+      image:
+        tag: 7.15.2
       adminPassword: TO_BE_FIXED
       enabled: true 
       count: 3        # FIXME
@@ -454,7 +455,8 @@ spec:
             storageClassName: TO_BE_FIXED
             size: 0.5Gi
     kibana:
-      version: 7.5.1
+      image:
+        tag: 7.15.2
       enabled: true
       http:
         tls:
