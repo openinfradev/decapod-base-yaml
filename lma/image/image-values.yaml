@@ -9,9 +9,9 @@ charts:
 - name: eck-resource
   override:
     elasticsearch.image.repository: $(registry)/elasticsearch/elasticsearch
-    elasticsearch.image.tag: 7.5.1
+    elasticsearch.image.tag: 7.15.2
     kibana.image.repository: $(registry)/kibana/kibana
-    kibana.image.tag: 7.5.1
+    kibana.image.tag: 7.15.2
 
 - name: eck-operator
   override:
@@ -88,8 +88,8 @@ charts:
     prometheusOperator.admissionWebhooks.patch.image.tag: v1.5.0
     prometheusOperator.image.repository: $(registry)/prometheus-operator/prometheus-operator
     prometheusOperator.image.tag: v0.46.0
-    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/prometheus-operator/prometheus-config-reloader
-    prometheusOperator.prometheusConfigReloaderImage.tag: v0.46.0
+    prometheusOperator.prometheusConfigReloader.image.repository: $(registry)/prometheus-operator/prometheus-config-reloader
+    prometheusOperator.prometheusConfigReloader.image.tag: v0.46.0
     prometheus.prometheusSpec.image.repository: $(registry)/prometheus/prometheus
     prometheus.prometheusSpec.image.tag: v2.24.0
 
@@ -106,8 +106,8 @@ charts:
     prometheusOperator.admissionWebhooks.patch.image.tag: v1.5.0
     prometheusOperator.image.repository: $(registry)/prometheus-operator/prometheus-operator
     prometheusOperator.image.tag: v0.46.0
-    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/prometheus-operator/prometheus-config-reloader
-    prometheusOperator.prometheusConfigReloaderImage.tag: v0.46.0
+    prometheusOperator.prometheusConfigReloader.image.repository: $(registry)/prometheus-operator/prometheus-config-reloader
+    prometheusOperator.prometheusConfigReloader.image.tag: v0.46.0
     prometheus.prometheusSpec.image.repository: $(registry)/prometheus/prometheus
     prometheus.prometheusSpec.image.tag: v2.24.0
 
@@ -124,8 +124,8 @@ charts:
     prometheusOperator.admissionWebhooks.patch.image.tag: v1.5.0
     prometheusOperator.image.repository: $(registry)/prometheus-operator/prometheus-operator
     prometheusOperator.image.tag: v0.46.0
-    prometheusOperator.prometheusConfigReloaderImage.repository: $(registry)/prometheus-operator/prometheus-config-reloader
-    prometheusOperator.prometheusConfigReloaderImage.tag: v0.46.0
+    prometheusOperator.prometheusConfigReloader.image.repository: $(registry)/prometheus-operator/prometheus-config-reloader
+    prometheusOperator.prometheusConfigReloader.image.tag: v0.46.0
     prometheus.prometheusSpec.image.repository: $(registry)/prometheus/prometheus
     prometheus.prometheusSpec.image.tag: v2.24.0
 
