@@ -809,12 +809,18 @@ spec:
   releaseName: addons
   targetNamespace: lma
   values:
+    grafanaDatasource:
+      enabled: true
+      namespace: lma
+      prometheus:
+        enabled: true
+        url: "thanos-query:9090"
+      loki:
+        enabled: true
+        url: "loki.lma:3100"
     grafanaDashboard:
       enabled: true
       namespace: lma
-      sidecar:
-        datasources:
-          prometheusAddress: "thanos-query:9090"
       istio:
         enabled: true
       jaeger:
