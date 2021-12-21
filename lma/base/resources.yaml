@@ -807,16 +807,22 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: lma-addons
-    version: 1.6.0
+    version: 1.7.0
   releaseName: addons
   targetNamespace: lma
   values:
+    grafanaDatasource:
+      enabled: true
+      namespace: lma
+      prometheus:
+        enabled: true
+        url: "thanos-query:9090"
+      loki:
+        enabled: true
+        url: "loki.lma:3100"
     grafanaDashboard:
       enabled: true
       namespace: lma
-      sidecar:
-        datasources:
-          prometheusAddress: "thanos-query:9090"
       istio:
         enabled: true
       jaeger:
@@ -1149,3 +1155,52 @@ spec:
     #       effect: "NoSchedule"
     #       operator: "Exists"
     tolerations: [] # TO_BE_FIXED
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: loki
+  name: loki
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://grafana.github.io/helm-charts
+    name: loki
+    version: 2.8.1
+  releaseName: loki
+  targetNamespace: lma
+  values:
+    image:
+      tag: 2.4.1
+    replicas: 1
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClassName: taco-storage
+    serviceMonitor:
+      enabled: false
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: promtail
+  name: promtail
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://grafana.github.io/helm-charts
+    name: promtail
+    version: 3.9.1
+  releaseName: promtail
+  targetNamespace: lma
+  values:
+    image:
+      tag: 2.4.1
+    serviceMonitor:
+      enabled: false
+    syslogService:
+      enabled: false

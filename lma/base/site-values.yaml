@@ -242,3 +242,15 @@ charts:
     sidecarsService.name: thanos-sidecars
     sidecarsService.endpoints: 
       - 172.16.50.114
+
+- name: loki
+  override:
+    replicas: 1
+    persistence.size: 20Gi
+    persistence.storageClassName: $(storageClassName)
+    serviceMonitor.enabled: false
+
+- name: promtail
+  override:
+    serviceMonitor.enabled: false
+    syslogService.enabled: false

@@ -171,3 +171,14 @@ charts:
   override:
     image.repository: $(registry)/hyperkube
     image.tag: v1.18.8
+
+- name: loki
+  override:
+    image.repository: $(registry)/grafana/loki
+    image.tag: 2.4.1
+
+- name: promtail
+  override:
+    image.registry: $(registry)
+    image.repository: grafana/promtail
+    image.tag: 2.4.1
