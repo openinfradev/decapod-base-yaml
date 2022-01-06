@@ -1200,7 +1200,7 @@ spec:
   values:
     image:
       tag: 2.4.1
+    config:
+      lokiAddress: http://loki.lma:3100/loki/api/v1/push
     serviceMonitor:
-      enabled: false
-    syslogService:
       enabled: false
