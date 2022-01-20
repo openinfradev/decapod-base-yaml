@@ -510,11 +510,9 @@ spec:
       plugins:
         vonage-status-panel: true
         grafana-piechart-panel: true
-        devopsprodigy-kubegraf-app: true
     plugins:
     - vonage-status-panel
     - grafana-piechart-panel
-    - devopsprodigy-kubegraf-app
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
