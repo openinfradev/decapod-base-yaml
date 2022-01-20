@@ -351,7 +351,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: prometheus-process-exporter
-    version: 0.1.0
+    version: 0.1.4
     skipDepUpdate: true
   releaseName: prometheus-process-exporter
   targetNamespace: lma
@@ -487,7 +487,7 @@ spec:
     type: helmrepo
     repository: https://grafana.github.io/helm-charts
     name: grafana
-    version: 5.5.7
+    version: 6.17.4
   releaseName: grafana
   targetNamespace: lma
   values:
@@ -529,11 +529,12 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-operator
-    version: 1.0.10
+    version: 1.2.0
     skipDepUpdate: true
   releaseName: fluentbit-operator
   targetNamespace: lma
   values:
+    containerRuntime: containerd
     global:
       base_cluster_url: TO_BE_FIXED   #FIXME
     fluentbitOperator:
@@ -573,7 +574,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-operator
-    version: 1.0.10
+    version: 1.2.0
     skipDepUpdate: true
   releaseName: fluentbit
   targetNamespace: lma
