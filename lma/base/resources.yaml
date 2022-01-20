@@ -1199,7 +1199,33 @@ spec:
   values:
     image:
       tag: 2.4.1
+    extraArgs:
+      - "-config.expand-env=true"
     config:
       lokiAddress: http://loki.lma:3100/loki/api/v1/push
+      snippets:
+        extraScrapeConfigs: |
+          - job_name: systemlog
+            static_configs:
+            - targets:
+                - localhost
+              labels:
+                job: systemlog
+                host: ${HOSTNAME}
+                __path__: /var/log/messages
     serviceMonitor:
       enabled: false
+    defaultVolumes:
+      - name: containers
+        hostPath:
+          path: /var/lib/docker/containers
+      - name: varlog
+        hostPath:
+          path: /var/log
+    defaultVolumeMounts:
+      - name: containers
+        mountPath: /var/lib/docker/containers
+        readOnly: true
+      - name: varlog
+        mountPath: /var/log
+        readOnly: true
