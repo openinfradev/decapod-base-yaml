@@ -238,6 +238,7 @@ spec:
         targetPort: "grpc"
         nodePort: 30901
         type: NodePort
+        clusterIP: {}
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
