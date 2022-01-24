@@ -29,7 +29,6 @@ jobs:
           .github/workflows/render.sh lma
           .github/workflows/render.sh openstack
           .github/workflows/render.sh cloud-console
-          .github/workflows/render.sh tks-cluster aws
 
       - name: install helm
         run: |
