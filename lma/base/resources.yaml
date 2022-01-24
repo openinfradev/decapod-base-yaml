@@ -486,7 +486,7 @@ spec:
     type: helmrepo
     repository: https://grafana.github.io/helm-charts
     name: grafana
-    version: 6.17.4
+    version: 6.19.4
   releaseName: grafana
   targetNamespace: lma
   values:
@@ -745,7 +745,7 @@ spec:
       namespace: lma
       prometheus:
         enabled: true
-        url: "thanos-query:9090"
+        url: "thanos-query.lma:9090"
       loki:
         enabled: true
         url: "loki.lma:3100"
