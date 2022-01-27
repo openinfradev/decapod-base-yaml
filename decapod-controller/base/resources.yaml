@@ -94,13 +94,13 @@ spec:
     server:
       serviceType: NodePort
       image:
-        tag: v3.1.9
+        tag: v3.2.6
       extraArgs:
         - "--auth-mode=server"
     controller:
       containerRuntimeExecutor: k8sapi
       image:
-        tag: v3.1.9
+        tag: v3.2.6
       persistence:
         nodeStatusOffLoad: true
         archive: true
@@ -119,5 +119,5 @@ spec:
             key: postgresql-password
     executor:
       image:
-        tag: v3.1.9
+        tag: v3.2.6
   wait: true
