@@ -4,7 +4,7 @@ metadata:
   name: site
 
 charts:
-- name: sealed-secrets-controller
+- name: sealed-secrets-operator
   override:
 
 - name: kubed
