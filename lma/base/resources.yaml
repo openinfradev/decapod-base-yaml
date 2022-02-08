@@ -526,7 +526,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-operator
-    version: 1.2.0
+    version: 1.2.1
     skipDepUpdate: true
   releaseName: fluentbit-operator
   targetNamespace: lma
@@ -571,7 +571,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-operator
-    version: 1.2.0
+    version: 1.2.1
     skipDepUpdate: true
   releaseName: fluentbit
   targetNamespace: lma
