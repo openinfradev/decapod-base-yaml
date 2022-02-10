@@ -399,7 +399,7 @@ spec:
   values:
     elasticsearch:
       image:
-        tag: 7.15.2
+        tag: 7.10.2
       adminPassword: TO_BE_FIXED
       enabled: true 
       count: 3        # FIXME
@@ -455,7 +455,7 @@ spec:
             size: 0.5Gi
     kibana:
       image:
-        tag: 7.15.2
+        tag: 7.10.2
       enabled: true
       http:
         tls:
