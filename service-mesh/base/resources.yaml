@@ -1,3 +1,21 @@
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: istio-operator-crds
+  name: istio-operator-crds
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: istio-operator
+    version: 1.7.0
+  releaseName: istio-operator-crds
+  targetNamespace: istio-system
+  values: {}
+---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
@@ -159,6 +177,23 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
+    name: jaeger-operator-crds
+  name: jaeger-operator-crds
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: jaeger-operator
+    version: 2.20.0
+  releaseName: jaeger-operator-crds
+  targetNamespace: istio-system
+  values: {}
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
     name: jaeger-operator
   name: jaeger-operator
 spec:
@@ -238,6 +273,23 @@ spec:
                 port:
                   number: 16686
   wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: kiali-operator-crds
+  name: kiali-operator-crds
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://kiali.org/helm-charts
+    name: kiali-operator
+    version: 1.34.0
+  releaseName: kiali-operator-crds
+  targetNamespace: istio-system
+  values: {}
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
