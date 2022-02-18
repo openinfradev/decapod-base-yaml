@@ -734,9 +734,9 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://ktkfree.github.io/test-helm-chart
     name: lma-addons
-    version: 1.7.0
+    version: 1.7.1
   releaseName: addons
   targetNamespace: lma
   values:
