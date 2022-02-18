@@ -499,8 +499,9 @@ spec:
         enabled: true
         label: grafana_datasource
     service:
-      type: NodePort
-      nodePort: 30009
+      type: LoadBalancer
+      #type: NodePort
+      #nodePort: 30009
     persistence:
       enabled: true
       size: 10G #FIXME
