@@ -79,7 +79,24 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
+    name: argo-workflows-operator-crds
+  name: argo-workflows-operator-crds
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://argoproj.github.io/argo-helm
     name: argo-workflows
+    version: 0.2.6
+  releaseName: argo-workflows-operator-crds
+  targetNamespace: argo
+  values: {}
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: argo-workflows-operator
   name: argo-workflows-operator
 spec:
   helmVersion: v3

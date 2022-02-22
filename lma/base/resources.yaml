@@ -1,3 +1,21 @@
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: prometheus-operator-crds
+  name: prometheus-operator-crds
+spec:
+  chart:
+    type: helmrepo
+    repository: https://prometheus-community.github.io/helm-charts
+    name: kube-prometheus-stack
+    version: 21.0.3
+  helmVersion: v3
+  releaseName: prometheus-operator-crds
+  targetNamespace: lma
+  values: {}
+---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
@@ -513,6 +531,24 @@ spec:
     - vonage-status-panel
     - grafana-piechart-panel
   wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: fluentbit-operator-crds
+  name: fluentbit-operator-crds
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: fluentbit-operator
+    version: 1.2.1
+    skipDepUpdate: true
+  releaseName: fluentbit-operator-crds
+  targetNamespace: lma
+  values: {}
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
