@@ -32,6 +32,7 @@ spec:
   releaseName: sealed-secrets-operator
   targetNamespace: kube-system
   wait: true
+  values: {}
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -49,3 +50,4 @@ spec:
   releaseName: kubed
   targetNamespace: kube-system
   wait: true
+  values: {}
