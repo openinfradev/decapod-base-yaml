@@ -15,6 +15,7 @@ spec:
   releaseName: sealed-secrets-operator-crds
   targetNamespace: kube-system
   wait: true
+  values: {}
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
