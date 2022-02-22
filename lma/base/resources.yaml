@@ -1103,7 +1103,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: prepare-etcd-secret
-    version: 0.1.1
+    version: 0.2.0
   releaseName: prepare-etcd-secret
   targetNamespace: lma
   values:
