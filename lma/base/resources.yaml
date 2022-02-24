@@ -1120,6 +1120,7 @@ spec:
     #       effect: "NoSchedule"
     #       operator: "Exists"
     tolerations: [] # TO_BE_FIXED
+    deployer: "tks"
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
