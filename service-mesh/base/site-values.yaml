@@ -20,9 +20,7 @@ global:
 charts:
 - name: istio-operator
   override:
-    revision: "1-10-2"
-    hub: docker.io/istio
-    tag: 1.10.2
+    revision: "1-11-7"
     operator.resources.limits.cpu: 200m
     operator.resources.limits.memory: 256Mi
     operator.resources.requests.cpu: 50m
@@ -30,14 +28,12 @@ charts:
 
 - name: servicemesh-controlplane
   override:
-    IstioOperator.revision: "1-10-2"
-    IstioOperator.image.hub: docker.io/istio
-    IstioOperator.image.tag: 1.10.2
+    IstioOperator.revision: "1-11-7"
     IstioOperator.meshConfig.enableTracing: true
     IstioOperator.meshConfig.tracingSampling: 100
     IstioOperator.meshConfig.extensionProviders.envoyExtAuthzGrpc.service: jaeger-operator-jaeger-collector.istio-system.svc
     IstioOperator.meshConfig.extensionProviders.envoyExtAuthzGrpc.port: 14250
-    IstioOperator.meshConfig.defaultConfig.discoveryAddress: istiod-1-10-2.istio-system.svc:15012
+    IstioOperator.meshConfig.defaultConfig.discoveryAddress: istiod-1-11-7.istio-system.svc:15012
     IstioOperator.meshConfig.defaultConfig.tracing.zipkin.address: jaeger-operator-jaeger-collector.istio-system.svc:9411
     IstioOperator.meshConfig.defaultConfig.tracing.sampling: 100
     IstioOperator.values.global.istioNamespace: istio-system
@@ -48,9 +44,7 @@ charts:
 
 - name: servicemesh-gateway
   override:
-    IstioOperator.revision: "1-10-2"
-    IstioOperator.image.hub: docker.io/istio
-    IstioOperator.image.tag: 1.10.2
+    IstioOperator.revision: "1-11-7"
     IstioOperator.values.global.istioNamespace: istio-system
     IstioOperator.components.ingressGateways.name: istio-ingress-gateway
     IstioOperator.components.ingressGateways.namespace: istio-system
@@ -89,7 +83,7 @@ charts:
       username: elastic
       password: tacoword
     JaegerIngress:
-      enabled: true
+      enabled: false
       namespace: istio-system
       rules:
       - host: jaeger.k2-node01
@@ -116,7 +110,7 @@ charts:
     deployment.resources.limits.cpu: 1000m
     deployment.resources.limits.memory: 2048Mi
     deployment.nodeSelector: $(serviceMeshControlNodeSelector)
-    externalServices.istio.configMapName: istio-1-10-2
+    externalServices.istio.configMapName: istio-1-11-7
     externalServices.istio.istioIdentityDomain: "svc.cluster.local"
     externalServices.prometheus.url: http://lma-prometheus.lma.svc:9090
     externalServices.tracing.inClusterUrl: http://jaeger-operator-jaeger-query.istio-system:16686
@@ -125,7 +119,7 @@ charts:
     externalServices.grafana.inClusterUrl: http://grafana.lma.svc:80
     externalServices.grafana.url: http://k1-master01:30009
     KialiIngress:
-      enabled: true
+      enabled: false
       namespace: istio-system
       rules:
       - host: kiali.k2-node01
