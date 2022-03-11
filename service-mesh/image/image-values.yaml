@@ -6,50 +6,32 @@ global:
   registry: LOCAL_REGISTRY
 
 charts:
-- name: istio-operator
+- name: istiod
   override:
-    hub: $(registry)/istio-testing
-    tag: latest
+    hub: $(registry)/istio/pilot
+    tag: 1.13.1
 
-- name: servicemesh-controlplane
-  override: 
-    IstioOperator.image.hub: $(registry)/istio-testing
-    IstioOperator.image.tag: 1.14-alpha.82cbd49db92acce69184ab4e9b95e033ea8ab390
-
-- name: servicemesh-gateway
+- name: istio-ingress-gateway
   override:
-    IstioOperator.image.hub: $(registry)/istio-testing
-    IstioOperator.image.tag: 1.14-alpha.82cbd49db92acce69184ab4e9b95e033ea8ab390
+    hub: $(registry)/istio/proxyv2
+    tag: 1.13.1
 
 - name: jaeger-operator
   override:
     image.repository: $(registry)/jaegertracing/jaeger-operator
-    image.tag: 1.24.0
+    image.tag: 1.29.1
     collectorImage.repository: $(registry)/jaegertracing/jaeger-collector
-    collectorImage.tag: 1.24.0
+    collectorImage.tag: 1.29.1
     agentImage.repository: $(registry)/jaegertracing/jaeger-agent
-    agentImage.tag: 1.24.0
+    agentImage.tag: 1.29.1
     ingesterImage.repository: $(registry)/jaegertracing/jaeger-ingester
-    ingesterImage.tag: 1.24.0
+    ingesterImage.tag: 1.29.1
     queryImage.repository: $(registry)/jaegertracing/jaeger-collector
-    queryImage.tag: 1.24.0
-
-- name: servicemesh-jaeger-resource
-  override:
-    image.repository: $(registry)/jaegertracing/jaeger-operator
-    image.tag: 1.24.0
-    collectorImage.repository: $(registry)/jaegertracing/jaeger-collector
-    collectorImage.tag: 1.24.0
-    agentImage.repository: $(registry)/jaegertracing/jaeger-agent
-    agentImage.tag: 1.24.0
-    ingesterImage.repository: $(registry)/jaegertracing/jaeger-ingester
-    ingesterImage.tag: 1.24.0
-    queryImage.repository: $(registry)/jaegertracing/jaeger-collector
-    queryImage.tag: 1.24.0
+    queryImage.tag: 1.29.1
 
 - name: kiali-operator
   override:
     image.repo: $(registry)/kiali/kiali-operator
-    image.tag: v1.38.1
+    image.tag: v1.45.1
 
 
