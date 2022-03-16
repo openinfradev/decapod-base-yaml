@@ -5,7 +5,7 @@ metadata:
 
 global:
   clusterName: cluster.local
-  storageClassName: ceph
+  storageClassName: taco-storage
   repository: http://master-1:8879
   keycloakDomain: keycloak.example.com
   keycloakPassword: password
@@ -87,3 +87,12 @@ charts:
     configmap.backup.servers:
     - TO_BE_FIXED
     secret.password: TO_BE_FIXED
+- name: keycloak-operator
+  override:
+- name: keycloak-resources
+  override:
+    keycloak.name: tks-keycloak
+    keycloak.externalDatabase.address: postgresql.decapod-db.svc.$(clusterName)
+    keycloak.externalDatabase.databaseName: keycloak
+    keycloak.externalDatabase.username: keycloak
+    keycloak.externalDatabase.password: keycloak

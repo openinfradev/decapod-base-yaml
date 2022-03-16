@@ -51,3 +51,11 @@ charts:
 - name: site-mirror-registry
   override:
     tacoRegistry.deployment.image: $(registry)/registry:2
+
+- name: keycloak-operator
+  override:
+    image.repository: $(registry)/keycloak/keycloak-operator
+    image.tag: "17.0.0"
+
+- name: keycloak-resources
+  override:
