@@ -1227,3 +1227,25 @@ spec:
       # Use image built from openshift eventrouter src
       repository: sktdev/os-eventrouter
       tag: 69a58b
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: metrics-server
+  name: metrics-server
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://kubernetes-sigs.github.io/metrics-server/
+    name: metrics-server
+    version: 3.8.2
+  releaseName: metrics-server
+  targetNamespace: lma
+  values:
+    image:
+      repository: k8s.gcr.io/metrics-server/metrics-server
+      # a value 'tag' is guided in https://artifacthub.io/packages/helm/metrics-server/metrics-server but not applied on any template
+      # tag: ""
+      pullPolicy: IfNotPresent
