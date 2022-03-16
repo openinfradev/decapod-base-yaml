@@ -4,67 +4,40 @@ metadata:
   name: site
 
 global:
+  clusterName: cluster.local
   serviceMeshControlNodeSelector:
     servicemesh: enabled
   serviceMeshIngressNodeSelector:
     taco-ingress-gateway: enabled
   serviceMeshEgressNodeSelector:
     taco-egress-gateway: enabled
-  ingressGatewayLabel:
-    gateway: taco-ingress
-  egressGatewayLabel:
-    gateway: taco-egress
-  clusterName: cluster.local
-  storageClassName: taco-storage
+  ingressGatewayLabel: istio-ingress-gateway
+  egressGatewayLabel: istio-egress-gateway
 
 charts:
-- name: istio-operator
-  override:
-    revision: "1-11-7"
-    operator.resources.limits.cpu: 200m
-    operator.resources.limits.memory: 256Mi
-    operator.resources.requests.cpu: 50m
-    operator.resources.requests.memory: 128Mi
+- name: istio-base
+  override: {}
 
-- name: servicemesh-controlplane
+- name: istiod
   override:
-    IstioOperator.revision: "1-11-7"
-    IstioOperator.meshConfig.enableTracing: true
-    IstioOperator.meshConfig.tracingSampling: 100
-    IstioOperator.meshConfig.extensionProviders.envoyExtAuthzGrpc.service: jaeger-operator-jaeger-collector.istio-system.svc
-    IstioOperator.meshConfig.extensionProviders.envoyExtAuthzGrpc.port: 14250
-    IstioOperator.meshConfig.defaultConfig.discoveryAddress: istiod-1-11-7.istio-system.svc:15012
-    IstioOperator.meshConfig.defaultConfig.tracing.zipkin.address: jaeger-operator-jaeger-collector.istio-system.svc:9411
-    IstioOperator.meshConfig.defaultConfig.tracing.sampling: 100
-    IstioOperator.values.global.istioNamespace: istio-system
-    IstioOperator.components.pilot.k8s.resources.requests.cpu: 1000m
-    IstioOperator.components.pilot.k8s.resources.requests.memory: 1024Mi
-    IstioOperator.components.pilot.k8s.hpaSpec.minReplicas: 1
-    IstioOperator.components.pilot.k8s.nodeSelector: $(serviceMeshControlNodeSelector)
+    revision: ""
+    pilot.traceSampling: 1.0
+    pilot.resources.requests.cpu: 500m
+    pilot.resources.requests.memory: 2048Mi
+    pilot.nodeSelector: $(serviceMeshControlNodeSelector)
+    global.tracer.zipkin.address: "jaeger-operator-jaeger-collector.istio-system:9411"
 
-- name: servicemesh-gateway
+- name: istio-ingress-gateway
   override:
-    IstioOperator.revision: "1-11-7"
-    IstioOperator.values.global.istioNamespace: istio-system
-    IstioOperator.components.ingressGateways.name: istio-ingress-gateway
-    IstioOperator.components.ingressGateways.namespace: istio-system
-    IstioOperator.components.ingressGateways.label: $(ingressGatewayLabel)
-    IstioOperator.components.ingressGateways.enabled: true
-    IstioOperator.components.ingressGateways.k8s.resources.requests.cpu: 1000m
-    IstioOperator.components.ingressGateways.k8s.resources.requests.memory: 1024Mi
-    IstioOperator.components.ingressGateways.k8s.hpaSpec.minReplicas: 1
-    IstioOperator.components.ingressGateways.k8s.nodeSelector: $(serviceMeshIngressNodeSelector)
-    IstioOperator.components.ingressGateways.k8s.service.type: NodePort
-    IstioOperator.components.ingressGateways.k8s.service.ports.httpNodePort: 31081
-    IstioOperator.components.ingressGateways.k8s.service.ports.httpsNodePort: 31443
-    IstioOperator.components.egressGateways.name: istio-egress-gateway
-    IstioOperator.components.egressGateways.namespace: istio-system
-    IstioOperator.components.egressGateways.label: $(egressGatewayLabel)
-    IstioOperator.components.egressGateways.enabled: false
-    IstioOperator.components.egressGateways.k8s.resources.requests.cpu: 1000m
-    IstioOperator.components.egressGateways.k8s.resources.requests.memory: 1024Mi
-    IstioOperator.components.egressGateways.k8s.hpaSpec.minReplicas: 1
-    IstioOperator.components.egressGateways.k8s.nodeSelector: $(serviceMeshEgressNodeSelector)
+    revision: ""
+    replicaCount: 1
+    service.type: LoadBalancer
+    resources.requests.cpu: 1000m
+    resources.requests.memory: 1024Mi
+    resources.limits.cpu: 2000m
+    resources.limits.memory: 2048Mi
+    labels.app: $(ingressGatewayLabel)
+    nodeSelector: $(serviceMeshIngressNodeSelector)
 
 - name: jaeger-operator
   override:
@@ -73,29 +46,20 @@ charts:
 - name: servicemesh-jaeger-resource
   override:
     namespace: istio-system
-    logLevel: debug
+    sampling.param: 100
     collector.resources.requests.cpu: 500m
-    collector.resources.requests.memory: 1Gi
-    collector.resources.limits.cpu: '1'
-    collector.resources.limits.memory: 2Gi
+    collector.resources.requests.memory: 1024Mi
+    collector.resources.limits.cpu: 1000m
+    collector.resources.limits.memory: 2048Mi
     storage.options.es:
       serverUrls: https://eck-elasticsearch-es-http.lma.svc:9200
       username: elastic
       password: tacoword
-    JaegerIngress:
-      enabled: false
-      namespace: istio-system
-      rules:
-      - host: jaeger.k2-node01
-        http:
-          paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: jaeger-operator-jaeger-query
-                port:
-                  number: 16686
+    elasticsearch:
+      host: eck-elasticsearch-es-http.lma.svc.$(clusterName)
+      user:
+        username: taco-jaeger
+        password: tacoword
 
 - name: kiali-operator
   override:
@@ -103,39 +67,30 @@ charts:
 
 - name: servicemesh-kiali-resource
   override:
-    istioComponentNamespaces.prometheus: lma
+    namespace: istio-system
     istioNamespace: istio-system
     deployment.resources.requests.cpu: 500m
-    deployment.resources.requests.memory: 1024Mi
+    deployment.resources.requests.memory: 512Mi
     deployment.resources.limits.cpu: 1000m
-    deployment.resources.limits.memory: 2048Mi
+    deployment.resources.limits.memory: 1024Mi
     deployment.nodeSelector: $(serviceMeshControlNodeSelector)
-    externalServices.istio.configMapName: istio-1-11-7
-    externalServices.istio.istioIdentityDomain: "svc.cluster.local"
+    auth.strategy: anonymous
+    externalServices.istio.configMapName: istio
+    externalServices.istio.istioIdentityDomain: svc.$(clusterName)
     externalServices.prometheus.url: http://lma-prometheus.lma.svc:9090
     externalServices.tracing.inClusterUrl: http://jaeger-operator-jaeger-query.istio-system:16686
+    externalServices.tracing.url: https://jaeger-v2.taco-cat.xyz
+    externalServices.tracing.useGrpc: false
+    externalServices.grafana.auth.type: basic
     externalServices.grafana.auth.username: admin
     externalServices.grafana.auth.password: password
     externalServices.grafana.inClusterUrl: http://grafana.lma.svc:80
-    externalServices.grafana.url: http://k1-master01:30009
-    KialiIngress:
-      enabled: false
-      namespace: istio-system
-      rules:
-      - host: kiali.k2-node01
-        http:
-          paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: kaili
-                port:
-                  number: 20001
+    externalServices.grafana.url: https://grafana-v2.taco-cat.xyz
 
 - name: servicemesh-grafana-dashboard
   override:
     namespace: istio-system
+    dashboards.label: grafana_dashboard
 
 - name: servicemesh-prometheusmonitor
   override:
