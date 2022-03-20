@@ -103,3 +103,18 @@ charts:
     namespace: istio-system
     aggregation.interval: "15s"
     optimization.interval: "15s"
+
+- name: servicemesh-portal
+  override:
+    namespace: istio-system
+    application:
+      tks:
+        admin:
+          username: admin
+          password: password
+        url: https://dashboard.example.com
+      keycloak:
+        realm: realmname
+        credentials:
+          secret: TO_BE_FIXED
+        auth-server-url: https://keycloak.example.com/auth
