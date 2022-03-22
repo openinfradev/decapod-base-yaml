@@ -408,3 +408,44 @@ spec:
     optimization:
       interval: "5s"
   wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: servicemesh-portal
+  name: servicemesh-portal
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: servicemesh-portal
+    version: 1.0.0
+  releaseName: servicemesh-portal
+  targetNamespace: istio-system
+  values:
+    application:
+      spring:
+        profiles:
+          active: prod,log
+      server:
+        port: 8080
+      tks:
+        admin:
+          username: admin
+          password: password
+        url: https://dashboard.example.com
+      harbor:
+        url: https://harbor.example.com
+      keycloak:
+        realm: realm
+        resource: portal
+        credentials:
+          secret: TO_BE_FIXED
+        auth-server-url: https://keycloak.example.com/auth
+    service:
+      type: ClusterIP
+      port: 9110
+      containerPort: 8080
+  wait: true
