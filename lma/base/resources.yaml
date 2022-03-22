@@ -182,7 +182,7 @@ spec:
         interval: TO_BE_FIXED
     kubeEtcd:
       enabled: true
-      endpoints: [] # TO_BE_FIXED
+      endpoints: []
       serviceMonitor:
         interval: TO_BE_FIXED
         caFile: /etc/prometheus/secrets/etcd-client-cert/etcd-ca

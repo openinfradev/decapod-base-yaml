@@ -29,7 +29,7 @@ charts:
 
 - name: prometheus
   override:
-    kubeEtcd.endpoints: [TO_BE_FIXED]
+    kubeEtcd.endpoints: [] # If your etcd is not deployed as a pod, specify IPs it can be found on
     prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
     # Define specifications for storing metrics
     prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 200Gi
