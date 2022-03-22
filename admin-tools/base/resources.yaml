@@ -3,362 +3,43 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: keycloak
-  name: keycloak
+    name: keycloak-operator
+  name: keycloak-operator
 spec:
   chart:
     type: helmrepo
-    repository: TO_BE_FIXED
-    name: keycloak
-    version: 8.2.2
-  releaseName: keycloak
-  targetNamespace: fed
+    repository: https://openinfradev.github.io/helm-repo
+    name: keycloak-operator
+    version: 0.1.0
+  releaseName: keycloak-operator
+  targetNamespace: keycloak
   values:
-    clusterDomain: TO_BE_FIXED
-    global:
-      storageClass: TO_BE_FIXED
+    replicaCount: 1
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: keycloak-resources
+  name: keycloak-resources
+spec:
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: keycloak-resources
+    version: 0.1.0
+  releaseName: keycloak-resources
+  targetNamespace: keycloak
+  values:
     keycloak:
-      extraEnv: |
-        - name: KEYCLOAK_LOGLEVEL
-          value: WARN
-        - name: WILDFLY_LOGLEVEL
-          value: WARN
-      ingress:
-        enabled: false
-        hosts:
-          - keycloak.example.com
-        tls:
-          - hosts:
-            - keycloak.example.com
-            secretName: tls-keycloak
-      password: TO_BE_FIXED
-      persistence:
-        deployPostgres: true
-        dbVendor: postgres
-    postgresql:
-      postgresqlUsername: keycloak
-      postgresqlPassword: TO_BE_FIXED
-      postgresqlDatabase: keycloak
-      postgresqlPostgresPassword: TO_BE_FIXED
-      persistence:
-        enabled: false
-        size: 20Gi
-      metrics:
-        enabled: false
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: cloud-console
-  name: cloud-console
-spec:
-  chart:
-    type: helmrepo
-    repository: TO_BE_FIXED
-    name: cloud-console
-    version: 1.0.7
-  releaseName: cloud-console
-  targetNamespace: fed
-  values:
-    config:
-      grafana:
-        authkey: admin:password
-      initDB: true
-      kibana:
-        authkey: elastic:tacoword
-      password: password
-      username: taco
-    nodeSelector:
-      taco-lma: enabled
-    service:
-      nodePort: 32000
-      port: 32000
-      proxy_from: 32001
-      proxy_to: 32008
-      targetPort: 32000
-      type: ClusterIP
-    ingress:
-      enabled: false
-    volume:
-      storageClassName: TO_BE_FIXED
-    config:
-      #config.service.proxyurl.format
-      service:
-        proxyportlist: 32001-32008
-        proxyurl:
-          format: TO_BE_FIXED
-      prometheus:
-        ruleUrl: /apis/monitoring.coreos.com/v1/namespaces/fed/prometheusrules
-      loggingfilter:
-        url: /apis/logging.kubesphere.io/v1alpha2/namespaces/lma/filters/kubernetes
-      filter:
-        rule: "yes"
-      keycloak:
-        enabled: "yes"
-        url: TO_BE_FIXED  
-        realm: TO_BE_FIXED
-        clientId: cloud-console
-        hasRealmRole1: lma_system
-        hasRealmRole2: lma_app
-        hasRealmRole3: lma_viewer
-        cacert: TO_BE_FIXED 
-      lenz:
-        url: TO_BE_FIXED  
-      extra:
-        config: |-
-        
-        sql: |-
-
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: custom-network
-  name: custom-network
-spec:
-  chart:
-    type: helmrepo
-    repository: TO_BE_FIXED
-    name: custom-network
-    version: 1.0.10
-  releaseName: custom-network
-  targetNamespace: lma
-  values:
-    f5_ingress:
-      enabled: false
-      ingresses: TO_BE_FIXED
-    service:
-      enabled: false
-      endpoints: TO_BE_FIXED
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: taco-registry
-  name: taco-registry
-spec:
-  chart:
-    type: helmrepo
-    repository: TO_BE_FIXED
-    name: taco-registry
-    version: 1.0.6
-  releaseName: taco-registry
-  targetNamespace: registry
-  values:
-    # Taco Registry Chart
-    # Registry, Postgres, Clair, Builder, App
-    storageClassName: TO_BE_FIXED
-    tacoRegistry:
-      name: taco-private-registry
-      deployment:
-        image: registry:2
-        auth:
-          service: taco-registry
-          issuer: taco-registry
-          keyPassword: taco-registry
-          keyPairAlias: servercert
-          keyPairPassword: taco-registry
-      service:
-        type: ClusterIP
-        ports:
-          - name: http
-            port: 5000
-            targetPort: 5000
-            nodePort:
-      volume:
+      name: tks-keycloak
+      replicas: 1
+      externalDatabase:
         enabled: true
-        data:
-          size: 10Gi
-
-    # Taco-db : Postgres
-    tacoDb:
-      name: taco-db
-      deployment:
-        image: postgres:latest
-        data:
-          db: registry
-          user: registry
-          password: registry1234
-      service:
-        type: ClusterIP
-        ports:
-          - name: http
-            port: 5432
-            targetPort: 5432
-            nodePort:
-      volume:
-        enabled: true
-        storageClassName: TO_BE_FIXED
-        data:
-          size: 10Gi
-
-    # Taco-clair : Clair
-    tacoClair:
-      name: taco-clair
-      deployment:
-        replicas: 1
-        hostAliases:
-        - TO_BE_FIXED 
-          # - ip: "10.10.10.15"
-          #   hostnames:  
-          #   - """
-        data:
-          db: clair
-          user: clair
-          password: clair
-      service:
-        type: ClusterIP
-        ports:
-          - name: http
-            port: 6060
-            targetPort: 6060
-            nodePort:
-          - name: health
-            port: 6061
-            targetPort: 6061
-            nodePort:
-
-    # Taco-registry-builder : Builder
-    tacoRegistryBuilder:
-      name: taco-registry-builder
-      deployment:
-        replicas: 1
-        hostAliases: 
-          # - ip: "10.10.10.15"
-          #   hostnames:  
-          #   - ""
-      service:
-        type: ClusterIP
-        ports:
-          - name: http
-            port: 4000
-            targetPort: 4000
-            nodePort:
-      volume:
-        data:
-          size: 100Mi
-          path: /var/run/docker.sock
-      mirrors:
-      - TO_BE_FIXED
-        # - ip:  192.168.0.1
-        #   host: registry-1.com
-
-    # Taco-registry-app : App
-    tacoRegistryApp:
-      name: taco-registry-app
-      deployment:
-        replicas: 1
-        #hostAliases: TO_BE_FIXED
-          # - ip: 1.1.1.1
-          #   hostnames: 
-          #   - "keycloak"
-        env:
-        - TO_BE_FIXED 
-          # - name: KEYCLOAK_AUTH_SERVER_URI
-          #   value: "https://keycloak"
-          # - name: KEYCLOAK_CLIENT_ID
-          #   value: "registry"
-          # - name: KEYCLOAK_REALM
-          #   value: ""
-      service:
-        type: ClusterIP
-        ports:
-          - name: http
-            port: 8080
-            targetPort: 8080
-            nodePort:  
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: site-mirror-registry
-  name: site-mirror-registry
-spec:
-  chart:
-    type: helmrepo
-    repository: TO_BE_FIXED
-    name: site-mirror-registry
-    version: 0.0.3
-  releaseName: site-mirror-registry
-  targetNamespace: registry
-  values:
-    # Taco Registry Chart
-    namespace: registry
-
-    # site-mirror-registry
-    tacoRegistry:
-      name: private-registry
-      service:
-        type: ClusterIP
-        ports:
-          - name: http
-            port: 5000
-            targetPort: 5000
-            nodePort:    
-      volume:
-        storageClassName: TO_BE_FIXED #netapp
-        data:
-          size: TO_BE_FIXED #10Gi
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: cronjob-backup-cloudconsole
-  name: cronjob-backup-cloudconsole
-spec:
-  chart:
-    type: helmrepo
-    repository: TO_BE_FIXED
-    name: cronjob-backup-cloudconsole
-    version: 1.0.0
-  releaseName: cronjob-backup-cloudconsole
-  targetNamespace: fed
-  values:
-    job:
-      successfulJobsHistoryLimit: 3
-      failedJobsHistoryLimit: 3
-      schedule: "2 2 * * *"
-    configmap:
-      cloudconsoleUrl: TO_BE_FIXED
-      backup:
-        servers:
-        - TO_BE_FIXED
-    secret:
-      password: TO_BE_FIXED
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: cronjob-backup-keycloak
-  name: cronjob-backup-keycloak
-spec:
-  chart:
-    type: helmrepo
-    repository: TO_BE_FIXED
-    name: cronjob-backup-keycloak
-    version: 1.0.2
-  releaseName: cronjob-backup-keycloak
-  targetNamespace: fed
-  values:
-    job:
-      successfulJobsHistoryLimit: 3
-      failedJobsHistoryLimit: 3
-      schedule: "32 2 * * *"
-    configmap:
-      backup:
-        keycloak: 
-          targetRealm: TO_BE_FIXED
-        servers:
-        - TO_BE_FIXED
-    secret:
-      password: TO_BE_FIXED
+        address: postgresql.decapod-db.svc.cluster.local # Shoud be FQDN
+        port: 5432
+        databaseName: keycloak
+        username: keycloak
+        password: keycloak
+        superuserEnabled: true
+      externalAccessEnabled: false
