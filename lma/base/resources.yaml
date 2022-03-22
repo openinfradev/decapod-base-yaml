@@ -330,6 +330,8 @@ spec:
   releaseName: prometheus-node-exporter
   targetNamespace: lma
   values:
+    # Expose the service to the host network
+    hostNetwork: true
     extraArgs:
     - --no-collector.hwmon
   wait: true
@@ -368,7 +370,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: prometheus-process-exporter
-    version: 0.1.4
+    version: 0.1.4-skt
     skipDepUpdate: true
   releaseName: prometheus-process-exporter
   targetNamespace: lma
@@ -395,6 +397,8 @@ spec:
             operator: Exists
           - key: node-role.kubernetes.io/node
             operator: Exists
+      # Expose the service to the host network
+      hostNetwork: true
     conf:
       processes: dockerd,kubelet,kube-proxy,ntpd
   wait: true
