@@ -20,6 +20,22 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
+    name: keycloak-operator-crds
+  name: keycloak-operator-crds
+spec:
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: keycloak-operator
+    version: 0.1.0
+  releaseName: keycloak-operator-crds
+  targetNamespace: keycloak
+  values: {}
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
     name: keycloak-resources
   name: keycloak-resources
 spec:
