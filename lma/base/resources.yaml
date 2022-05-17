@@ -929,7 +929,7 @@ spec:
     query:
       nodeSelector: {}
       dnsDiscovery:
-        enabled: true
+        enabled: false
         sidecarsService: TO_BE_FIXED
         sidecarsNamespace: lma
     queryFrontend:

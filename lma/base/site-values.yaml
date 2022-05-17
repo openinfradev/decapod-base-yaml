@@ -175,9 +175,11 @@ charts:
     clusterDomain: $(clusterName)
     existingObjstoreSecret: $(thanosObjstoreSecret)
     query.nodeSelector: $(nodeSelector)
-    query.dnsDiscovery.sidecarsService: lma-thanos-discovery
+    # Example of dns discovery for thanos sidecar service:
     # query.stores:
     #   - lma-thanos-discovery.lma.svc.$(clusterName)
+    query.dnsDiscovery.enabled: false
+    query.dnsDiscovery.sidecarsService: null
     queryFrontend.nodeSelector: $(nodeSelector)
     queryFrontend.service.type: NodePort
     queryFrontend.service.http.nodePort: 30007
