@@ -316,7 +316,6 @@ spec:
         limits:
           cpu: 1000m
           memory: 1024Mi
-      replicas: 1
       nodeSelector:
         servicemesh: enabled
       serviceType: ClusterIP
