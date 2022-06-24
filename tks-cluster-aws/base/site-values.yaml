@@ -31,24 +31,3 @@ charts:
         taco-lma: enabled
         servicemesh: enabled
         taco-ingress-gateway: enabled
-    job.taconode.enabled: true
-    job.argo.enabled: true
-    job.argo.url: argocd-v2.taco-cat.xyz
-    job.argo.password: aFgSFwjtrBRwKgci
-  
-- name: kubernetes-addons
-  override:
-    cni.calico.enabled: true
-    storageclass.enabled: true
-
-- name: ingress-nginx
-  override:
-
-- name: cluster-autoscaler
-  override:
-    discoveryNamespace: $(clusterName)
-    discoveryClusterName: $(clusterName)
-
-- name: cluster-autoscaler-rbac
-  override:
-    deployMgmtRbacOnly.targetNamespace: $(clusterName)

@@ -1,0 +1,26 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+global:
+  # Specify cluster name. It is useful in multi-cluster env.
+  clusterName: TO_BE_FIXED
+
+charts:
+- name: kubernetes-addons
+  override:
+    cni.calico.enabled: true
+    storageclass.enabled: true
+
+- name: ingress-nginx
+  override:
+
+- name: cluster-autoscaler
+  override:
+    discoveryNamespace: $(clusterName)
+    discoveryClusterName: $(clusterName)
+
+- name: cluster-autoscaler-rbac
+  override:
+    deployMgmtRbacOnly.targetNamespace: $(clusterName)
