@@ -1,0 +1,28 @@
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: cluster-api-byoh
+  name: cluster-api-byoh
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: cluster-api-byoh
+    version: 0.1.0
+  releaseName: cluster-api-byoh
+  targetNamespace: argo
+  values:
+    cluster:
+      name: TO_BE_FIXED
+      kubernetesVersion: v1.22.3
+    byoCluster:
+      controlPlaneEndpoint:
+        host: TO_BE_FIXED
+        port: TO_BE_FIXED
+    kubeadmControlPlane:
+      replicas: 3
+    machineDeployment: []
+  wait: true
