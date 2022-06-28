@@ -1,0 +1,13 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+global:
+  # Specify cluster name. It is useful in multi-cluster env.
+  clusterName: TO_BE_FIXED
+
+charts:
+- name: cluster-api-byoh
+  override:
+    cluster.name: $(clusterName)
