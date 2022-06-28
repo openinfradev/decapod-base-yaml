@@ -19,7 +19,27 @@ spec:
       calico:
         enabled: true
     storageclass:
-        enabled: true
+        enabled: false
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: local-path-provisioner
+  name: local-path-provisioner
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: local-path-provisioner
+    version: 0.0.22
+  releaseName: local-path-provisioner
+  targetNamespace: taco-system
+  values:
+    storageClass:
+      name: taco-storage
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1

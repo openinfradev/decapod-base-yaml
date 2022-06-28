@@ -69,4 +69,19 @@ spec:
   targetNamespace: kube-system
   values:
     snapshotterSidecarEnabled: true
+    storageClasses: 
+    - name: taco-storage
+      # annotation metadata
+      annotations:
+        storageclass.kubernetes.io/is-default-class: "true"
+      # label metadata
+      labels:
+        support: taco-apps
+      # defaults to WaitForFirstConsumer
+      volumeBindingMode: WaitForFirstConsumer
+      # defaults to Delete
+      reclaimPolicy: Delete
+      parameters:
+        encrypted: "true"
+
   wait: true
