@@ -74,6 +74,8 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       service:
         externalTrafficPolicy: Local
+        annotations: {}
+        type: TO_BE_FIXED
       config:
         enable-underscores-in-headers: "true"
         use-proxy-protocol: "false"
