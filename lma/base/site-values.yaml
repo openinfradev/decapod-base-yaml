@@ -130,8 +130,8 @@ charts:
     fluentbit.clusterName: $(clusterName)
 
     # Define a endpoint to store logs
-    fluentbit.outputs.es.host: eck-elasticsearch-es-http.lma.svc.$(clusterName)
-    fluentbit.outputs.es.elasticPasswordSecret: eck-elasticsearch-es-elastic-user
+    fluentbit.outputs.es[1].host: eck-elasticsearch-es-http.lma.svc.$(clusterName)
+    fluentbit.outputs.es[1].elasticPasswordSecret: eck-elasticsearch-es-elastic-user
     fluentbit.outputs.kafka:
       enabled: false
       broker: "YOUR_BORKER_INFO"
