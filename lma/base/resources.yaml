@@ -636,41 +636,47 @@ spec:
               operator: Exists
       targetLogs:
       - name: dockerlog
-        tag: kube.*
-        path: /var/log/containers/*.log
-        type: fluent
-        index: container
-        parser: docker
-        memBufLimit: 20MB
+        do_not_store_as_default: true
         bufferChunkSize: 2M
         bufferMaxSize: 5M
+        memBufLimit: 20MB
+        path: /var/log/containers/*.log
+        parser: docker
+        tag: kube.*
+        type: fluent
+        multi_index:
+        - index: platform
+          es_name: taco-es
+          key: $kubernetes['namespace_name']
+          value: kube-system|lma|fed|argo|openstack|istio-system|istio-services|trident|registry
         extraArgs:
           multilineParser: docker, cri
-        multi_index:
-        - key: "$kubernetes['namespace_name']"
-          value: "kube-system|lma|fed|argo|openstack"
-          index: platform
+      - name: syslog
+        do_not_store_as_default: false
+        es_name: taco-es
+        index: syslog
+        path: /var/log/syslog
+        parser: syslog-rfc5424
+        tag: syslog.*
+        type: syslog
+        extraArgs: {}
       - name: syslog
         tag: syslog.*
         path: /var/log/messages
         type: syslog
+        es_name: taco-es
         index: syslog
         parser: syslog-rfc5424
-      - name: syslog-ubuntu
-        tag: syslog.*
-        path: /var/log/syslog
-        type: syslog
-        index: syslog
-        parser: syslog-rfc5424
+        extraArgs: {}
       outputs:
-        es:
+        es: 
         - name: taco-es
-          host: TO_BE_FIXED
+          host: eck-elasticsearch-es-http
           port: 9200
           createuser: true
           username: taco-fluentbit
           password: tacoword
-          elasticPasswordSecret: TO_BE_FIXED
+          elasticPasswordSecret: eck-elasticsearch-es-elastic-user
           template:
             enabled: true
             ilms:
@@ -678,80 +684,73 @@ spec:
               json:
                 policy:
                   phases:
+                    delete:
+                      actions:
+                        delete: {}
+                      min_age: 14d
                     hot:
                       actions:
                         rollover:
-                          max_size: 30gb
                           max_age: 1d
                           max_docs: 5000000000
+                          max_size: 30gb
                         set_priority:
                           priority: 100
-                    delete:
-                      min_age: 14d
-                      actions:
-                        delete: {}
             - name: hot-delete-7days
               json:
                 policy:
                   phases:
+                    delete:
+                      actions:
+                        delete: {}
+                      min_age: 7d
                     hot:
                       actions:
                         rollover:
-                          max_size: 30gb
                           max_age: 1d
                           max_docs: 5000000000
+                          max_size: 30gb
                         set_priority:
                           priority: 100
-                    delete:
-                      min_age: 7d
-                      actions:
-                        delete: {}
             - name: hot-delete-3hour
               json:
                 policy:
                   phases:
+                    delete:
+                      actions:
+                        delete: {}
+                      min_age: 3h
                     hot:
                       actions:
                         rollover:
-                          max_size: 30gb
                           max_age: 1h
                           max_docs: 5000000000
+                          max_size: 30gb
                         set_priority:
                           priority: 100
-                    delete:
-                      min_age: 3h
-                      actions:
-                        delete: {}
             templates:
             - name: platform
               json:
-                index_patterns: "platform*"
+                index_patterns: platform*
                 settings:
-                  refresh_interval: 30s
-                  number_of_shards: 3
-                  number_of_replicas: 1
                   index.lifecycle.name: hot-delete-14days
                   index.lifecycle.rollover_alias: platform
-            - name: application
-              json:
-                index_patterns: "container*"
-                settings:
-                  refresh_interval: 30s
-                  number_of_shards: 3
                   number_of_replicas: 1
-                  index.lifecycle.name: hot-delete-3hour
-                  index.lifecycle.rollover_alias: container
+                  number_of_shards: 3
+                  refresh_interval: 30s
             - name: syslog
               json:
-                index_patterns: "syslog*"
+                index_patterns: syslog*
                 settings:
-                  refresh_interval: 30s
-                  number_of_shards: 2
-                  number_of_replicas: 1
                   index.lifecycle.name: hot-delete-14days
                   index.lifecycle.rollover_alias: syslog
+                  number_of_replicas: 1
+                  number_of_shards: 2
+                  refresh_interval: 30s
         http:
           enabled: true
+        kafka:
+          enabled: false
       exclude:
       - key: "$kubernetes['container_name']"
         value: kibana|elasticsearch|fluent-bit
