@@ -539,17 +539,17 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: fluentbit-operator-crds
-  name: fluentbit-operator-crds
+    name: fluent-operator-crds
+  name: fluent-operator-crds
 spec:
   helmVersion: v3
   chart:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
-    name: fluentbit-operator
-    version: 1.2.1
+    name: fluent-operator
+    version: 0.1.0
     skipDepUpdate: true
-  releaseName: fluentbit-operator-crds
+  releaseName: fluent-operator-crds
   targetNamespace: lma
   values: {}
 ---
@@ -557,45 +557,32 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: fluentbit-operator
-  name: fluentbit-operator
+    name: fluent-operator
+  name: fluent-operator
 spec:
   helmVersion: v3
   chart:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
-    name: fluentbit-operator
-    version: 1.2.1
+    name: fluent-operator
+    version: 0.1.0
     skipDepUpdate: true
-  releaseName: fluentbit-operator
+  releaseName: fluent-operator
   targetNamespace: lma
   values:
-    containerRuntime: containerd
-    global:
-      base_cluster_url: TO_BE_FIXED   #FIXME
-    fluentbitOperator:
-      enabled: true
-      createCustomResource: true
-      cleanupCustomResource: true
-      nodeSelector: {} # TO_BE_FIXED
-      resources:
-        limits:
-          cpu: "2"
-          memory: 200Mi
-        requests:
-          cpu: 100m
-          memory: 20Mi
-    fluentbit:
-      enabled: false
-    logExporter:
-      enabled: true
-      nodeSelector: {} # TO_BE_FIXED
-      serviceMonitor:
-        enabled: false
-        interval: 1m
-    image:
-      hyperkube:
-        tag: v1.17.6
+    operator:
+      image: "ghcr.io/openinfradev/fluentbit-operator"
+      tag: "25bc31cd4333f7f77435561ec70bc68e0c73a194"
+    resources:
+      operator:
+      # FluentBit operator resources. Usually user needn't to adjust these.
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 20Mi
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -609,23 +596,15 @@ spec:
   chart:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
-    name: fluentbit-operator
-    version: 1.3.0
+    name: fluentbit-resource
+    version: 1.1.0
     skipDepUpdate: true
   releaseName: fluentbit
   targetNamespace: lma
   values:
-    fullnameOverride: fluentbit-cr-taco
-    global:
-      base_cluster_url: TO_BE_FIXED   #FIXME
-      nodeSelector: {} # TO_BE_FIXED
-    fluentbitOperator:
-      enabled: false
-      createCustomResource: false
-      cleanupCustomResource: false
+    fullnameOverride: fbcr-taco
     fluentbit:
       enabled: true
-      clusterName: TO_BE_FIXED
       daemonset:
         spec:
           pod:
@@ -634,134 +613,31 @@ spec:
               operator: Exists
             - key: node-role.kubernetes.io/node
               operator: Exists
-      targetLogs:
-      - name: dockerlog
-        do_not_store_as_default: true
-        bufferChunkSize: 2M
-        bufferMaxSize: 5M
-        memBufLimit: 20MB
-        path: /var/log/containers/*.log
-        parser: docker
-        tag: kube.*
-        type: fluent
-        multi_index:
-        - index: platform
-          es_name: taco-es
-          key: $kubernetes['namespace_name']
-          value: kube-system|lma|fed|argo|openstack|istio-system|istio-services|trident|registry
-        extraArgs:
-          multilineParser: docker, cri
-      - name: syslog
-        do_not_store_as_default: false
-        es_name: taco-es
-        index: syslog
-        path: /var/log/syslog
-        parser: syslog-rfc5424
-        tag: syslog.*
-        type: syslog
-        extraArgs: {}
-      - name: syslog
-        tag: syslog.*
-        path: /var/log/messages
-        type: syslog
-        es_name: taco-es
-        index: syslog
-        parser: syslog-rfc5424
-        extraArgs: {}
-      outputs:
-        es: 
-        - name: taco-es
-          host: eck-elasticsearch-es-http
-          port: 9200
-          createuser: true
-          username: taco-fluentbit
-          password: tacoword
-          elasticPasswordSecret: eck-elasticsearch-es-elastic-user
-          template:
-            enabled: true
-            ilms:
-            - name: hot-delete-14days
-              json:
-                policy:
-                  phases:
-                    delete:
-                      actions:
-                        delete: {}
-                      min_age: 14d
-                    hot:
-                      actions:
-                        rollover:
-                          max_age: 1d
-                          max_docs: 5000000000
-                          max_size: 30gb
-                        set_priority:
-                          priority: 100
-            - name: hot-delete-7days
-              json:
-                policy:
-                  phases:
-                    delete:
-                      actions:
-                        delete: {}
-                      min_age: 7d
-                    hot:
-                      actions:
-                        rollover:
-                          max_age: 1d
-                          max_docs: 5000000000
-                          max_size: 30gb
-                        set_priority:
-                          priority: 100
-            - name: hot-delete-3hour
-              json:
-                policy:
-                  phases:
-                    delete:
-                      actions:
-                        delete: {}
-                      min_age: 3h
-                    hot:
-                      actions:
-                        rollover:
-                          max_age: 1h
-                          max_docs: 5000000000
-                          max_size: 30gb
-                        set_priority:
-                          priority: 100
-            templates:
-            - name: platform
-              json:
-                index_patterns: platform*
-                settings:
-                  index.lifecycle.name: hot-delete-14days
-                  index.lifecycle.rollover_alias: platform
-                  number_of_replicas: 1
-                  number_of_shards: 3
-                  refresh_interval: 30s
-            - name: syslog
-              json:
-                index_patterns: syslog*
-                settings:
-                  index.lifecycle.name: hot-delete-14days
-                  index.lifecycle.rollover_alias: syslog
-                  number_of_replicas: 1
-                  number_of_shards: 2
-                  refresh_interval: 30s
-        http:
-          enabled: true
-        kafka:
-          enabled: false
-      exclude:
-      - key: "$kubernetes['container_name']"
-        value: kibana|elasticsearch|fluent-bit
+      job:
+        spec:
+          nodeSelector:
+            taco-lma: enabled
+      outputs: { }
+      targetLogs: [ ]
       alerts:
-        makeAlertRule: true
-      nodeSelector: {} # TO_BE_FIXED
+        enabled: true
+        namespace: taco-system
+        message: |-
+          {{ $labels.container }} in {{ $labels.pod }} ({{ $labels.taco_cluster }}/{{ $labels.namespace }} ) generate a error due to log = {{ $labels.log }}
+        summary: |-
+          {{ $labels.container }} in {{ $labels.pod }} ({{ $labels.taco_cluster }}/{{ $labels.namespace }} ) generate a error
+        rules: [ ]
+      clusterName: TO_BE_FIXED
+      exclude:
+      - key: $kubernetes['container_name']
+        value: kibana|elasticsearch|fluent-bit
     logExporter:
-      enabled: false
-    image:
-      hyperkube:
-        tag: v1.17.6
+      enabled: true
+      serviceMonitor:
+        enabled: true
+      spec:
+        nodeSelector:
+          taco-lma: enabled
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1

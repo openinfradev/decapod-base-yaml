@@ -117,16 +117,11 @@ charts:
     adminPassword: password
     persistence.storageClassName: $(storageClassName)
 
-- name: fluentbit-operator
+- name: fluent-operator
   override:
-    global.base_cluster_url: $(clusterName)
-    fluentbitOperator.nodeSelector: $(nodeSelector)
-    logExporter.nodeSelector: $(nodeSelector)
 
 - name: fluentbit
   override:
-    global.base_cluster_url: $(clusterName)
-    global.nodeSelector: $(nodeSelector)
     fluentbit.clusterName: $(clusterName)
     fluentbit.nodeSelector: $(nodeSelector)
 
