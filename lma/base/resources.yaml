@@ -767,21 +767,15 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: kubernetes-event-exporter
-    version: 1.0.0
+    version: 2.0.0
   releaseName: kubernetes-event-exporter
   targetNamespace: lma
   values:
+    clustername: taco-cluster.local
     conf:
       logLevel: error     # possible level: error, debug,
       logFormat: json
-      default:
-        hosts: [] # TO_BE_FIXED
-        index: kube-events
-        user: elastic
-        password: tacoword
-        additionalDefaultReceivers: []
-      additionalRoutes: {}
-      additionalReceivers: {}
+      recievers: TO_BE_FIXED
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
