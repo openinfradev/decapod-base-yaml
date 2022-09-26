@@ -775,7 +775,7 @@ spec:
     conf:
       logLevel: error     # possible level: error, debug,
       logFormat: json
-      recievers: TO_BE_FIXED
+      recievers: [ ]
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
