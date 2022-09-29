@@ -617,6 +617,13 @@ spec:
         spec:
           nodeSelector:
             taco-lma: enabled
+      parsers:
+      - name: taco-syslog-parser-for-ubuntu # modified from syslog-rfc3164
+        regex:
+          regex: '^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$'
+          timeFormat: '%b %d %H:%M:%S'
+          timeKeep: false
+          timeKey: 'time'
       outputs: { }
       targetLogs: [ ]
       alerts:
