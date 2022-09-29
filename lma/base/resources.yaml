@@ -571,18 +571,20 @@ spec:
   targetNamespace: lma
   values:
     operator:
-      image: "ghcr.io/openinfradev/fluentbit-operator"
-      tag: "25bc31cd4333f7f77435561ec70bc68e0c73a194"
-    resources:
-      operator:
+      initcontainer:
+        repository: "docker"
+        tag: "19.03"
+      container:
+        repository: "kubesphere/fluent-operator"
+        tag: "v1.5.0"
       # FluentBit operator resources. Usually user needn't to adjust these.
-        resources:
-          limits:
-            cpu: 1000m
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 20Mi
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 200Mi
+        requests:
+          cpu: 100m
+          memory: 20Mi
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
