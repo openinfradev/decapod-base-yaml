@@ -597,7 +597,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-resource
-    version: 1.1.0
+    version: 1.2.0
     skipDepUpdate: true
   releaseName: fluentbit
   targetNamespace: lma
