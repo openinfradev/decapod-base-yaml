@@ -571,18 +571,20 @@ spec:
   targetNamespace: lma
   values:
     operator:
-      image: "ghcr.io/openinfradev/fluentbit-operator"
-      tag: "25bc31cd4333f7f77435561ec70bc68e0c73a194"
-    resources:
-      operator:
+      initcontainer:
+        repository: "docker"
+        tag: "19.03"
+      container:
+        repository: "kubesphere/fluent-operator"
+        tag: "v1.5.0"
       # FluentBit operator resources. Usually user needn't to adjust these.
-        resources:
-          limits:
-            cpu: 1000m
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 20Mi
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 200Mi
+        requests:
+          cpu: 100m
+          memory: 20Mi
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -597,7 +599,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluentbit-resource
-    version: 1.1.0
+    version: 1.2.0
     skipDepUpdate: true
   releaseName: fluentbit
   targetNamespace: lma
@@ -617,6 +619,13 @@ spec:
         spec:
           nodeSelector:
             taco-lma: enabled
+      parsers:
+      - name: taco-syslog-parser-for-ubuntu # modified from syslog-rfc3164
+        regex:
+          regex: '^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$'
+          timeFormat: '%b %d %H:%M:%S'
+          timeKeep: false
+          timeKey: 'time'
       outputs: { }
       targetLogs: [ ]
       alerts:
