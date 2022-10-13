@@ -1016,20 +1016,96 @@ spec:
   chart:
     type: helmrepo
     repository: https://grafana.github.io/helm-charts
-    name: loki
-    version: 2.8.1
+    name: loki-distributed 
+    version: 0.58.0
   releaseName: loki
   targetNamespace: lma
   values:
-    image:
-      tag: 2.4.1
-    replicas: 1
-    persistence:
-      enabled: true
-      size: 20Gi
-      storageClassName: taco-storage
-    serviceMonitor:
-      enabled: false
+    global:
+      clusterDomain: cluster.local # TO_BE_FIXED
+      dnsService: coredns
+    loki:
+      schemaConfig:
+        configs:
+        - from: 2020-09-07
+          store: boltdb-shipper
+          object_store: s3
+          schema: v11
+          index:
+            prefix: loki_index_
+            period: 24h
+      storageConfig:
+        boltdb_shipper:
+          active_index_directory: /var/loki/index
+          cache_location: /var/loki/cache
+          cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
+          shared_store: s3
+        aws:
+          s3: s3://ap-northeast-2/taco-loki-entire-cluster
+      structuredConfig:
+        limits_config:
+          ingestion_rate_mb: 1024
+          ingestion_burst_size_mb: 1024
+          max_streams_per_user: 0
+          max_global_streams_per_user: 0
+    serviceMonitor.enabled: true
+    prometheusRule.enabled: true
+    ingester:
+      extraEnv:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: iam-loki-s3
+            key: AWS_S3_ACCESS_KEY_ID
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: iam-loki-s3
+            key: AWS_S3_SECRET_ACCESS_KEY
+      resources:
+        limits:
+          cpu: '4'
+          memory: 4Gi
+        requests:
+          cpu: 100m
+          memory: 250Mi
+    querier:
+      extraEnv:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: iam-loki-s3
+            key: AWS_S3_ACCESS_KEY_ID
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: iam-loki-s3
+            key: AWS_S3_SECRET_ACCESS_KEY
+    compactor:
+      extraEnv:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: iam-loki-s3
+            key: AWS_S3_ACCESS_KEY_ID
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: iam-loki-s3
+            key: AWS_S3_SECRET_ACCESS_KEY
+    ruler:
+      extraEnv:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: iam-loki-s3
+            key: AWS_S3_ACCESS_KEY_ID
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: iam-loki-s3
+            key: AWS_S3_SECRET_ACCESS_KEY
+    memcachedExporter.enabled: true
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
