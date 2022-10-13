@@ -72,8 +72,8 @@ charts:
 - name: eck-resource
   override:
     kibana.nodeSelector: $(nodeSelector)
-    kibana.limitCpu: 4
-    kibana.limitMem: 8Gi
+    kibana.limitCpu: 1
+    kibana.limitMem: 2Gi
 
     elasticsearch.adminPassword: tacoword
 
@@ -81,7 +81,7 @@ charts:
     # Master nodes
     elasticsearch.nodeSets.master.nodeSelector: $(nodeSelector)
     elasticsearch.nodeSets.master.javaOpts: "-Xms2g -Xmx2g"
-    elasticsearch.nodeSets.master.limitCpu: 2
+    elasticsearch.nodeSets.master.limitCpu: 1
     elasticsearch.nodeSets.master.limitMem: 4Gi
     elasticsearch.nodeSets.master.pvc.storageClassName: $(storageClassName)
     elasticsearch.nodeSets.master.pvc.size: 2Gi
@@ -89,7 +89,7 @@ charts:
     # Hot nodes
     elasticsearch.nodeSets.hotdata.nodeSelector: $(nodeSelector)
     elasticsearch.nodeSets.hotdata.javaOpts: "-Xms2g -Xmx2g"
-    elasticsearch.nodeSets.hotdata.limitCpu: 2
+    elasticsearch.nodeSets.hotdata.limitCpu: 1
     elasticsearch.nodeSets.hotdata.limitMem: 4Gi
     elasticsearch.nodeSets.hotdata.pvc.storageClassName: $(storageClassName)
     elasticsearch.nodeSets.hotdata.pvc.size: 100Gi
