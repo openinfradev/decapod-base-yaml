@@ -1060,6 +1060,10 @@ spec:
         requests:
           cpu: 100m
           memory: 250Mi
+      persistence:
+        enabled: true
+        inMemory: false
+        size: 100Gi
     memcachedExporter.enabled: true
 ---
 apiVersion: helm.fluxcd.io/v1
