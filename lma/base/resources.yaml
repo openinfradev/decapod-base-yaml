@@ -1041,7 +1041,9 @@ spec:
           cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
           shared_store: s3
         aws:
-          s3: s3://ap-northeast-2/taco-loki-entire-cluster
+          s3: TO_BE_FIXED
+          bucketnames: loki
+          s3forcepathstyle: true
       structuredConfig:
         limits_config:
           ingestion_rate_mb: 1024
@@ -1051,17 +1053,6 @@ spec:
     serviceMonitor.enabled: true
     prometheusRule.enabled: true
     ingester:
-      extraEnv:
-      - name: AWS_ACCESS_KEY_ID
-        valueFrom:
-          secretKeyRef:
-            name: iam-loki-s3
-            key: AWS_S3_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: iam-loki-s3
-            key: AWS_S3_SECRET_ACCESS_KEY
       resources:
         limits:
           cpu: '4'
@@ -1069,42 +1060,6 @@ spec:
         requests:
           cpu: 100m
           memory: 250Mi
-    querier:
-      extraEnv:
-      - name: AWS_ACCESS_KEY_ID
-        valueFrom:
-          secretKeyRef:
-            name: iam-loki-s3
-            key: AWS_S3_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: iam-loki-s3
-            key: AWS_S3_SECRET_ACCESS_KEY
-    compactor:
-      extraEnv:
-      - name: AWS_ACCESS_KEY_ID
-        valueFrom:
-          secretKeyRef:
-            name: iam-loki-s3
-            key: AWS_S3_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: iam-loki-s3
-            key: AWS_S3_SECRET_ACCESS_KEY
-    ruler:
-      extraEnv:
-      - name: AWS_ACCESS_KEY_ID
-        valueFrom:
-          secretKeyRef:
-            name: iam-loki-s3
-            key: AWS_S3_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: iam-loki-s3
-            key: AWS_S3_SECRET_ACCESS_KEY
     memcachedExporter.enabled: true
 ---
 apiVersion: helm.fluxcd.io/v1
