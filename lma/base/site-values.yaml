@@ -215,7 +215,7 @@ charts:
     ruler.persistence.size: 8Gi
     minio.accessKey.password: $(defaultUser)
     minio.secretKey.password: $(defaultPassword)
-    minio.defaultBuckets: thanos
+    minio.defaultBuckets: "thanos, loki"
     minio.persistence.storageClass: $(storageClassName)
     minio.persistence.accessMode: ReadWriteOnce
     minio.persistence.size: 8Gi
@@ -230,14 +230,12 @@ charts:
       secretName: $(thanosObjstoreSecret)
     sidecarsService.name: thanos-sidecars
     sidecarsService.endpoints: 
-      - 172.16.50.114
+      - 127.0.0.1
 
 - name: loki
   override:
-    replicas: 1
-    persistence.size: 20Gi
-    persistence.storageClassName: $(storageClassName)
-    serviceMonitor.enabled: false
+    loki.storageConfig.aws.s3: http://$(defaultUser):$(defaultPassword)@thanos-minio.lma.svc:9000/minio
+    loki.structuredConfig.table_manager.retention_period: 672h    # delete logs after 672h = 28 days
 
 - name: promtail
   override:
