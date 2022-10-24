@@ -1046,8 +1046,8 @@ spec:
           s3forcepathstyle: true
       structuredConfig:
         limits_config:
-          ingestion_rate_mb: 1024
-          ingestion_burst_size_mb: 1024
+          ingestion_rate_mb: 25
+          ingestion_burst_size_mb: 50
           max_streams_per_user: 0
           max_global_streams_per_user: 0
         table_manager:
