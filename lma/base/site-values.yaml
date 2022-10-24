@@ -235,6 +235,7 @@ charts:
 - name: loki
   override:
     loki.storageConfig.aws.s3: http://$(defaultUser):$(defaultPassword)@thanos-minio.lma.svc:9000/minio
+    loki.structuredConfig.table_manager.retention_period: 672h    # delete logs after 672h = 28 days
 
 - name: promtail
   override:

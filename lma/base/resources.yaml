@@ -1050,6 +1050,9 @@ spec:
           ingestion_burst_size_mb: 1024
           max_streams_per_user: 0
           max_global_streams_per_user: 0
+        table_manager:
+          retention_deletes_enabled: true
+          retention_period: TO_BE_FIXED
     serviceMonitor.enabled: true
     prometheusRule.enabled: true
     ingester:
