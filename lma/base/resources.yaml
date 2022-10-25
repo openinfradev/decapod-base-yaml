@@ -1027,7 +1027,7 @@ spec:
     loki:
       schemaConfig:
         configs:
-        - from: 2020-09-07
+        - from: "2020-09-07"
           store: boltdb-shipper
           object_store: s3
           schema: v11
