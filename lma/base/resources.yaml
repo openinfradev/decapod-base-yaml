@@ -790,6 +790,35 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
+    name: minio
+  name: minio
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: minio
+    version: 6.8.3
+  releaseName: minio
+  targetNamespace: lma
+  values:
+    accessKey:
+      password: TO_BE_FIXED
+    secretKey:
+      password: TO_BE_FIXED
+    defaultBuckets: TO_BE_FIXED
+    service:
+      type: NodePort
+      nodePort: 30002
+    persistence:
+      storageClass: TO_BE_FIXED
+      accessMode: TO_BE_FIXED
+      size: TO_BE_FIXED
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
     name: thanos
   name: thanos
 spec:
@@ -927,19 +956,7 @@ spec:
     volumePermissions:
       enabled: false
     minio:
-      enabled: true
-      accessKey:
-        password: TO_BE_FIXED
-      secretKey:
-        password: TO_BE_FIXED
-      defaultBuckets: TO_BE_FIXED
-      service:
-        type: NodePort
-        nodePort: 30002
-      persistence:
-        storageClass: TO_BE_FIXED
-        accessMode: TO_BE_FIXED
-        size: TO_BE_FIXED
+      enabled: false
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
