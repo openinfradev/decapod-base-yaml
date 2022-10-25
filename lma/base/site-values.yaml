@@ -156,6 +156,16 @@ charts:
     conf.default.hosts:
     - TO_BE_FIXED
 
+
+- name: thanos
+  override:
+    accessKey.password: $(defaultUser)
+    secretKey.password: $(defaultPassword)
+    defaultBuckets: "thanos, loki"
+    persistence.storageClass: $(storageClassName)
+    persistence.accessMode: ReadWriteOnce
+    persistence.size: 8Gi
+
 - name: thanos
   override:
     global.storageClass: $(storageClassName)
@@ -213,12 +223,6 @@ charts:
               - alert: "PrometheusDown"
                 expr: absent(up{prometheus="monitoring/prometheus-operator"})
     ruler.persistence.size: 8Gi
-    minio.accessKey.password: $(defaultUser)
-    minio.secretKey.password: $(defaultPassword)
-    minio.defaultBuckets: "thanos, loki"
-    minio.persistence.storageClass: $(storageClassName)
-    minio.persistence.accessMode: ReadWriteOnce
-    minio.persistence.size: 8Gi
 
 - name: thanos-config
   override:
