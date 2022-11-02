@@ -1040,7 +1040,7 @@ spec:
   values:
     global:
       clusterDomain: cluster.local # TO_BE_FIXED
-      dnsService: coredns
+      dnsService: kube-dns
     loki:
       schemaConfig:
         configs:
