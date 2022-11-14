@@ -55,7 +55,7 @@ spec:
     type: helmrepo
     repository: https://charts.bitnami.com/bitnami
     name: postgresql
-    version: 10.5.2
+    version: 12.1.2
   releaseName: postgresql
   targetNamespace: decapod-db
   values:
