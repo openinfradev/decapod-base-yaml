@@ -673,7 +673,7 @@ spec:
         url: "thanos-query.lma:9090"
       loki:
         enabled: true
-        url: "loki.lma:3100"
+        url: "loki-loki-distributed-gateway.lma"
     grafanaDashboard:
       enabled: true
       namespace: lma
