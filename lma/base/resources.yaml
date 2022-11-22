@@ -661,7 +661,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: lma-addons
-    version: 1.7.0
+    version: 1.8.0
   releaseName: addons
   targetNamespace: lma
   values:
@@ -675,20 +675,12 @@ spec:
         enabled: true
         url: "loki-loki-distributed-gateway.lma"
     grafanaDashboard:
-      enabled: true
-      namespace: lma
-      istio:
-        enabled: true
-      jaeger:
-        enabled: true
-      tacoCustomDashboard:
-        enabled: true
-      ceph:
-        enabled: false
-      argocd:
-        enabled: false
-      argowf:
-        enabled: false
+      include: 
+      - kubernetes
+      - node
+      - loki
+      - calico
+      - etcd
     serviceMonitor:
       calico:
         enabled: true
