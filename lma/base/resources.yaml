@@ -723,8 +723,7 @@ spec:
         interval: TO_BE_FIXED
       federations: [] # TO_BE_FIXED
     kibanaInit:
-      enabled: true
-      url: TO_BE_FIXED
+      enabled: false
     prometheusRules:
       aggregation:
         enabled: true

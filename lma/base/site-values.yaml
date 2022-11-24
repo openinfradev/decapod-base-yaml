@@ -134,7 +134,6 @@ charts:
     - thanos-query-frontend.lma.svc.$(clusterName):9090
 
     # Initialize the kibana index
-    kibanaInit.url: http://eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
     serviceMonitor.grafana.interval: $(serviceScrapeInterval)
     serviceMonitor.argocd.interval: $(serviceScrapeInterval)
     serviceMonitor.argowf.interval: $(serviceScrapeInterval)
