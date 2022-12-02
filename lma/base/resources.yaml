@@ -681,6 +681,7 @@ spec:
       - loki
       - calico
       - etcd
+      namespace: lma      
     serviceMonitor:
       calico:
         enabled: true
