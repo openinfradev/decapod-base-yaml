@@ -1077,6 +1077,12 @@ spec:
         inMemory: false
         size: 100Gi
     memcachedExporter.enabled: true
+    gateway:
+      nginxConfig:
+        httpSnippet: |-
+          client_max_body_size 50M;
+        serverSnippet: |-
+          client_max_body_size 50M;
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
