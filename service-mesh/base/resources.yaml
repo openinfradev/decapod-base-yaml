@@ -188,7 +188,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: servicemesh-jaeger-resource
-    version: 2.27.1
+    version: 2.27.2
   releaseName: servicemesh-jaeger-resource
   targetNamespace: istio-system
   values:
@@ -207,6 +207,15 @@ spec:
         limits:
           cpu: 1000m
           memory: 2Gi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: servicemesh
+                operator: In
+                values:
+                - enabled
     storage:
       esIndexCleaner:
         enabled: true
@@ -222,6 +231,15 @@ spec:
           secretName: eck-elasticsearch-es-http-certs-public
     query:
       basePath: /
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: servicemesh
+                operator: In
+                values:
+                - enabled
     elasticsearch:
       image:
         repository: docker.io/openstackhelm/heat
