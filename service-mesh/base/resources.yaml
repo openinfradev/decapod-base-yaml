@@ -105,6 +105,7 @@ spec:
   releaseName: istio-ingress-gateway
   targetNamespace: istio-ingress
   values:
+    image: istio/proxyv2:1.13.1
     revision: ""
     replicaCount: 1
     service:
@@ -133,6 +134,53 @@ spec:
       app: istio-ingress-gateway
     nodeSelector:
       taco-ingress-gateway: enabled
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: istio-egress-gateway
+  name: istio-egress-gateway
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://openinfradev.github.io/helm-repo
+    name: istio-ingress-gateway
+    version: 1.13.1
+  releaseName: istio-egress-gateway
+  targetNamespace: istio-ingress
+  values:
+    image: istio/proxyv2:1.13.1
+    revision: ""
+    replicaCount: 1
+    service:
+      type: ClusterIP
+      ports:
+      - name: status-port
+        port: 15021
+        protocol: TCP
+        targetPort: 15021
+      - name: http2
+        port: 80
+        protocol: TCP
+        targetPort: 80
+      - name: https
+        port: 443
+        protocol: TCP
+        targetPort: 443
+    resources:
+      requests:
+        cpu: 1000m
+        memory: 1024Mi
+      limits:
+        cpu: 2000m
+        memory: 2048Mi
+    labels:
+      app: istio-egress-gateway
+    nodeSelector:
+      taco-egress-gateway: enabled
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -199,6 +247,7 @@ spec:
     ingress:
       enabled: false
     collector:
+      image: jaegertracing/jaeger-collector:1.29.0
       maxReplicas: 5
       resources:
         requests:
@@ -219,6 +268,7 @@ spec:
     storage:
       esIndexCleaner:
         enabled: true
+        image: jaegertracing/jaeger-es-index-cleaner:1.29.0
         numberOfDays: 7
         schedule: "55 04 * * *"
       options:
@@ -230,6 +280,7 @@ spec:
           serverUrls: https://eck-elasticsearch-es-http.elastic-system.svc:9200
           secretName: eck-elasticsearch-es-http-certs-public
     query:
+      image: jaegertracing/jaeger-query:1.29.0
       basePath: /
       affinity:
         nodeAffinity:
@@ -240,10 +291,12 @@ spec:
                 operator: In
                 values:
                 - enabled
+    agent:
+      image: jaegertracing/jaeger-agent:1.29.0
     elasticsearch:
       image:
-        repository: docker.io/openstackhelm/heat
-        tag: newton
+        repository: docker.io/nginxinc/nginx-unprivileged
+        tag: 1.19-alpine
         pullPolicy: IfNotPresent
       host: eck-elasticsearch-es-http.lma.svc.cluster.local
       port: 9200
