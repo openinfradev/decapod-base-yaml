@@ -52,6 +52,7 @@ spec:
   targetNamespace: istio-system
   values:
     pilot:
+      image: istio/pilot:1.13.1
       traceSampling: 1.0
       resources:
         requests:
@@ -60,7 +61,6 @@ spec:
       nodeSelector:
         servicemesh: enabled
     revision: ""
-    revisionTags: []
     global:
       istioNamespace: istio-system
       defaultResources:
@@ -217,6 +217,9 @@ spec:
   releaseName: jaeger-operator
   targetNamespace: istio-system
   values:
+    image:
+      repository: jaegertracing/jaeger-operator
+      tag: 1.29.1
     jaeger:
       create: false
       namespace: istio-system
@@ -344,6 +347,7 @@ spec:
     image:
       repo: quay.io/kiali/kiali-operator
       tag: v1.45.1
+    allowAdHocKialiImage: true
     nodeSelector:
       servicemesh: enabled
     resources:
@@ -379,6 +383,8 @@ spec:
       ingress:
         enabled: false
       namespace: istio-system
+      image_name: quay.io/kiali/kiali
+      image_version: v1.45.1
       replicas: 1
       resources:
         requests:
