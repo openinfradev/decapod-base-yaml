@@ -85,7 +85,7 @@ spec:
             memory: 1024Mi
         tracer: "zipkin"
       tracer:
-        zipkin: 
+        zipkin:
           address: "jaeger-operator-jaeger-collector.istio-system:9411"
   wait: true
 ---
@@ -110,18 +110,18 @@ spec:
     service:
       type: LoadBalancer
       ports:
-      - name: status-port
-        port: 15021
-        protocol: TCP
-        targetPort: 15021
-      - name: http2
-        port: 80
-        protocol: TCP
-        targetPort: 80
-      - name: https
-        port: 443
-        protocol: TCP
-        targetPort: 443
+        - name: status-port
+          port: 15021
+          protocol: TCP
+          targetPort: 15021
+        - name: http2
+          port: 80
+          protocol: TCP
+          targetPort: 80
+        - name: https
+          port: 443
+          protocol: TCP
+          targetPort: 443
     resources:
       requests:
         cpu: 1000m
@@ -270,6 +270,7 @@ spec:
   releaseName: kiali-operator
   targetNamespace: istio-system
   values:
+    allowAdHocKialiImage: true
     image:
       repo: quay.io/kiali/kiali-operator
       tag: v1.45.1
