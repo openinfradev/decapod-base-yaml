@@ -306,7 +306,6 @@ spec:
     namespace: istio-system
     istioNamespace: istio-system
     deployment:
-      accessible_namespaces: ["**"]
       ingress:
         enabled: false
       namespace: istio-system

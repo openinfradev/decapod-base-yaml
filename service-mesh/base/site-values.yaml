@@ -69,7 +69,6 @@ charts:
   override:
     namespace: istio-system
     istioNamespace: istio-system
-    deployment.accessible_namespaces: ["**"]
     deployment.resources.requests.cpu: 500m
     deployment.resources.requests.memory: 512Mi
     deployment.resources.limits.cpu: 1000m
