@@ -152,9 +152,7 @@ charts:
 
 - name: kubernetes-event-exporter
   override:
-    conf.default.hosts:
-    - TO_BE_FIXED
-
+    clustername: $(clusterName)
 
 - name: minio
   override:
@@ -191,7 +189,7 @@ charts:
           max_size_items: 100
           validity: 100s
 
-    queryFrontend.extraFlags: 
+    queryFrontend.extraFlags:
       - --query-range.split-interval=24h
       - --query-range.max-retries-per-request=3
       - --query-frontend.log-queries-longer-than=60s
@@ -205,7 +203,7 @@ charts:
     compactor.resources.limits.memory: 1024Mi
     compactor.resources.limits.cpu: 1000m
     compactor.persistence.size: 8Gi
-    compactor.extraFlags: 
+    compactor.extraFlags:
     storegateway.config: |-
         type: IN-MEMORY
         config:
@@ -232,7 +230,7 @@ charts:
       secret_key: $(defaultPassword)
       secretName: $(thanosObjstoreSecret)
     sidecarsService.name: thanos-sidecars
-    sidecarsService.endpoints: 
+    sidecarsService.endpoints:
       - 127.0.0.1
 
 - name: loki

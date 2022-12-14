@@ -772,7 +772,7 @@ spec:
   releaseName: kubernetes-event-exporter
   targetNamespace: lma
   values:
-    clustername: taco-cluster.local
+    clustername: TO_BE_FIXED
     conf:
       logLevel: error     # possible level: error, debug,
       logFormat: json
