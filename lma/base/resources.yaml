@@ -565,7 +565,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluent-operator
-    version: 0.1.0
+    version: 1.7.0
     skipDepUpdate: true
   releaseName: fluent-operator
   targetNamespace: lma
