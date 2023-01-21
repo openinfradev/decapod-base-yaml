@@ -651,9 +651,9 @@ spec:
       - key: $kubernetes['container_name']
         value: kibana|elasticsearch|fluent-bit
     logExporter:
-      enabled: true
+      enabled: false
       serviceMonitor:
-        enabled: true
+        enabled: false
       spec:
         nodeSelector:
           taco-lma: enabled
@@ -800,22 +800,17 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: minio
-    version: 6.8.3
+    version: 5.0.4
   releaseName: minio
   targetNamespace: lma
-  values:
-    accessKey:
-      password: TO_BE_FIXED
-    secretKey:
-      password: TO_BE_FIXED
-    defaultBuckets: TO_BE_FIXED
-    service:
-      type: NodePort
-      nodePort: 30002
+  values: 
+    users: [] # must_be_defined
+    buckets: [] # must_be_defined
     persistence:
-      storageClass: TO_BE_FIXED
-      accessMode: TO_BE_FIXED
-      size: TO_BE_FIXED
+      storageClass: # must_be_defined
+      accessMode: ReadWriteOnce
+      size: 20Gi # tunable 
+    mode: standalone   
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
