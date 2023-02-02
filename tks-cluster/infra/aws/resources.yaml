@@ -37,19 +37,6 @@ spec:
         type: gp2
     machinePool: []
     machineDeployment: []
-    job:
-      taconode:
-        enabled: true
-        labels:
-        - taco-lma
-        - taco-ingress-gateway
-        - taco-egress-gateway
-        - servicemesh
-      argo:
-        enabled: true
-        url: TO_BE_FIXED  # argocd url like argocd-v2.taco-cat.xyz
-        user: admin
-        password: TO_BE_FIXED  
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
