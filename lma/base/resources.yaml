@@ -10,7 +10,7 @@ spec:
     type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: kube-prometheus-stack
-    version: 21.0.3
+    version: 44.3.1
   helmVersion: v3
   releaseName: prometheus-operator-crds
   targetNamespace: lma
@@ -28,7 +28,7 @@ spec:
     type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: kube-prometheus-stack
-    version: 21.0.3
+    version: 44.3.1
   releaseName: prometheus-operator
   targetNamespace: lma
   values:
@@ -86,7 +86,7 @@ spec:
     type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: kube-prometheus-stack
-    version: 21.0.3
+    version: 44.3.1
   releaseName: prometheus
   targetNamespace: lma
   values:
@@ -244,9 +244,9 @@ spec:
             key: objstore.yml
             name: TO_BE_FIXED # secret name
           minTime: -3h
-      service:
-        nodePort: 30008
-        type: NodePort
+        evaluationInterval: 60s
+        scrapeInterval: 30s
+        scrapeTimeout: 10s
       thanosServiceExternal:
         enabled: true
         annotations: {}
@@ -280,7 +280,7 @@ spec:
     global:
       manifestGen: true
       kubeVersion: 1.22.2
-      createOperatorNamespace: true
+      createOperatorNamespace: false
     softMultiTenancy:
       enabled: false
   wait: true
@@ -303,10 +303,10 @@ spec:
     #    - https://github.com/kubernetes/kube-state-metrics/issues/1337
     #    - https://github.com/kubernetes/kube-state-metrics/issues/1342
     # so, i'll use bitnami before the issues are closed
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://charts.bitnami.com/bitnami
     name: kube-state-metrics
     # version: 2.9.4
-    version: 1.1.3
+    version: 3.2.8
   releaseName: kube-state-metrics
   targetNamespace: lma
   values:
@@ -325,7 +325,7 @@ spec:
     type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-node-exporter
-    version: 1.11.2
+    version: 4.13.0
   releaseName: prometheus-node-exporter
   targetNamespace: lma
   values:
@@ -333,6 +333,11 @@ spec:
     hostNetwork: true
     extraArgs:
     - --no-collector.hwmon
+    tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+    - key: node-role.kubernetes.io/master
+      operator: Exists
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -347,7 +352,7 @@ spec:
     type: helmrepo
     repository: https://prometheus-community.github.io/helm-charts
     name: prometheus-pushgateway
-    version: 1.5.1
+    version: 2.1.1
   releaseName: prometheus-pushgateway
   targetNamespace: lma
   values:
@@ -392,6 +397,8 @@ spec:
         process_exporter:
           enabled: true
           tolerations:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
           - key: node-role.kubernetes.io/master
             operator: Exists
           - key: node-role.kubernetes.io/node
@@ -507,7 +514,7 @@ spec:
     type: helmrepo
     repository: https://grafana.github.io/helm-charts
     name: grafana
-    version: 6.19.4
+    version: 6.50.7
   releaseName: grafana
   targetNamespace: lma
   values:
@@ -609,12 +616,13 @@ spec:
       enabled: true
       daemonset:
         spec:
-          pod:
-            tolerations:
-            - key: node-role.kubernetes.io/master
-              operator: Exists
-            - key: node-role.kubernetes.io/node
-              operator: Exists
+          tolerations:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
+          - key: node-role.kubernetes.io/master
+            operator: Exists
+          - key: node-role.kubernetes.io/node
+            operator: Exists
       job:
         spec:
           nodeSelector:
