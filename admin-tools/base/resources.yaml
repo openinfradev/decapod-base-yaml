@@ -14,7 +14,7 @@ spec:
   releaseName: keycloak-operator
   targetNamespace: keycloak
   values:
-    replicaCount: 1
+    replicaCount: 2
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
