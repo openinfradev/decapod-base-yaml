@@ -1,0 +1,29 @@
+name: Check using internal repository for every helm chart and image in here. 
+
+on:
+  pull_request:
+    branches:
+      - main
+      - release**
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.5.0
+      - name: check every chart using the local repository
+        run: |
+          set -xe
+          chmod +x .github/workflows/check_chart_repo.sh
+          .github/workflows/check_chart_repo.sh
+      - name: check every image using the local repository
+        run: |
+          set -xe
+          chmod +x .github/workflows/check_image_repo.sh
+          .github/workflows/check_image_repo.sh
