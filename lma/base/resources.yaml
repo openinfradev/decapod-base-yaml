@@ -66,6 +66,15 @@ spec:
 #   prometheus-node-exporter: # subchart configuration
     prometheusOperator:
       enabled: true
+      prometheusConfigReloader.image:
+        registry: quay.io
+        repository: prometheus-operator/prometheus-config-reloader
+        # if not set appVersion field from Chart.yaml is used
+        tag: ""
+      thanosImage:
+        registry: quay.io
+        repository: thanos/thanos
+        tag: v0.30.2
       nodeSelector: {}  # TO_BE_FIXED
       createCustomResource: true
       cleanupCustomResource: true
