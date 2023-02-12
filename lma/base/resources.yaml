@@ -768,7 +768,7 @@ spec:
       namespace: lma
       prometheus:
         enabled: true
-        url: "thanos-query.lma:9090"
+        url: "lma-prometheus.lma:9090"
       loki:
         enabled: true
         url: "loki-loki-distributed-gateway.lma"
