@@ -66,6 +66,16 @@ spec:
 #   prometheus-node-exporter: # subchart configuration
     prometheusOperator:
       enabled: true
+      prometheusConfigReloader:
+        image:
+          registry: quay.io
+          repository: prometheus-operator/prometheus-config-reloader
+          # if not set appVersion field from Chart.yaml is used
+          tag: ""
+      thanosImage:
+        registry: quay.io
+        repository: thanos/thanos
+        tag: v0.30.2
       nodeSelector: {}  # TO_BE_FIXED
       createCustomResource: true
       cleanupCustomResource: true
@@ -241,7 +251,7 @@ spec:
         thanos:
           version: v0.18.0
           objectStorageConfig:
-            key: objstore.yml 
+            key: objstore.yml
             name: TO_BE_FIXED # secret name
           minTime: -3h
       service:
@@ -422,7 +432,7 @@ spec:
       image:
         tag: 7.5.1
       adminPassword: TO_BE_FIXED
-      enabled: true 
+      enabled: true
       count: 3        # FIXME
       http:
         service:
@@ -547,7 +557,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluent-operator
-    version: 0.1.0
+    version: 1.7.0
     skipDepUpdate: true
   releaseName: fluent-operator-crds
   targetNamespace: lma
@@ -565,7 +575,7 @@ spec:
     type: helmrepo
     repository: https://openinfradev.github.io/helm-repo
     name: fluent-operator
-    version: 0.1.0
+    version: 1.7.0
     skipDepUpdate: true
   releaseName: fluent-operator
   targetNamespace: lma
@@ -675,13 +685,13 @@ spec:
         enabled: true
         url: "loki-loki-distributed-gateway.lma"
     grafanaDashboard:
-      include: 
+      include:
       - kubernetes
       - node
       - loki
       - calico
       - etcd
-      namespace: lma      
+      namespace: lma
     serviceMonitor:
       calico:
         enabled: true
@@ -772,7 +782,7 @@ spec:
   releaseName: kubernetes-event-exporter
   targetNamespace: lma
   values:
-    clustername: taco-cluster.local
+    clustername: TO_BE_FIXED
     conf:
       logLevel: error     # possible level: error, debug,
       logFormat: json
@@ -1005,7 +1015,7 @@ spec:
       client_certfile: peer.crt
       client_keyfile: peer.key
     # master node의 label을 환경에 맞게 적어야함
-    # ex) "node-role.kubernetes.io/master": "" 
+    # ex) "node-role.kubernetes.io/master": ""
     nodeSelector: {} # TO_BE_FIXED
     # master node에 taint가 있는 경우 필요
     # ex) - key: "node-role.kubernetes.io/master"
@@ -1025,14 +1035,14 @@ spec:
   chart:
     type: helmrepo
     repository: https://grafana.github.io/helm-charts
-    name: loki-distributed 
+    name: loki-distributed
     version: 0.58.0
   releaseName: loki
   targetNamespace: lma
   values:
     global:
       clusterDomain: cluster.local # TO_BE_FIXED
-      dnsService: kube-dns
+      dnsService: coredns
     loki:
       schemaConfig:
         configs:
@@ -1077,6 +1087,12 @@ spec:
         inMemory: false
         size: 100Gi
     memcachedExporter.enabled: true
+    gateway:
+      nginxConfig:
+        httpSnippet: |-
+          client_max_body_size 50M;
+        serverSnippet: |-
+          client_max_body_size 50M;
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
