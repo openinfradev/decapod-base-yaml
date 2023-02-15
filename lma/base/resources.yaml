@@ -804,13 +804,13 @@ spec:
   releaseName: minio
   targetNamespace: lma
   values: 
-    users: [] # must_be_defined
-    buckets: [] # must_be_defined
+    users: [] # MUST_BE_DEFINED
+    buckets: [] # MUST_BE_DEFINED
     persistence:
-      storageClass: # must_be_defined
-      accessMode: ReadWriteOnce
+      storageClass: MUST_BE_DEFINED
+      accessMode: ReadWriteOnce # tunable
       size: 20Gi # tunable 
-    mode: standalone   
+    mode: standalone
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
