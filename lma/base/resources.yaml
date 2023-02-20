@@ -8,7 +8,7 @@ metadata:
 spec:
   chart:
     type: helmrepo
-    repository: https://prometheus-community.github.io/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kube-prometheus-stack
     version: 21.0.3
   helmVersion: v3
@@ -26,7 +26,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://prometheus-community.github.io/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kube-prometheus-stack
     version: 21.0.3
   releaseName: prometheus-operator
@@ -94,7 +94,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://prometheus-community.github.io/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kube-prometheus-stack
     version: 21.0.3
   releaseName: prometheus
@@ -277,7 +277,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://helm.elastic.co
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: eck-operator
     version: 1.8.0
   releaseName: eck-operator
@@ -313,7 +313,7 @@ spec:
     #    - https://github.com/kubernetes/kube-state-metrics/issues/1337
     #    - https://github.com/kubernetes/kube-state-metrics/issues/1342
     # so, i'll use bitnami before the issues are closed
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kube-state-metrics
     # version: 2.9.4
     version: 1.1.3
@@ -333,7 +333,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://prometheus-community.github.io/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prometheus-node-exporter
     version: 1.11.2
   releaseName: prometheus-node-exporter
@@ -355,7 +355,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://prometheus-community.github.io/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prometheus-pushgateway
     version: 1.5.1
   releaseName: prometheus-pushgateway
@@ -377,7 +377,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prometheus-process-exporter
     version: 0.1.4-skt
     skipDepUpdate: true
@@ -422,7 +422,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: eck-resource
     version: 1.1.1
   releaseName: eck-resource
@@ -515,7 +515,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://grafana.github.io/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: grafana
     version: 6.19.4
   releaseName: grafana
@@ -555,7 +555,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: fluent-operator
     version: 1.7.0
     skipDepUpdate: true
@@ -573,7 +573,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: fluent-operator
     version: 1.7.0
     skipDepUpdate: true
@@ -607,7 +607,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: fluentbit-resource
     version: 1.2.0
     skipDepUpdate: true
@@ -669,7 +669,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: lma-addons
     version: 1.8.2
   releaseName: addons
@@ -752,7 +752,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://prometheus-community.github.io/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prometheus-adapter
     version: 2.5.1
   releaseName: prometheus-adapter
@@ -776,7 +776,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubernetes-event-exporter
     version: 2.0.0
   releaseName: kubernetes-event-exporter
@@ -798,7 +798,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: minio
     version: 6.8.3
   releaseName: minio
@@ -827,7 +827,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: thanos
     version: 3.4.0
   releaseName: thanos
@@ -971,7 +971,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: thanos-config
     version: 0.1.4
   releaseName: thanos-config
@@ -1003,7 +1003,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prepare-etcd-secret
     version: 0.2.0
   releaseName: prepare-etcd-secret
@@ -1034,7 +1034,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://grafana.github.io/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: loki-distributed
     version: 0.58.0
   releaseName: loki
@@ -1104,7 +1104,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://grafana.github.io/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: promtail
     version: 3.9.1
   releaseName: promtail
@@ -1163,7 +1163,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://helm-charts.wikimedia.org/stable/
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: eventrouter
     version: 0.4.0
   releaseName: eventrouter
