@@ -9,7 +9,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istio-base
     version: 1.13.1
   releaseName: istio-base
@@ -27,7 +27,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istio-base
     version: 1.13.1
   releaseName: istio-base-crds
@@ -45,7 +45,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istiod
     version: 1.13.1
   releaseName: istiod
@@ -99,7 +99,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istio-ingress-gateway
     version: 1.13.1
   releaseName: istio-ingress-gateway
@@ -146,7 +146,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istio-ingress-gateway
     version: 1.13.1
   releaseName: istio-egress-gateway
@@ -193,7 +193,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: jaeger-operator
     version: 2.27.1
   releaseName: jaeger-operator-crds
@@ -211,7 +211,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     version: 2.27.1
     name: jaeger-operator
   releaseName: jaeger-operator
@@ -237,7 +237,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-jaeger-resource
     version: 2.27.2
   releaseName: servicemesh-jaeger-resource
@@ -320,7 +320,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://kiali.org/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kiali-operator
     version: 1.45.1
   releaseName: kiali-operator-crds
@@ -338,7 +338,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://kiali.org/helm-charts
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kiali-operator
     version: 1.45.1
   releaseName: kiali-operator
@@ -371,7 +371,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-kiali-resource
     version: 1.45.1
   releaseName: servicemesh-kiali-resource
@@ -446,7 +446,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-grafana-dashboard
     version: 1.13.1
   releaseName: servicemesh-grafana-dashboard
@@ -467,7 +467,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-prometheusmonitor
     version: 1.7.0
   releaseName: servicemesh-prometheusmonitor
@@ -490,7 +490,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-prometheusrule
     version: 1.7.0
   releaseName: servicemesh-prometheusrule

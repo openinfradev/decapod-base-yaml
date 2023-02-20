@@ -9,7 +9,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: cluster-api-aws
     version: 0.8.1
   releaseName: cluster-api-aws
@@ -49,7 +49,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: aws-ebs-csi-driver
     version: 2.6.4-skt
   releaseName: aws-ebs-csi-driver

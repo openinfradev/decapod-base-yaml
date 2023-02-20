@@ -9,7 +9,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prepare-decapod-controller
     version: 0.1.0
   releaseName: db-secret-argo
@@ -31,7 +31,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prepare-decapod-controller
     version: 0.1.0
   releaseName: db-secret-decapod-db
@@ -53,7 +53,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://charts.bitnami.com/bitnami
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: postgresql
     version: 12.1.2
   releaseName: postgresql
@@ -85,7 +85,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://argoproj.github.io/argo-helm
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: argo-workflows
     version: 0.2.6
   releaseName: argo-workflows-operator-crds
@@ -102,7 +102,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://argoproj.github.io/argo-helm
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: argo-workflows
     version: 0.2.6
   releaseName: argo-workflows-operator
