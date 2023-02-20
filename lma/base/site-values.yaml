@@ -156,12 +156,24 @@ charts:
 
 - name: minio
   override:
-    accessKey.password: $(defaultUser)
-    secretKey.password: $(defaultPassword)
-    defaultBuckets: "thanos, loki"
+    users:
+      - accessKey: $(defaultUser)
+        secretKey: $(defaultPassword)
+        policy: consoleAdmin 
+    buckets:
+      - name: thanos
+        policy: public
+        purge: false
+        versioning: true
+        objectlocking: false
+      - name: loki
+        policy: public
+        purge: false
+        versioning: true
+        objectlocking: false
     persistence.storageClass: $(storageClassName)
     persistence.accessMode: ReadWriteOnce
-    persistence.size: 8Gi
+    persistence.size: 20Gi
 
 - name: thanos
   override:
