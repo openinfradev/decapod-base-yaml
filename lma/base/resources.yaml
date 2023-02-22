@@ -805,7 +805,12 @@ spec:
     persistence:
       storageClass: MUST_BE_DEFINED
       accessMode: ReadWriteOnce # tunable
-      size: 20Gi # tunable 
+      size: 20Gi # tunable
+    resources:
+      requests:
+          memory: 1Gi # tunable
+      limits:
+          memory: 2Gi # tunable
     mode: standalone
 ---
 apiVersion: helm.fluxcd.io/v1
