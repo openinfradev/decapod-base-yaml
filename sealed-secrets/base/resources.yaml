@@ -9,7 +9,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://bitnami-labs.github.io/sealed-secrets
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: sealed-secrets
     version: 1.16.1
   releaseName: sealed-secrets-operator-crds
@@ -27,7 +27,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://bitnami-labs.github.io/sealed-secrets
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: sealed-secrets
     version: 1.16.1
   releaseName: sealed-secrets-operator
@@ -45,7 +45,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://charts.appscode.com/stable/
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubed
     version: v0.12.0-rc.3
   releaseName: kubed

@@ -8,7 +8,7 @@ metadata:
 spec:
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: keycloak-operator
     version: 0.1.0
   releaseName: keycloak-operator
@@ -25,7 +25,7 @@ metadata:
 spec:
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: keycloak-operator
     version: 0.1.0
   releaseName: keycloak-operator-crds
@@ -41,7 +41,7 @@ metadata:
 spec:
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: keycloak-resources
     version: 0.1.0
   releaseName: keycloak-resources

@@ -9,7 +9,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubernetes-addons
     version: 0.1.0
   releaseName: kubernetes-addons
@@ -32,7 +32,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: local-path-provisioner
     version: 0.0.22
   releaseName: local-path-provisioner
@@ -52,7 +52,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://kubernetes.github.io/ingress-nginx
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: ingress-nginx
     version: 4.0.17
   releaseName: ingress-nginx
@@ -116,7 +116,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://charts.appscode.com/stable
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubed
     version: v0.12.0
   releaseName: kubed
@@ -135,7 +135,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: cluster-autoscaler
     version: 0.2.0
   releaseName: cluster-autoscaler
@@ -157,7 +157,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://openinfradev.github.io/helm-repo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: cluster-autoscaler
     version: 0.2.0
   releaseName: cluster-autoscaler-rbac
@@ -178,7 +178,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://kubernetes-sigs.github.io/metrics-server/
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: metrics-server
     version: 3.8.2
   releaseName: metrics-server

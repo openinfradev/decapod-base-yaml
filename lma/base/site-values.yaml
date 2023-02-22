@@ -19,8 +19,9 @@ global:
   defaultUser: taco
   # Secret name to connect the object storage
   thanosObjstoreSecret: taco-objstore-secret
-  # Which it install every thanos component?
-  thanosPrimaryCluster: true
+
+  lokiHost: loki-loki-distributed-gateway
+  lokiPort: 80
 
 charts:
 - name: prometheus-operator
@@ -127,12 +128,6 @@ charts:
 
 - name: addons
   override:
-    # Configure the connection from prometheus to elasticsearch (It not used)
-    metricbeat.elasticsearch.host: https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
-    metricbeat.kibana.host: eck-kibana-dashboard-kb-http.lma.svc.$(clusterName):5601
-    metricbeat.prometheus.hosts:
-    - thanos-query-frontend.lma.svc.$(clusterName):9090
-
     # Initialize the kibana index
     serviceMonitor.grafana.interval: $(serviceScrapeInterval)
     serviceMonitor.argocd.interval: $(serviceScrapeInterval)
@@ -145,6 +140,9 @@ charts:
     serviceMonitor.kubelet.interval: $(serviceScrapeInterval)
     serviceMonitor.istio.interval: $(serviceScrapeInterval)
     serviceMonitor.jaeger.interval: $(serviceScrapeInterval)
+    grafanaDatasource.prometheus.url: "lma-prometheus.lma:9090"
+    # grafanaDatasource.prometheus.url: "thanos-query.lma:9090"
+    grafanaDatasource.loki.url: $(lokiHost):$(lokiPort)
 
 - name: prometheus-adapter
   override:
@@ -156,12 +154,24 @@ charts:
 
 - name: minio
   override:
-    accessKey.password: $(defaultUser)
-    secretKey.password: $(defaultPassword)
-    defaultBuckets: "thanos, loki"
+    users:
+      - accessKey: $(defaultUser)
+        secretKey: $(defaultPassword)
+        policy: consoleAdmin 
+    buckets:
+      - name: thanos
+        policy: public
+        purge: false
+        versioning: true
+        objectlocking: false
+      - name: loki
+        policy: public
+        purge: false
+        versioning: true
+        objectlocking: false
     persistence.storageClass: $(storageClassName)
     persistence.accessMode: ReadWriteOnce
-    persistence.size: 8Gi
+    persistence.size: 20Gi
 
 - name: thanos
   override:
@@ -194,8 +204,6 @@ charts:
       - --query-range.max-retries-per-request=3
       - --query-frontend.log-queries-longer-than=60s
 
-    bucketweb.enabled: $(thanosPrimaryCluster)
-    compactor.enabled: $(thanosPrimaryCluster)
     compactor.retentionResolutionRaw: 30d
     compactor.retentionResolution5m: 30d
     compactor.retentionResolution1h: 10y
@@ -210,7 +218,6 @@ charts:
           max_size: 250MB
           max_item_size: 125MB
     storegateway.persistence.size: 8Gi
-    ruler.enabled: $(thanosPrimaryCluster)
     ruler.alertmanagers:
     - http://alertmanager-operated:9093
     ruler.config: |-
