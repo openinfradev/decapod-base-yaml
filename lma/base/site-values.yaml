@@ -172,6 +172,8 @@ charts:
     persistence.storageClass: $(storageClassName)
     persistence.accessMode: ReadWriteOnce
     persistence.size: 20Gi
+    resources.requests.memory: 1Gi
+    resources.limits.memory: 2Gi
 
 - name: thanos
   override:

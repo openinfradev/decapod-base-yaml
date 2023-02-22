@@ -52,7 +52,7 @@ spec:
   targetNamespace: istio-system
   values:
     pilot:
-      image: istio/pilot:1.13.1
+      image: harbor-cicd.taco-cat.xyz/tks/pilot:1.13.1
       traceSampling: 1.0
       resources:
         requests:
@@ -70,7 +70,7 @@ spec:
         limits:
           cpu: 100m
           memory: 128Mi
-      hub: docker.io/istio
+      hub: harbor-cicd.taco-cat.xyz/tks
       tag: 1.13.1
       proxy:
         image: proxyv2
@@ -105,7 +105,7 @@ spec:
   releaseName: istio-ingress-gateway
   targetNamespace: istio-ingress
   values:
-    image: istio/proxyv2:1.13.1
+    image: harbor-cicd.taco-cat.xyz/tks/proxyv2:1.13.1
     revision: ""
     replicaCount: 1
     service:
@@ -152,7 +152,7 @@ spec:
   releaseName: istio-egress-gateway
   targetNamespace: istio-ingress
   values:
-    image: istio/proxyv2:1.13.1
+    image: harbor-cicd.taco-cat.xyz/tks/proxyv2:1.13.1
     revision: ""
     replicaCount: 1
     service:
@@ -218,7 +218,7 @@ spec:
   targetNamespace: istio-system
   values:
     image:
-      repository: jaegertracing/jaeger-operator
+      repository: harbor-cicd.taco-cat.xyz/tks/jaeger-operator
       tag: 1.29.1
     jaeger:
       create: false
@@ -250,7 +250,7 @@ spec:
     ingress:
       enabled: false
     collector:
-      image: jaegertracing/jaeger-collector:1.29.0
+      image: harbor-cicd.taco-cat.xyz/tks/jaeger-collector:1.29.0
       maxReplicas: 5
       resources:
         requests:
@@ -271,7 +271,7 @@ spec:
     storage:
       esIndexCleaner:
         enabled: true
-        image: jaegertracing/jaeger-es-index-cleaner:1.29.0
+        image: harbor-cicd.taco-cat.xyz/tks/jaeger-es-index-cleaner:1.29.0
         numberOfDays: 7
         schedule: "55 04 * * *"
       options:
@@ -283,7 +283,7 @@ spec:
           serverUrls: https://eck-elasticsearch-es-http.elastic-system.svc:9200
           secretName: eck-elasticsearch-es-http-certs-public
     query:
-      image: jaegertracing/jaeger-query:1.29.0
+      image: harbor-cicd.taco-cat.xyz/tks/jaeger-query:1.29.0
       basePath: /
       affinity:
         nodeAffinity:
@@ -295,10 +295,10 @@ spec:
                 values:
                 - enabled
     agent:
-      image: jaegertracing/jaeger-agent:1.29.0
+      image: harbor-cicd.taco-cat.xyz/tks/jaeger-agent:1.29.0
     elasticsearch:
       image:
-        repository: docker.io/nginxinc/nginx-unprivileged
+        repository: harbor-cicd.taco-cat.xyz/tks/nginx-unprivileged
         tag: 1.19-alpine
         pullPolicy: IfNotPresent
       host: eck-elasticsearch-es-http.lma.svc.cluster.local
@@ -346,7 +346,7 @@ spec:
   values:
     allowAdHocKialiImage: true
     image:
-      repo: quay.io/kiali/kiali-operator
+      repo: harbor-cicd.taco-cat.xyz/tks/kiali-operator
       tag: v1.45.1
     allowAdHocKialiImage: true
     nodeSelector:
@@ -384,7 +384,7 @@ spec:
       ingress:
         enabled: false
       namespace: istio-system
-      image_name: quay.io/kiali/kiali
+      image_name: harbor-cicd.taco-cat.xyz/tks/kiali
       image_version: v1.45.1
       replicas: 1
       resources:

@@ -40,6 +40,9 @@ spec:
         create: true
     alertmanager:
       enabled: false
+      image:
+        repository: harbor-cicd.taco-cat.xyz/tks/alertmanager
+        tag: v0.23.0
     grafana:
       enabled: false
     kubeApiServer:
@@ -66,15 +69,20 @@ spec:
 #   prometheus-node-exporter: # subchart configuration
     prometheusOperator:
       enabled: true
+      image:
+        repository: harbor-cicd.taco-cat.xyz/tks/prometheus-operator
+        tag: v0.52.0
+      admissionWebhooks:
+        patch:
+          image:
+            repository: harbor-cicd.taco-cat.xyz/tks/kube-webhook-certgen
+            tag: v1.0
       prometheusConfigReloader:
         image:
-          registry: quay.io
-          repository: prometheus-operator/prometheus-config-reloader
-          # if not set appVersion field from Chart.yaml is used
-          tag: ""
+          repository: harbor-cicd.taco-cat.xyz/tks/prometheus-config-reloader
+          tag: v0.52.0
       thanosImage:
-        registry: quay.io
-        repository: thanos/thanos
+        repository: harbor-cicd.taco-cat.xyz/tks/thanos
         tag: v0.30.2
       nodeSelector: {}  # TO_BE_FIXED
       createCustomResource: true
@@ -82,6 +90,10 @@ spec:
       cleanupCustomResourceBeforeInstall: true
     prometheus:
       enabled: false
+      prometheusSpec:
+        image:
+          repository: harbor-cicd.taco-cat.xyz/tks/prometheus
+          tag: v2.31.1
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -106,6 +118,9 @@ spec:
       rbac:
         create: true
     alertmanager:
+      image:
+        repository: harbor-cicd.taco-cat.xyz/tks/alertmanager
+        tag: v0.23.0
       alertmanagerSpec:
         nodeSelector: {} # TO_BE_FIXED
         retention: TO_BE_FIXED
@@ -215,11 +230,12 @@ spec:
 #   prometheus-node-exporter: # subchart configuration
     fullnameOverride: lma
     prometheusOperator:
-      admissionWebhooks:
-        enabled: false
       enabled: false
     prometheus:
       prometheusSpec:
+        image:
+          repository: harbor-cicd.taco-cat.xyz/tks/prometheus
+          tag: v2.31.1
         retention: TO_BE_FIXED
         storageSpec:
           volumeClaimTemplate:
@@ -283,6 +299,9 @@ spec:
   releaseName: eck-operator
   targetNamespace: elastic-system
   values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/eck-operator
+      tag: 1.8.0
     installCRDs: true
     replicaCount: 1
     config:
@@ -320,6 +339,9 @@ spec:
   releaseName: kube-state-metrics
   targetNamespace: lma
   values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/kube-state-metrics
+      tag: 1.9.7-debian-10-r143
     nodeSelector: {} # TO_BE_FIXED
   wait: true
 ---
@@ -339,6 +361,9 @@ spec:
   releaseName: prometheus-node-exporter
   targetNamespace: lma
   values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/node-exporter
+      tag: v1.0.1
     # Expose the service to the host network
     hostNetwork: true
     extraArgs:
@@ -361,6 +386,9 @@ spec:
   releaseName: prometheus-pushgateway
   targetNamespace: lma
   values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/pushgateway
+      tag: v1.3.0
     service:
       nodePort: 30010
       type: NodePort
@@ -386,6 +414,11 @@ spec:
   values:
     images:
       pull_policy: Always
+      images:
+        tags:
+          dep_check: harbor-cicd.taco-cat.xyz/tks/kubernetes-entrypoint:v1.0.0
+          image_repo_sync: harbor-cicd.taco-cat.xyz/tks/docker:19.03
+          process_exporter: harbor-cicd.taco-cat.xyz/tks/process-exporter:0.2.11
     labels:
       process_exporter:
         process_selector_key: process-exporter
@@ -430,6 +463,7 @@ spec:
   values:
     elasticsearch:
       image:
+        repository: harbor-cicd.taco-cat.xyz/tks/elasticsearch
         tag: 7.5.1
       adminPassword: TO_BE_FIXED
       enabled: true
@@ -486,6 +520,7 @@ spec:
             size: 0.5Gi
     kibana:
       image:
+        repository: harbor-cicd.taco-cat.xyz/tks/kibana
         tag: 7.5.1
       enabled: true
       http:
@@ -521,14 +556,30 @@ spec:
   releaseName: grafana
   targetNamespace: lma
   values:
+    downloadDashboardsImage:
+      repository: harbor-cicd.taco-cat.xyz/tks/curl
+      tag: latest
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/grafana
+      tag: 8.3.3
+    initChownData:
+      image:
+        repository: harbor-cicd.taco-cat.xyz/tks/busybox
+        tag: latest
     adminPassword: password
     sidecar:
+      image:
+        repository: harbor-cicd.taco-cat.xyz/tks/k8s-sidecar
+        tag: 1.14.2
       dashboards:
         enabled: true
         label: grafana_dashboard
       datasources:
         enabled: true
         label: grafana_datasource
+    testFramework:
+      image: harbor-cicd.taco-cat.xyz/tks/bats
+      tag: v1.4.1
     service:
       type: NodePort
       nodePort: 30009
@@ -582,11 +633,11 @@ spec:
   values:
     operator:
       initcontainer:
-        repository: "docker"
-        tag: "19.03"
+        repository: harbor-cicd.taco-cat.xyz/tks/docker
+        tag: 19.03
       container:
-        repository: "kubesphere/fluent-operator"
-        tag: "v1.5.0"
+        repository: harbor-cicd.taco-cat.xyz/tks/fluent-operator
+        tag: v1.5.0
       # FluentBit operator resources. Usually user needn't to adjust these.
       resources:
         limits:
@@ -595,6 +646,10 @@ spec:
         requests:
           cpu: 100m
           memory: 20Mi
+    fluentbit:
+      image:
+        repository: harbor-cicd.taco-cat.xyz/tks/fluent-bit
+        tag: v1.9.7-debug
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -615,6 +670,16 @@ spec:
   targetNamespace: lma
   values:
     fullnameOverride: fbcr-taco
+    image:
+      exporter:
+        repository: harbor-cicd.taco-cat.xyz/tks/logalert-exporter
+        tag: v0.1.1
+      fluentbit:
+        repository: harbor-cicd.taco-cat.xyz/tks/fluentbit
+        fluentbit.tag: 25bc31cd4333f7f77435561ec70bc68e0c73a194
+      elasticsearchTemplates:
+        repository: harbor-cicd.taco-cat.xyz/tks/curl
+        tag: latest
     fluentbit:
       enabled: true
       daemonset:
@@ -758,6 +823,9 @@ spec:
   releaseName: prometheus-adapter
   targetNamespace: lma
   values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/k8s-prometheus-adapter-amd64
+      image.tag: v0.7.0
     prometheus:
       url: http://lma-prometheus
       port: 9090
@@ -782,6 +850,9 @@ spec:
   releaseName: kubernetes-event-exporter
   targetNamespace: lma
   values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/kubernetes-event-exporter
+      tag: v1.0
     clustername: TO_BE_FIXED
     conf:
       logLevel: error     # possible level: error, debug,
@@ -804,12 +875,21 @@ spec:
   releaseName: minio
   targetNamespace: lma
   values: 
+    image:
+      registry: harbor-cicd.taco-cat.xyz
+      repository: tks/minio
+      tag: 2021.6.14-debian-10-r0
     users: [] # MUST_BE_DEFINED
     buckets: [] # MUST_BE_DEFINED
     persistence:
       storageClass: MUST_BE_DEFINED
       accessMode: ReadWriteOnce # tunable
-      size: 20Gi # tunable 
+      size: 20Gi # tunable
+    resources:
+      requests:
+          memory: 1Gi # tunable
+      limits:
+          memory: 2Gi # tunable
     mode: standalone
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -830,6 +910,10 @@ spec:
   values:
     global:
       storageClass: local-path
+    image:
+      registry: harbor-cicd.taco-cat.xyz
+      repository: tks/thanos
+      tag: 0.30.2
     clusterDomain: TO_BE_FIXED
     existingObjstoreSecret: TO_BE_FIXED
     query:
@@ -1004,6 +1088,9 @@ spec:
   releaseName: prepare-etcd-secret
   targetNamespace: lma
   values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/hyperkube
+      tag: v1.18.8
     etcd:
       certdir: /etc/kubernetes/pki/etcd
       certfile: ca.crt
@@ -1166,5 +1253,5 @@ spec:
   values:
     image:
       # Use image built from openshift eventrouter src
-      repository: sktdev/os-eventrouter
+      repository: harbor-cicd.taco-cat.xyz/tks/os-eventrouter
       tag: 69a58b
