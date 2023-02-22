@@ -70,8 +70,7 @@ spec:
         image:
           repository: quay.io/prometheus-operator/prometheus-config-reloader
       thanosImage:
-        registry: quay.io
-        repository: thanos/thanos
+        repository: quay.io/thanos/thanos
         tag: v0.30.2
       nodeSelector: {}  # TO_BE_FIXED
       createCustomResource: true
