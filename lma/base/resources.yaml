@@ -340,7 +340,8 @@ spec:
   targetNamespace: lma
   values:
     image:
-      repository: harbor-cicd.taco-cat.xyz/tks/kube-state-metrics
+      registry: harbor-cicd.taco-cat.xyz
+      repository: tks/kube-state-metrics
       tag: 1.9.7-debian-10-r143
     nodeSelector: {} # TO_BE_FIXED
   wait: true
