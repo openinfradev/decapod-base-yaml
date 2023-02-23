@@ -878,7 +878,7 @@ spec:
   values: 
     image:
       repository: harbor-cicd.taco-cat.xyz/tks/minio
-      tag: RELEASE.2022-12-12T19-27-27Z
+      tag: RELEASE.2023-01-20T02-05-44Z
     users: [] # MUST_BE_DEFINED
     buckets: [] # MUST_BE_DEFINED
     persistence:
