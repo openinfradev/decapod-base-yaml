@@ -878,7 +878,7 @@ spec:
   values: 
     image:
       repository: harbor-cicd.taco-cat.xyz/tks/minio
-      tag: 2021.6.14-debian-10-r0
+      tag: RELEASE.2022-12-12T19-27-27Z
     users: [] # MUST_BE_DEFINED
     buckets: [] # MUST_BE_DEFINED
     persistence:
