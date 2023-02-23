@@ -875,7 +875,7 @@ spec:
     version: 5.0.4
   releaseName: minio
   targetNamespace: lma
-  values: 
+  values:
     image:
       repository: harbor-cicd.taco-cat.xyz/tks/minio
       tag: 2021.6.14-debian-10-r0
@@ -1175,83 +1175,3 @@ spec:
           client_max_body_size 50M;
         serverSnippet: |-
           client_max_body_size 50M;
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: promtail
-  name: promtail
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
-    name: promtail
-    version: 3.9.1
-  releaseName: promtail
-  targetNamespace: lma
-  values:
-    image:
-      tag: 2.4.1
-    extraArgs:
-      - "-config.expand-env=true"
-    config:
-      lokiAddress: http://loki.lma:3100/loki/api/v1/push
-      snippets:
-        pipelineStages:
-        - cri: {}
-        - match:
-            selector: '{app="eventrouter"}'
-            stages:
-            - json:
-                expressions:
-                  namespace: event.metadata.namespace
-            - labels:
-                namespace: ""
-        extraScrapeConfigs: |
-          - job_name: systemlog
-            static_configs:
-            - targets:
-                - localhost
-              labels:
-                job: systemlog
-                host: ${HOSTNAME}
-                __path__: /var/log/messages
-    serviceMonitor:
-      enabled: false
-    defaultVolumes:
-      - name: containers
-        hostPath:
-          path: /var/lib/docker/containers
-      - name: varlog
-        hostPath:
-          path: /var/log
-    defaultVolumeMounts:
-      - name: containers
-        mountPath: /var/lib/docker/containers
-        readOnly: true
-      - name: varlog
-        mountPath: /var/log
-        readOnly: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: eventrouter
-  name: eventrouter
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
-    name: eventrouter
-    version: 0.4.0
-  releaseName: eventrouter
-  targetNamespace: lma
-  values:
-    image:
-      # Use image built from openshift eventrouter src
-      repository: harbor-cicd.taco-cat.xyz/tks/os-eventrouter
-      tag: 69a58b
