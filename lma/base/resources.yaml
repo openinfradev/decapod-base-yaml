@@ -40,9 +40,6 @@ spec:
         create: true
     alertmanager:
       enabled: false
-      image:
-        repository: harbor-cicd.taco-cat.xyz/tks/alertmanager
-        tag: v0.23.0
     grafana:
       enabled: false
     kubeApiServer:
@@ -118,12 +115,13 @@ spec:
       rbac:
         create: true
     alertmanager:
-      image:
-        repository: harbor-cicd.taco-cat.xyz/tks/alertmanager
-        tag: v0.23.0
       alertmanagerSpec:
+        image:
+          repository: harbor-cicd.taco-cat.xyz/tks/alertmanager
+          tag: v0.23.0
         nodeSelector: {} # TO_BE_FIXED
         retention: TO_BE_FIXED
+
       config:
         global:
           slack_api_url: TO_BE_FIXED
@@ -414,12 +412,10 @@ spec:
   targetNamespace: lma
   values:
     images:
-      pull_policy: Always
-      images:
-        tags:
-          dep_check: harbor-cicd.taco-cat.xyz/tks/kubernetes-entrypoint:v1.0.0
-          image_repo_sync: harbor-cicd.taco-cat.xyz/tks/docker:19.03
-          process_exporter: harbor-cicd.taco-cat.xyz/tks/process-exporter:0.2.11
+      tags:
+        dep_check: harbor-cicd.taco-cat.xyz/tks/kubernetes-entrypoint:v1.0.0
+        image_repo_sync: harbor-cicd.taco-cat.xyz/tks/docker:19.03
+        process_exporter: harbor-cicd.taco-cat.xyz/tks/process-exporter:0.2.11
     labels:
       process_exporter:
         process_selector_key: process-exporter
@@ -847,13 +843,18 @@ spec:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubernetes-event-exporter
-    version: 2.0.0
+    version: 2.0.1
   releaseName: kubernetes-event-exporter
   targetNamespace: lma
   values:
     image:
-      repository: harbor-cicd.taco-cat.xyz/tks/kubernetes-event-exporter
-      tag: v1.0
+      exporter:
+        repository: harbor-cicd.taco-cat.xyz/tks/kubernetes-event-exporter
+        tag: v1.0
+      sidecar:
+        repository: harbor-cicd.taco-cat.xyz/tks/fluent-bit
+        tag: 1.9.7-debug
+
     clustername: TO_BE_FIXED
     conf:
       logLevel: error     # possible level: error, debug,
@@ -879,6 +880,9 @@ spec:
     image:
       repository: harbor-cicd.taco-cat.xyz/tks/minio
       tag: RELEASE.2023-01-20T02-05-44Z
+    mcImage:
+      repository: harbor-cicd.taco-cat.xyz/tks/mc
+      tag: RELEASE.2023-01-11T03-14-16Z
     users: [] # MUST_BE_DEFINED
     buckets: [] # MUST_BE_DEFINED
     persistence:
@@ -1126,6 +1130,10 @@ spec:
       clusterDomain: cluster.local # TO_BE_FIXED
       dnsService: coredns
     loki:
+      image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/loki
+        tag: null
       schemaConfig:
         configs:
         - from: "2020-09-07"
@@ -1170,6 +1178,10 @@ spec:
         size: 100Gi
     memcachedExporter.enabled: true
     gateway:
+      image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/nginx-unprivileged
+
       nginxConfig:
         httpSnippet: |-
           client_max_body_size 50M;
