@@ -157,7 +157,7 @@ charts:
     users:
       - accessKey: $(defaultUser)
         secretKey: $(defaultPassword)
-        policy: consoleAdmin 
+        policy: consoleAdmin
     buckets:
       - name: thanos
         policy: public
@@ -246,9 +246,3 @@ charts:
   override:
     loki.storageConfig.aws.s3: http://$(defaultUser):$(defaultPassword)@minio.lma.svc:9000/minio
     loki.structuredConfig.table_manager.retention_period: 672h    # delete logs after 672h = 28 days
-
-- name: promtail
-  override:
-    config.lokiAddress: http://loki.lma:3100/loki/api/v1/push
-    serviceMonitor.enabled: false
-    syslogService.enabled: false
