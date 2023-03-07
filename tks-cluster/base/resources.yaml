@@ -40,6 +40,8 @@ spec:
   releaseName: local-path-provisioner
   targetNamespace: taco-system
   values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/local-path-provisioner
     storageClass:
       name: taco-storage
   wait: true
@@ -62,6 +64,13 @@ spec:
   targetNamespace: taco-system
   values:
     controller:
+      image:
+        registry: harbor-cicd.taco-cat.xyz
+        image: tks/controller
+      patch:
+        image:
+          registry: harbor-cicd.taco-cat.xyz
+          image: tks/kube-webhook-certgen
       replicaCount: 2
       affinity:
         podAntiAffinity:
@@ -192,7 +201,7 @@ spec:
   targetNamespace: kube-system
   values:
     image:
-      repository: k8s.gcr.io/metrics-server/metrics-server
+      repository: harbor-cicd.taco-cat.xyz/tks/metrics-server
       # a value 'tag' is guided in https://artifacthub.io/packages/helm/metrics-server/metrics-server but not applied on any template
       # tag: ""
       pullPolicy: IfNotPresent
