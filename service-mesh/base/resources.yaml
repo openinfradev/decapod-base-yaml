@@ -12,6 +12,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istio-base
     version: 1.13.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: istio-base
   targetNamespace: istio-system
   values: {}
@@ -30,6 +31,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istio-base
     version: 1.13.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: istio-base-crds
   targetNamespace: istio-system
   values: {}
@@ -48,6 +50,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istiod
     version: 1.13.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: istiod
   targetNamespace: istio-system
   values:
@@ -85,7 +88,7 @@ spec:
             memory: 1024Mi
         tracer: "zipkin"
       tracer:
-        zipkin: 
+        zipkin:
           address: "jaeger-operator-jaeger-collector.istio-system:9411"
   wait: true
 ---
@@ -102,6 +105,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istio-ingress-gateway
     version: 1.13.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: istio-ingress-gateway
   targetNamespace: istio-ingress
   values:
@@ -149,6 +153,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: istio-ingress-gateway
     version: 1.13.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: istio-egress-gateway
   targetNamespace: istio-ingress
   values:
@@ -196,6 +201,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: jaeger-operator
     version: 2.27.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: jaeger-operator-crds
   targetNamespace: istio-system
   values: {}
@@ -214,6 +220,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     version: 2.27.1
     name: jaeger-operator
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: jaeger-operator
   targetNamespace: istio-system
   values:
@@ -240,6 +247,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-jaeger-resource
     version: 2.27.2
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: servicemesh-jaeger-resource
   targetNamespace: istio-system
   values:
@@ -323,6 +331,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kiali-operator
     version: 1.45.1
+    origin: https://kiali.org/helm-charts
   releaseName: kiali-operator-crds
   targetNamespace: istio-system
   values: {}
@@ -341,6 +350,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kiali-operator
     version: 1.45.1
+    origin: https://kiali.org/helm-charts
   releaseName: kiali-operator
   targetNamespace: istio-system
   values:
@@ -374,6 +384,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-kiali-resource
     version: 1.45.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: servicemesh-kiali-resource
   targetNamespace: istio-system
   values:
@@ -449,6 +460,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-grafana-dashboard
     version: 1.13.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: servicemesh-grafana-dashboard
   targetNamespace: istio-system
   values:
@@ -470,6 +482,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-prometheusmonitor
     version: 1.7.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: servicemesh-prometheusmonitor
   targetNamespace: istio-system
   values:
@@ -493,6 +506,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: servicemesh-prometheusrule
     version: 1.7.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: servicemesh-prometheusrule
   targetNamespace: istio-system
   values:

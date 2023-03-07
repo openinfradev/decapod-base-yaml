@@ -1,3 +1,4 @@
+---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
@@ -1051,7 +1052,7 @@ spec:
     endpoints:
       baremetal:
         hosts:
-          public: 
+          public:
         port:
           api:
             public: 30511

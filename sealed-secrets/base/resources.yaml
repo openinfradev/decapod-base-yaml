@@ -12,6 +12,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: sealed-secrets
     version: 1.16.1
+    origin: https://bitnami-labs.github.io/sealed-secrets
   releaseName: sealed-secrets-operator-crds
   targetNamespace: kube-system
   wait: true
@@ -30,6 +31,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: sealed-secrets
     version: 1.16.1
+    origin: https://bitnami-labs.github.io/sealed-secrets
   releaseName: sealed-secrets-operator
   targetNamespace: kube-system
   wait: true
@@ -48,6 +50,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubed
     version: v0.12.0-rc.3
+    origin: https://charts.appscode.com/stable/
   releaseName: kubed
   targetNamespace: kube-system
   wait: true
