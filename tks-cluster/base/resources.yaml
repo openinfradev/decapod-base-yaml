@@ -1,26 +1,47 @@
----
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: kubernetes-addons
-  name: kubernetes-addons
+    name: tigera-operator-crds
+  name: tigera-operator-crds
 spec:
   helmVersion: v3
   chart:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
-    name: kubernetes-addons
-    version: 0.1.0
-    origin: https://openinfradev.github.io/helm-repo
-  releaseName: kubernetes-addons
-  targetNamespace: taco-system
+    name: tigera-operator
+    version: v3.25.0
+  releaseName: tigera-operator-crds
+  targetNamespace: tigera-operator
+  values: {}
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: tigera-operator
+  name: tigera-operator
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    name: tigera-operator
+    version: v3.25.0
+    origin: https://docs.tigera.io/calico/charts
+  releaseName: tigera-operator
+  targetNamespace: tigera-operator
   values:
-    cni:
-      calico:
-        enabled: true
-    storageclass:
-        enabled: false
+    tigeraOperator:
+      image: tks/calico-operator
+      registry: harbor-cicd.taco-cat.xyz
+    calicoctl:
+      image: harbor-cicd.taco-cat.xyz/tks/calico-ctl
+    installation:
+      registry: harbor-cicd.taco-cat.xyz/
+      imagePath: tks
+      imagePrefix: calico-
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1

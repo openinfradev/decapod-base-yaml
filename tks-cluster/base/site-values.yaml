@@ -8,11 +8,6 @@ global:
   clusterName: TO_BE_FIXED
 
 charts:
-- name: kubernetes-addons
-  override:
-    cni.calico.enabled: true
-    storageclass.enabled: true
-
 - name: ingress-nginx
   override:
 
