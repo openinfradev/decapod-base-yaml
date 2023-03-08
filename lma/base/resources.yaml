@@ -38,6 +38,7 @@ spec:
     global:
       rbac:
         create: true
+      imageRegistry: harbor-cicd.taco-cat.xyz
     alertmanager:
       enabled: false
     grafana:
@@ -67,19 +68,19 @@ spec:
     prometheusOperator:
       enabled: true
       image:
-        repository: harbor-cicd.taco-cat.xyz/tks/prometheus-operator
+        repository: tks/prometheus-operator
         tag: v0.52.0
       admissionWebhooks:
         patch:
           image:
-            repository: harbor-cicd.taco-cat.xyz/tks/kube-webhook-certgen
+            repository: tks/kube-webhook-certgen
             tag: v1.0
       prometheusConfigReloader:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/prometheus-config-reloader
+          repository: tks/prometheus-config-reloader
           tag: v0.52.0
       thanosImage:
-        repository: harbor-cicd.taco-cat.xyz/tks/thanos
+        repository: tks/thanos
         tag: v0.30.2
       nodeSelector: {}  # TO_BE_FIXED
       createCustomResource: true
@@ -89,7 +90,7 @@ spec:
       enabled: false
       prometheusSpec:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/prometheus
+          repository: tks/prometheus
           tag: v2.31.1
   wait: true
 ---
