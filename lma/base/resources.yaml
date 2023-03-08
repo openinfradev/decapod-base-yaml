@@ -115,10 +115,11 @@ spec:
     global:
       rbac:
         create: true
+      imageRegistry: harbor-cicd.taco-cat.xyz
     alertmanager:
       alertmanagerSpec:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/alertmanager
+          repository: tks/alertmanager
           tag: v0.23.0
         nodeSelector: {} # TO_BE_FIXED
         retention: TO_BE_FIXED
@@ -233,7 +234,7 @@ spec:
     prometheus:
       prometheusSpec:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/prometheus
+          repository: tks/prometheus
           tag: v2.31.1
         retention: TO_BE_FIXED
         storageSpec:
