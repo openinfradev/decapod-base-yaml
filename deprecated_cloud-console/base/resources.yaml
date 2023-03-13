@@ -11,6 +11,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: keycloak
     version: 8.2.2
+    origin: https://codecentric.github.io/helm-charts
   releaseName: keycloak
   targetNamespace: fed
   values:
@@ -60,6 +61,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: cloud-console
     version: 1.0.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: cloud-console
   targetNamespace: fed
   values:
@@ -71,6 +73,7 @@ spec:
         authkey: elastic:tacoword
       password: password
       username: taco
+      #config.service.proxyurl.format
       #config.service.proxyurl.format
       service:
         proxyportlist: 32001-32008
@@ -84,18 +87,18 @@ spec:
         rule: "yes"
       keycloak:
         enabled: "yes"
-        url: TO_BE_FIXED  
+        url: TO_BE_FIXED
         realm: TO_BE_FIXED
         clientId: cloud-console
         hasRealmRole1: lma_system
         hasRealmRole2: lma_app
         hasRealmRole3: lma_viewer
-        cacert: TO_BE_FIXED 
+        cacert: TO_BE_FIXED
       lenz:
-        url: TO_BE_FIXED  
+        url: TO_BE_FIXED
       extra:
         config: |-
-        
+
         sql: |-
 
     nodeSelector:

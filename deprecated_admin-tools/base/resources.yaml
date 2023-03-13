@@ -11,6 +11,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: keycloak-operator
     version: 0.1.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: keycloak-operator
   targetNamespace: keycloak
   values:
@@ -28,6 +29,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: keycloak-operator
     version: 0.1.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: keycloak-operator-crds
   targetNamespace: keycloak
   values: {}
@@ -44,6 +46,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: keycloak-resources
     version: 0.1.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: keycloak-resources
   targetNamespace: keycloak
   values:

@@ -12,6 +12,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubernetes-addons
     version: 0.1.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: kubernetes-addons
   targetNamespace: taco-system
   values:
@@ -35,6 +36,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: local-path-provisioner
     version: 0.0.22
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: local-path-provisioner
   targetNamespace: taco-system
   values:
@@ -55,6 +57,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: ingress-nginx
     version: 4.0.17
+    origin: https://kubernetes.github.io/ingress-nginx
   releaseName: ingress-nginx
   targetNamespace: taco-system
   values:
@@ -97,7 +100,7 @@ spec:
 #   helmVersion: v3
 #   chart:
 #     type: helmrepo
-#     repository: 
+#     repository:
 #     name: kubeseal
 #     version: 0.1.0
 #   releaseName: kubeseal
@@ -110,7 +113,7 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: kubed 
+    name: kubed
   name: kubed
 spec:
   helmVersion: v3
@@ -119,6 +122,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubed
     version: v0.12.0
+    origin: https://charts.appscode.com/stable
   releaseName: kubed
   targetNamespace: taco-system
   values:
@@ -138,6 +142,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: cluster-autoscaler
     version: 0.2.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: cluster-autoscaler
   targetNamespace: kube-system
   values:
@@ -160,6 +165,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: cluster-autoscaler
     version: 0.2.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: cluster-autoscaler-rbac
   targetNamespace: argo
   values:
@@ -181,6 +187,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: metrics-server
     version: 3.8.2
+    origin: https://kubernetes-sigs.github.io/metrics-server/
   releaseName: metrics-server
   targetNamespace: kube-system
   values:

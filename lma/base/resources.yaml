@@ -11,6 +11,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kube-prometheus-stack
     version: 44.3.1
+    origin: https://prometheus-community.github.io/helm-charts
   helmVersion: v3
   releaseName: prometheus-operator-crds
   targetNamespace: lma
@@ -29,6 +30,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kube-prometheus-stack
     version: 44.3.1
+    origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-operator
   targetNamespace: lma
   values:
@@ -107,6 +109,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kube-prometheus-stack
     version: 44.3.1
+    origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus
   targetNamespace: lma
   values:
@@ -296,6 +299,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: eck-operator
     version: 1.8.0
+    origin: https://helm.elastic.co
   releaseName: eck-operator
   targetNamespace: elastic-system
   values:
@@ -336,6 +340,7 @@ spec:
     name: kube-state-metrics
     # version: 2.9.4
     version: 3.2.8
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: kube-state-metrics
   targetNamespace: lma
   values:
@@ -358,6 +363,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prometheus-node-exporter
     version: 4.13.0
+    origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-node-exporter
   targetNamespace: lma
   values:
@@ -391,6 +397,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prometheus-pushgateway
     version: 2.1.1
+    origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-pushgateway
   targetNamespace: lma
   values:
@@ -417,6 +424,7 @@ spec:
     name: prometheus-process-exporter
     version: 0.1.4-skt
     skipDepUpdate: true
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: prometheus-process-exporter
   targetNamespace: lma
   values:
@@ -466,6 +474,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: eck-resource
     version: 1.1.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: eck-resource
   targetNamespace: lma
   values:
@@ -561,6 +570,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: grafana
     version: 6.50.7
+    origin: https://grafana.github.io/helm-charts
   releaseName: grafana
   targetNamespace: lma
   values:
@@ -618,6 +628,7 @@ spec:
     name: fluent-operator
     version: 1.7.0
     skipDepUpdate: true
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: fluent-operator-crds
   targetNamespace: lma
   values: {}
@@ -632,6 +643,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
+    origin: https://openinfradev.github.io/helm-repo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: fluent-operator
     version: 1.7.0
@@ -674,6 +686,7 @@ spec:
     name: fluentbit-resource
     version: 1.2.0
     skipDepUpdate: true
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: fluentbit
   targetNamespace: lma
   values:
@@ -746,6 +759,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: lma-addons
     version: 1.8.2
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: addons
   targetNamespace: lma
   values:
@@ -829,6 +843,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prometheus-adapter
     version: 2.5.1
+    origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-adapter
   targetNamespace: lma
   values:
@@ -856,6 +871,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubernetes-event-exporter
     version: 2.0.1
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: kubernetes-event-exporter
   targetNamespace: lma
   values:
@@ -886,6 +902,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: minio
     version: 5.0.4
+    origin: https://charts.min.io
   releaseName: minio
   targetNamespace: lma
   values:
@@ -903,9 +920,9 @@ spec:
       size: 20Gi # tunable
     resources:
       requests:
-          memory: 1Gi # tunable
+        memory: 1Gi # tunable
       limits:
-          memory: 2Gi # tunable
+        memory: 2Gi # tunable
     mode: standalone
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -921,6 +938,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: thanos
     version: 3.4.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: thanos
   targetNamespace: lma
   values:
@@ -1069,6 +1087,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: thanos-config
     version: 0.1.4
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: thanos-config
   targetNamespace: lma
   values:
@@ -1101,6 +1120,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: prepare-etcd-secret
     version: 0.2.0
+    origin: https://openinfradev.github.io/helm-repo
   releaseName: prepare-etcd-secret
   targetNamespace: lma
   values:
@@ -1135,6 +1155,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: loki-distributed
     version: 0.58.0
+    origin: https://grafana.github.io/helm-charts
   releaseName: loki
   targetNamespace: lma
   values:
