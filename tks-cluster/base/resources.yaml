@@ -31,7 +31,7 @@ spec:
     version: v3.25.0
     origin: https://docs.tigera.io/calico/charts
   releaseName: tigera-operator
-  targetNamespace: tigera-operator
+  targetNamespace: taco-system
   values:
     tigeraOperator:
       image: tks/calico-operator
