@@ -12,7 +12,7 @@ spec:
     name: tigera-operator
     version: v3.25.0
   releaseName: tigera-operator-crds
-  targetNamespace: tigera-operator
+  targetNamespace: taco-system
   values: {}
   wait: true
 ---
