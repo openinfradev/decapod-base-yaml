@@ -55,6 +55,27 @@ spec:
   releaseName: aws-ebs-csi-driver
   targetNamespace: kube-system
   values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/aws-ebs-csi-driver
+    sidecars:
+      provisioner:
+        image:
+          repository: harbor-cicd.taco-cat.xyz/tks/csi-provisioner
+      attacher:
+        image:
+          repository: harbor-cicd.taco-cat.xyz/tks/csi-attacher
+      snapshotter:
+        image:
+          repository: harbor-cicd.taco-cat.xyz/tks/csi-snapshotter
+      livenessProbe:
+        image:
+          repository: harbor-cicd.taco-cat.xyz/tks/livenessprobe
+      resizer:
+        image:
+          repository: harbor-cicd.taco-cat.xyz/tks/csi-resizer
+      nodeDriverRegistrar:
+        image:
+          repository: harbor-cicd.taco-cat.xyz/tks/csi-node-driver-registrar
     snapshotterSidecarEnabled: true
     storageClasses: 
     - name: taco-storage

@@ -111,12 +111,16 @@ spec:
     server:
       serviceType: NodePort
       image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/argocli
         tag: v3.2.6
       extraArgs:
         - "--auth-mode=server"
     controller:
       containerRuntimeExecutor: k8sapi
       image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/workflow-controller
         tag: v3.2.6
       persistence:
         nodeStatusOffLoad: true
@@ -136,5 +140,7 @@ spec:
             key: postgresql-password
     executor:
       image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/argoexec
         tag: v3.2.6
   wait: true

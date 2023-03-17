@@ -35,7 +35,9 @@ spec:
   releaseName: sealed-secrets-operator
   targetNamespace: kube-system
   wait: true
-  values: {}
+  values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/sealed-secrets-controller
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -49,9 +51,12 @@ spec:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kubed
-    version: v0.12.0-rc.3
+    version: v0.12.0
     origin: https://charts.appscode.com/stable/
   releaseName: kubed
   targetNamespace: kube-system
   wait: true
-  values: {}
+  values:
+    operator:
+      registry: harbor-cicd.taco-cat.xyz
+      repository: tks/kubed
