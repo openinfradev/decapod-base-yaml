@@ -21,7 +21,7 @@ spec:
       region: TO_BE_FIXED
       kubernetesVersion: v1.22.5
       podCidrBlocks:
-      - 10.10.0.0/16
+      - 192.168.0.0/16
       bastion:
         enabled: true
         instanceType: t3.micro
