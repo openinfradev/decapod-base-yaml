@@ -88,10 +88,13 @@ spec:
       image:
         registry: harbor-cicd.taco-cat.xyz
         image: tks/controller
-      patch:
-        image:
-          registry: harbor-cicd.taco-cat.xyz
-          image: tks/kube-webhook-certgen
+        digest: ""
+      admissionWebhooks:
+        patch:
+          image:
+            registry: harbor-cicd.taco-cat.xyz
+            image: tks/kube-webhook-certgen
+            digest: ""
       replicaCount: 2
       affinity:
         podAntiAffinity:
