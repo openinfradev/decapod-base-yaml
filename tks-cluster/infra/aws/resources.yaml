@@ -93,3 +93,49 @@ spec:
         encrypted: "true"
 
   wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: aws-ack-s3
+  name: aws-ack-s3
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    name: s3-chart 
+    version: v1.0.3
+  releaseName: s3-chart 
+  targetNamespace: taco-system
+  values:
+    image:
+      repository: harbor-cicd.taco-cat.xyz/tks/s3-controller  #public.ecr.aws/aws-controllers-k8s/s3-controller
+      tag: v1.0.3
+    aws:
+      region: us-west-2
+    deployment:
+      nodeSelector:
+        kubernetes.io/os: linux
+        taco-lma: enabled
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: ack-resources
+  name: ack-resources
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    name: ack-resources
+    version: v1.0.0
+  releaseName: ack-resources
+  targetNamespace: taco-system
+  values:
+    s3:
+      enabled: true
+      name: TO_BE_FIXED
