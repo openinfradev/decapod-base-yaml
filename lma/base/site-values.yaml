@@ -22,6 +22,7 @@ global:
 
   lokiHost: loki-loki-distributed-gateway
   lokiPort: 80
+  grafanaDatasourceMetric: lma-prometheus.lma:9090
 
 charts:
 - name: prometheus-operator
@@ -140,7 +141,7 @@ charts:
     serviceMonitor.kubelet.interval: $(serviceScrapeInterval)
     serviceMonitor.istio.interval: $(serviceScrapeInterval)
     serviceMonitor.jaeger.interval: $(serviceScrapeInterval)
-    grafanaDatasource.prometheus.url: "lma-prometheus.lma:9090"
+    grafanaDatasource.prometheus.url: $(grafanaDatasourceMetric)
     # grafanaDatasource.prometheus.url: "thanos-query.lma:9090"
     grafanaDatasource.loki.url: $(lokiHost):$(lokiPort)
 
