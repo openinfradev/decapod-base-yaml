@@ -138,4 +138,4 @@ spec:
   values:
     s3:
       enabled: true
-      name: TO_BE_FIXED
+      name: [ ]
