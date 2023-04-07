@@ -114,7 +114,7 @@ spec:
       repository: harbor-cicd.taco-cat.xyz/tks/s3-controller  #public.ecr.aws/aws-controllers-k8s/s3-controller
       tag: v1.0.3
     aws:
-      region: us-west-2
+      region: ap-northeast-2
     deployment:
       nodeSelector:
         kubernetes.io/os: linux
