@@ -758,7 +758,7 @@ spec:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: lma-addons
-    version: 1.8.2
+    version: 1.8.3
     origin: https://openinfradev.github.io/helm-repo
   releaseName: addons
   targetNamespace: lma
