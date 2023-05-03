@@ -1048,7 +1048,7 @@ spec:
       logLevel: info
       alertmanagers: [] # TO_BE_FIXED
       evalInterval: 1m
-      config: TO_BE_FIXED
+      config: {} #TO_BE_FIXED
       replicaCount: 1
       updateStrategyType: RollingUpdate
       podManagementPolicy: OrderedReady
