@@ -937,7 +937,7 @@ spec:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: thanos
-    version: 3.4.0
+    version: 12.3.2-skt
     origin: https://openinfradev.github.io/helm-repo
   releaseName: thanos
   targetNamespace: lma
