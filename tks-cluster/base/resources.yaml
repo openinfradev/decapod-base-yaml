@@ -119,8 +119,6 @@ spec:
         proxy-body-size: "10m"
       hostPort:
         enabled: true
-    tcp:
-      "10254": 10254:healthz
   wait: true
 # ---
 # apiVersion: helm.fluxcd.io/v1
