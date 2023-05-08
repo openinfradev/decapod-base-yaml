@@ -3,6 +3,26 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
+    name: cert-manager-crds
+  name: cert-manager-crds
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    name: cert-manager-crds
+    version: v1.11.0
+    origin: https://charts.jetstack.io
+  releaseName: cert-manager-crds
+  targetNamespace: tks-msa
+  values:
+    installCRDs: true
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
     name: cert-manager
   name: cert-manager
 spec:
@@ -15,8 +35,26 @@ spec:
     origin: https://charts.jetstack.io
   releaseName: cert-manager
   targetNamespace: tks-msa
-  values:
-    installCRDs: true
+  values: {}
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: k8ssandra-operator-crds
+  name: k8ssandra-operator-crds
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    name: k8ssandra-operator
+    version: 1.6.0
+    origin: https://helm.k8ssandra.io/stable
+  releaseName: k8ssandra-operator-crds
+  targetNamespace: tks-msa
+  values: {}
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
