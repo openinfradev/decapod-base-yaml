@@ -68,7 +68,8 @@ charts:
             registry: harbor-cicd.taco-cat.xyz
             repository: tks
             tag: v1.0.67
-          nodeSelector: $(serviceMeshControlNodeSelector)
+          nodeSelector:
+            tks-msa: enabled
 
 - name: istio-base
   override:
