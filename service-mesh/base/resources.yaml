@@ -54,7 +54,17 @@ spec:
     origin: https://helm.k8ssandra.io/stable
   releaseName: k8ssandra-operator
   targetNamespace: tks-msa
-  values: {}
+  values:
+    cleaner:
+      image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/k8ssandra-tools
+        tag: latest
+    client:
+      image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/k8ssandra-tools
+        tag: latest
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1

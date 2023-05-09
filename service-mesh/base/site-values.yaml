@@ -21,7 +21,17 @@ charts:
   override: {}
 
 - name: k8ssandra-operator
-  override: {}
+  override:
+    cleaner:
+      image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/k8ssandra-tools
+        tag: latest
+    client:
+      image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/k8ssandra-tools
+        tag: latest
 
 - name: servicemesh-k8ssandra-resource
   override:
