@@ -174,7 +174,8 @@ charts:
         enabled: true
         username: tks
         password: tksword
-      nodeSelector: $(serviceMeshControlNodeSelector)
+      nodeSelector:
+        tks-msa: enabled
 
 - name: kiali-operator
   override:
@@ -194,7 +195,8 @@ charts:
     deployment.resources.requests.memory: 512Mi
     deployment.resources.limits.cpu: 1000m
     deployment.resources.limits.memory: 1024Mi
-    deployment.nodeSelector: $(serviceMeshControlNodeSelector)
+    deployment.nodeSelector:
+      tks-msa: enabled
     auth.strategy: anonymous
     externalServices.istio.configMapName: istio
     externalServices.istio.istioIdentityDomain: svc.$(clusterName)
