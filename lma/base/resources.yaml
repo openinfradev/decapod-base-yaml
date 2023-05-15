@@ -82,7 +82,7 @@ spec:
           repository: tks/prometheus-config-reloader
           tag: v0.52.0
       thanosImage:
-        repository: tks/thanos
+        repository: harbor-cicd.taco-cat.xyz/tks/thanos
         tag: v0.30.2
       nodeSelector: {}  # TO_BE_FIXED
       createCustomResource: true
