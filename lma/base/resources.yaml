@@ -339,7 +339,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: kube-state-metrics
     # version: 2.9.4
-    version: 3.2.8
+    version: 3.3.4
     origin: https://openinfradev.github.io/helm-repo
   releaseName: kube-state-metrics
   targetNamespace: lma
