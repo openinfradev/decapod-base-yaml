@@ -229,3 +229,39 @@ spec:
       pullPolicy: IfNotPresent
     args:
       - --kubelet-insecure-tls
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: argo-rollouts
+  name: argo-rollouts
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    name: argo-rollouts
+    version: 2.22.3
+    origin: https://argoproj.github.io/argo-helm
+  releaseName: argo-rollouts
+  targetNamespace: taco-system
+  values:
+    controller:
+      nodeSelector:
+        taco-lma: enabled
+        replicas: 2
+        image:
+          registry: harbor-cicd.taco-cat.xyz
+          repository: tks/argo-rollouts
+          tag: v1.4.1
+    dashboard:
+      enabled: false
+      nodeSelector:
+        taco-lma: enabled
+        replicas: 1
+        image:
+          registry: harbor-cicd.taco-cat.xyz
+          repository: tks/kubectl-argo-rollouts
+          tag: v1.4.1
+  wait: true

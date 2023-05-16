@@ -19,3 +19,14 @@ charts:
 - name: cluster-autoscaler-rbac
   override:
     deployMgmtRbacOnly.targetNamespace: $(clusterName)
+
+- name: argo-rollouts
+  override:
+    controller:
+      nodeSelector:
+        taco-lma: enabled
+        replicas: 2
+        image:
+          registry: harbor-cicd.taco-cat.xyz
+          repository: tks/argo-rollouts
+          tag: v1.4.1
