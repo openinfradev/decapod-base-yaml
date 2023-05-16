@@ -250,18 +250,18 @@ spec:
     controller:
       nodeSelector:
         taco-lma: enabled
-        replicas: 2
-        image:
-          registry: harbor-cicd.taco-cat.xyz
-          repository: tks/argo-rollouts
-          tag: v1.4.1
+      replicas: 2
+      image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/argo-rollouts
+        tag: v1.4.1
     dashboard:
       enabled: false
       nodeSelector:
         taco-lma: enabled
-        replicas: 1
-        image:
-          registry: harbor-cicd.taco-cat.xyz
-          repository: tks/kubectl-argo-rollouts
-          tag: v1.4.1
+      replicas: 1
+      image:
+        registry: harbor-cicd.taco-cat.xyz
+        repository: tks/kubectl-argo-rollouts
+        tag: v1.4.1
   wait: true
