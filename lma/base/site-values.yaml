@@ -53,7 +53,7 @@ charts:
     alertmanager.alertmanagerSpec.alertmanagerConfigSelector.matchLabels.alertmanagerConfig: example
     alertmanager.alertmanagerSpec.nodeSelector: $(nodeSelector)
     # Define the slack target to send alerts
-    alertmanager.config.global.slack_api_url: https://hooks.slack.com/services/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
+    alertmanager.config.global.slack_api_url: https://hooks.slack.com/services/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 # default slack channel: openinfradev.slack.com #default-alerts-ep
 
     # Define for storing alert
     alertmanager.alertmanagerSpec.retention: 120h
