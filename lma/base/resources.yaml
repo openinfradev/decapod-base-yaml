@@ -137,7 +137,7 @@ spec:
         receivers:
         - name: default-alert
           slack_configs:
-          - channel: '#doj-noti'
+          - channel: '#default-alerts-ep'
             send_resolved: true
             text: |-
               {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
@@ -156,7 +156,7 @@ spec:
             username: Prometheus
         - name: slack-alert
           slack_configs:
-          - channel: '#doj-critical-alert' #FIXME
+          - channel: '#default-alerts-ep' #FIXME
             send_resolved: true
             text: |-
               {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
