@@ -36,5 +36,5 @@ charts:
     s3:
       enabled: true
       name:
-      - tks_thanos_$(clusterName)
-      - tks_loki_$(clusterName)
+      - tks-thanos
+      - tks-loki
