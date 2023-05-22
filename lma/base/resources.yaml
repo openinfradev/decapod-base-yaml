@@ -183,12 +183,12 @@ spec:
           group_wait: 10s
           receiver: default-alert
           repeat_interval: 1h
-          routes:
-          - group_by:
-            - alertname
-            match:
-              severity: page
-            receiver: slack-alert
+          # routes:
+          # - group_by:
+          #   - alertname
+          #   match:
+          #     severity: page
+          #   receiver: slack-alert
       enabled: true
     grafana:
       enabled: false
