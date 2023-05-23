@@ -164,6 +164,42 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
+    name: k8s-cluster-autoscaler
+  name: k8s-cluster-autoscaler
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    name: cluster-autoscaler
+    version: 9.28.0
+    origin: https://kubernetes.github.io/autoscaler
+  releaseName: cluster-autoscaler
+  targetNamespace: kube-system
+  values:
+  image:
+    tag: TO_BE_FIXED
+  awsRegion: TO_BE_FIXED
+  autoDiscovery:
+    clusterName: TO_BE_FIXED
+  cloudProvider: aws
+  rbac:
+   serviceAccount:
+     create: false
+     name: "cluster-autoscaler"
+  extraArgs:
+    expander: priority
+  expanderPriorities:
+    10:
+      - .*-taco
+    50:
+      - .*-normal
+  wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
     name: cluster-autoscaler
   name: cluster-autoscaler
 spec:
