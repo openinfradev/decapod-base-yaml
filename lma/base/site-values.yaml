@@ -118,6 +118,7 @@ charts:
   override:
     adminPassword: password
     persistence.storageClassName: $(storageClassName)
+    nodeSelector: $(nodeSelector)
 
 - name: fluent-operator
   override:
@@ -223,7 +224,7 @@ charts:
     storegateway.persistence.size: 8Gi
     ruler.alertmanagers:
     - http://alertmanager-operated:9093
-    ruler.config: 
+    ruler.config:
         groups:
           - name: "metamonitoring"
             rules:
