@@ -190,9 +190,9 @@ spec:
     extraArgs:
       expander: priority
     expanderPriorities:
-      10:
+      "10":
         - .*-taco
-      50:
+      "50":
         - .*-normal
   wait: true
 ---
