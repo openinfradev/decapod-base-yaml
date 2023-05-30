@@ -57,6 +57,7 @@ charts:
 
     # Define for storing alert
     alertmanager.alertmanagerSpec.retention: 120h
+    alertmanager.config.route.routes: []
 
 - name: kube-state-metrics
   override:
