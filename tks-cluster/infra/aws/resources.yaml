@@ -11,7 +11,7 @@ spec:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: cluster-api-aws
-    version: 0.8.2
+    version: 0.8.3
   releaseName: cluster-api-aws
   targetNamespace: argo
   values:
