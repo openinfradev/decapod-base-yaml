@@ -158,20 +158,25 @@ charts:
 - name: minio
   override:
     users:
-      - accessKey: $(defaultUser)
-        secretKey: $(defaultPassword)
-        policy: consoleAdmin
+    - accessKey: $(defaultUser)
+      secretKey: $(defaultPassword)
+      policy: consoleAdmin
     buckets:
-      - name: thanos
-        policy: public
-        purge: false
-        versioning: true
-        objectlocking: false
-      - name: loki
-        policy: public
-        purge: false
-        versioning: true
-        objectlocking: false
+    - name: thanos
+      policy: public
+      purge: false
+      versioning: true
+      objectlocking: false
+    - name: loki
+      policy: public
+      purge: false
+      versioning: true
+      objectlocking: false
+    customCommands:
+    - ilm rule add --expire-days 90 myminio/thanos
+    - ilm rule add --expire-days 15 myminio/loki
+    - ilm ls myminio/thanos
+    - ilm ls myminio/loki
     persistence.storageClass: $(storageClassName)
     persistence.accessMode: ReadWriteOnce
     persistence.size: 20Gi
