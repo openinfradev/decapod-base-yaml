@@ -1133,13 +1133,18 @@ spec:
       client_certfile: peer.crt
       client_keyfile: peer.key
     # master node의 label을 환경에 맞게 적어야함
-    # ex) "node-role.kubernetes.io/master": ""
-    nodeSelector: {} # TO_BE_FIXED
-    # master node에 taint가 있는 경우 필요
-    # ex) - key: "node-role.kubernetes.io/master"
-    #       effect: "NoSchedule"
-    #       operator: "Exists"
-    tolerations: [] # TO_BE_FIXED
+    # ex) 1.20< "node-role.kubernetes.io/master": ""
+    #     >1.20 "node-role.kubernetes.io/control-plane": ""
+    # ref. https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#urgent-upgrade-notes
+    nodeSelector:
+      "node-role.kubernetes.io/control-plane": ""
+    tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        effect: "NoSchedule"
+        operator: "Exists"
+      - key: "node-role.kubernetes.io/master"
+        effect: "NoSchedule"
+        operator: "Exists"
     deployer: "tks"
 ---
 apiVersion: helm.fluxcd.io/v1
