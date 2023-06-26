@@ -173,10 +173,10 @@ charts:
       versioning: true
       objectlocking: false
     customCommands:
-    - ilm rule add --expire-days 90 myminio/thanos
-    - ilm rule add --expire-days 15 myminio/loki
-    - ilm ls myminio/thanos
-    - ilm ls myminio/loki
+    - command: ilm rule add --expire-days 90 myminio/thanos
+    - command: ilm rule add --expire-days 15 myminio/loki
+    - command: ilm ls myminio/thanos
+    - command: ilm ls myminio/loki
     persistence.storageClass: $(storageClassName)
     persistence.accessMode: ReadWriteOnce
     persistence.size: 20Gi
