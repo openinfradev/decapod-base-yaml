@@ -696,8 +696,8 @@ spec:
         repository: harbor-cicd.taco-cat.xyz/tks/logalert-exporter
         tag: v0.1.1
       fluentbit:
-        repository: harbor-cicd.taco-cat.xyz/tks/fluentbit
-        fluentbit.tag: v2.1.4
+        repository: harbor-cicd.taco-cat.xyz/tks/fluent-bit
+        tag: v2.1.4
       elasticsearchTemplates:
         repository: harbor-cicd.taco-cat.xyz/tks/curl
         tag: latest
