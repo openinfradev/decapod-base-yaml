@@ -923,7 +923,7 @@ spec:
         memory: 1Gi # tunable
       limits:
         memory: 2Gi # tunable
-    mode: standalone
+    # mode: standalone
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
