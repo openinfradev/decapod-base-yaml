@@ -923,8 +923,9 @@ spec:
         memory: 1Gi # tunable
       limits:
         memory: 2Gi # tunable
-    # mode: standalone
-    replicas: 1
+    mode: standalone
+    DeploymentUpdate.type: Recreate
+    # replicas: 3
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
