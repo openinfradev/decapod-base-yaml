@@ -1227,3 +1227,26 @@ spec:
           client_max_body_size 50M;
         serverSnippet: |-
           client_max_body_size 50M;
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: lma-bucket
+  name: lma-buket
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    name: ack-resources
+    version: v1.0.1
+  releaseName: ack-resources
+  targetNamespace: taco-system
+  values:
+    tks:
+      iamRoles: [] #arn:aws:iam::482246953094:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
+
+    s3:
+      enabled: true
+      buckets: [ ]
