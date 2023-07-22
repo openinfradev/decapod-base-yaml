@@ -31,10 +31,3 @@ charts:
         taco-lma: enabled
         servicemesh: enabled
         taco-ingress-gateway: enabled
-- name: ack-resources
-  override:
-    s3:
-      enabled: true
-      name:
-      - tks-thanos
-      - tks-loki
