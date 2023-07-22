@@ -1233,7 +1233,7 @@ kind: HelmRelease
 metadata:
   labels:
     name: lma-bucket
-  name: lma-buket
+  name: lma-bucket
 spec:
   helmVersion: v3
   chart:

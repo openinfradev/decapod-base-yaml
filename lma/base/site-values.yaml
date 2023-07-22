@@ -258,7 +258,7 @@ charts:
 - name: lma-bucket
   override:
     s3.enabled: true
-    s3.name:
+    s3.buckets:
     - name: $(clusterName)-tks-thanos
     - name: $(clusterName)-tks-loki
     # tks.iamRoles: arn:aws:iam::12345678:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
