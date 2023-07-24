@@ -1241,7 +1241,7 @@ spec:
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: ack-resources
     version: v1.0.1
-  releaseName: ack-resources
+  releaseName: lma-bucket
   targetNamespace: taco-system
   values:
     tks:
