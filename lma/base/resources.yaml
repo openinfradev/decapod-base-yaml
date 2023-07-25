@@ -1088,7 +1088,7 @@ spec:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: thanos-config
-    version: 0.1.4
+    version: 0.1.5
     origin: https://openinfradev.github.io/helm-repo
   releaseName: thanos-config
   targetNamespace: lma
