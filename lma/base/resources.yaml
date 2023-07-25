@@ -1096,10 +1096,12 @@ spec:
     objectStorage:
       enabled: true
       secretName: TO_BE_FIXED
-      bucketName: TO_BE_FIXED
-      endpoint: minio:9000
-      access_key: TO_BE_FIXED
-      secret_key: TO_BE_FIXED
+      rawConfig:
+        bucket: TO_BE_FIXED
+        endpoint: minio:9000
+        access_key: TO_BE_FIXED
+        secret_key: TO_BE_FIXED
+        insecure: TO_BE_FIXED
     sidecarsService:
       enabled: false
       type: NodePort
