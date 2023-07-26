@@ -758,7 +758,7 @@ spec:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: lma-addons
-    version: 1.8.3
+    version: 1.8.4
     origin: https://openinfradev.github.io/helm-repo
   releaseName: addons
   targetNamespace: lma
@@ -923,7 +923,9 @@ spec:
         memory: 1Gi # tunable
       limits:
         memory: 2Gi # tunable
-    # mode: standalone
+    mode: standalone
+    DeploymentUpdate.type: Recreate
+    # replicas: 3
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -1086,7 +1088,7 @@ spec:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: thanos-config
-    version: 0.1.4
+    version: 0.1.5
     origin: https://openinfradev.github.io/helm-repo
   releaseName: thanos-config
   targetNamespace: lma
@@ -1094,10 +1096,12 @@ spec:
     objectStorage:
       enabled: true
       secretName: TO_BE_FIXED
-      bucketName: TO_BE_FIXED
-      endpoint: minio:9000
-      access_key: TO_BE_FIXED
-      secret_key: TO_BE_FIXED
+      rawConfig:
+        bucket: TO_BE_FIXED
+        endpoint: minio:9000
+        access_key: TO_BE_FIXED
+        secret_key: TO_BE_FIXED
+        insecure: TO_BE_FIXED
     sidecarsService:
       enabled: false
       type: NodePort
@@ -1225,3 +1229,26 @@ spec:
           client_max_body_size 50M;
         serverSnippet: |-
           client_max_body_size 50M;
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: lma-bucket
+  name: lma-bucket
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    name: ack-resources
+    version: v1.0.1
+  releaseName: lma-bucket
+  targetNamespace: taco-system
+  values:
+    tks:
+      iamRoles: [] #arn:aws:iam::482246953094:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
+
+    s3:
+      enabled: true
+      buckets: [ ]

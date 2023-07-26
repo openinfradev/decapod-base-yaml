@@ -241,11 +241,13 @@ charts:
 - name: thanos-config
   override:
     objectStorage:
-      bucketName: thanos
-      endpoint: minio.lma.svc.$(clusterName):9000
-      access_key: $(defaultUser)
-      secret_key: $(defaultPassword)
       secretName: $(thanosObjstoreSecret)
+      rawConfig:
+        bucket: thanos
+        endpoint: minio.lma.svc.$(clusterName):9000
+        access_key: $(defaultUser)
+        secret_key: $(defaultPassword)
+        insecure: true
     sidecarsService.name: thanos-sidecars
     sidecarsService.endpoints:
       - 127.0.0.1
@@ -254,3 +256,11 @@ charts:
   override:
     loki.storageConfig.aws.s3: http://$(defaultUser):$(defaultPassword)@minio.lma.svc:9000/minio
     loki.structuredConfig.table_manager.retention_period: 672h    # delete logs after 672h = 28 days
+
+- name: lma-bucket
+  override:
+    s3.enabled: true
+    s3.buckets:
+    - name: $(clusterName)-tks-thanos
+    - name: $(clusterName)-tks-loki
+    # tks.iamRoles: arn:aws:iam::12345678:role/control-plane.cluster-api-provider-aws.sigs.k8s.io

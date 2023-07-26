@@ -136,23 +136,3 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
         taco-lma: enabled
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: ack-resources
-  name: ack-resources
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
-    name: ack-resources
-    version: v1.0.0
-  releaseName: ack-resources
-  targetNamespace: taco-system
-  values:
-    s3:
-      enabled: true
-      name: [ ]
