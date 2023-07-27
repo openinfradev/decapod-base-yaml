@@ -1099,9 +1099,10 @@ spec:
       rawConfig:
         bucket: TO_BE_FIXED
         endpoint: minio:9000
-        access_key: TO_BE_FIXED
-        secret_key: TO_BE_FIXED
-        insecure: TO_BE_FIXED
+        # only for minio
+        # access_key: TO_BE_FIXED
+        # secret_key: TO_BE_FIXED
+        # insecure: TO_BE_FIXED
     sidecarsService:
       enabled: false
       type: NodePort

@@ -245,9 +245,10 @@ charts:
       rawConfig:
         bucket: thanos
         endpoint: minio.lma.svc.$(clusterName):9000
-        access_key: $(defaultUser)
-        secret_key: $(defaultPassword)
-        insecure: true
+        # only for minio
+        # access_key: $(defaultUser)
+        # secret_key: $(defaultPassword)
+        # insecure: true
     sidecarsService.name: thanos-sidecars
     sidecarsService.endpoints:
       - 127.0.0.1
