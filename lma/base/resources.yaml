@@ -1243,7 +1243,7 @@ spec:
     type: helmrepo
     repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
     name: ack-resources
-    version: v1.0.1
+    version: v1.0.2
   releaseName: lma-bucket
   targetNamespace: taco-system
   values:
