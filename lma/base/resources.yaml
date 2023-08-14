@@ -401,8 +401,7 @@ spec:
       repository: harbor-cicd.taco-cat.xyz/tks/pushgateway
       tag: v1.3.0
     service:
-      nodePort: 30010
-      type: NodePort
+      type: ClusterIP
     nodeSelector: {} # TO_BE_FIXED
   wait: true
 ---
