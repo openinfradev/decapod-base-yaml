@@ -112,6 +112,11 @@ spec:
         externalTrafficPolicy: Local
         annotations: {}
         type: TO_BE_FIXED
+        nodePorts:
+          http: 32088
+          https: 32449
+          tcp:
+            8080: 32888
       config:
         enable-underscores-in-headers: "true"
         use-proxy-protocol: "false"
