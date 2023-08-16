@@ -9,7 +9,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: sealed-secrets
     version: 1.16.1
     origin: https://bitnami-labs.github.io/sealed-secrets
@@ -28,7 +28,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: sealed-secrets
     version: 1.16.1
     origin: https://bitnami-labs.github.io/sealed-secrets
@@ -37,7 +37,7 @@ spec:
   wait: true
   values:
     image:
-      repository: harbor-cicd.taco-cat.xyz/tks/sealed-secrets-controller
+      repository: harbor.taco-cat.xyz/tks/sealed-secrets-controller
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -49,7 +49,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: kubed
     version: v0.12.0
     origin: https://charts.appscode.com/stable/
@@ -58,5 +58,5 @@ spec:
   wait: true
   values:
     operator:
-      registry: harbor-cicd.taco-cat.xyz
+      registry: harbor.taco-cat.xyz
       repository: tks/kubed

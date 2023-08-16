@@ -9,7 +9,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cluster-api-byoh
     version: 0.1.0
   releaseName: cluster-api-byoh
