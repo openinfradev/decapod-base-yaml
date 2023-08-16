@@ -6,7 +6,7 @@ metadata:
 global:
   clusterName: cluster.local
   namespace: tks-msa
-  imageRepo: harbor-cicd.taco-cat.xyz/tks
+  imageRepo: harbor.taco-cat.xyz/tks
   serviceMeshControlNodeSelector:
     tks-msa: enabled
   serviceMeshIngressNodeSelector:
@@ -24,12 +24,12 @@ charts:
   override:
     cleaner:
       image:
-        registry: harbor-cicd.taco-cat.xyz
+        registry: harbor.taco-cat.xyz
         repository: tks/k8ssandra-tools
         tag: latest
     client:
       image:
-        registry: harbor-cicd.taco-cat.xyz
+        registry: harbor.taco-cat.xyz
         repository: tks/k8ssandra-tools
         tag: latest
 
@@ -75,7 +75,7 @@ charts:
           size: 1
           heapSize: 384M
           containerImage:
-            registry: harbor-cicd.taco-cat.xyz
+            registry: harbor.taco-cat.xyz
             repository: tks
             tag: v1.0.67
           nodeSelector:
@@ -146,7 +146,7 @@ charts:
     collector.resources.limits.cpu: 1000m
     collector.resources.limits.memory: 2048Mi
     collector:
-      image: harbor-cicd.taco-cat.xyz/tks/jaeger-collector:1.35.0
+      image: harbor.taco-cat.xyz/tks/jaeger-collector:1.35.0
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -164,9 +164,9 @@ charts:
           keyspace: jaeger_v1_datacenter
         dependencies:
           enabled: true
-          image: harbor-cicd.taco-cat.xyz/tks/spark-dependencies:1.35.0
+          image: harbor.taco-cat.xyz/tks/spark-dependencies:1.35.0
     query:
-      image: harbor-cicd.taco-cat.xyz/tks/jaeger-query:1.35.0
+      image: harbor.taco-cat.xyz/tks/jaeger-query:1.35.0
       basePath: /
       affinity:
         nodeAffinity:
@@ -178,7 +178,7 @@ charts:
                 values:
                 - enabled
     agent:
-      image: harbor-cicd.taco-cat.xyz/tks/jaeger-agent:1.35.0
+      image: harbor.taco-cat.xyz/tks/jaeger-agent:1.35.0
     cassandra:
       user:
         enabled: true
@@ -190,7 +190,7 @@ charts:
 - name: kiali-operator
   override:
     image:
-      repo: harbor-cicd.taco-cat.xyz/tks/kiali-operator
+      repo: harbor.taco-cat.xyz/tks/kiali-operator
       tag: v1.63.0
     nodeSelector: $(serviceMeshControlNodeSelector)
 
@@ -199,7 +199,7 @@ charts:
     namespace: tks-msa
     istioNamespace: tks-msa
     deployment.namespace: tks-msa
-    deployment.image_name: harbor-cicd.taco-cat.xyz/tks/kiali
+    deployment.image_name: harbor.taco-cat.xyz/tks/kiali
     deployment.image_version: v1.63.0
     deployment.resources.requests.cpu: 500m
     deployment.resources.requests.memory: 512Mi

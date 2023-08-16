@@ -9,7 +9,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cert-manager
     version: v1.11.0
     origin: https://charts.jetstack.io
@@ -29,7 +29,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: k8ssandra-operator
     version: 1.6.0
     origin: https://helm.k8ssandra.io/stable
@@ -48,7 +48,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: k8ssandra-operator
     version: 1.6.0
     origin: https://helm.k8ssandra.io/stable
@@ -57,12 +57,12 @@ spec:
   values:
     cleaner:
       image:
-        registry: harbor-cicd.taco-cat.xyz
+        registry: harbor.taco-cat.xyz
         repository: tks/k8ssandra-tools
         tag: latest
     client:
       image:
-        registry: harbor-cicd.taco-cat.xyz
+        registry: harbor.taco-cat.xyz
         repository: tks/k8ssandra-tools
         tag: latest
   wait: true
@@ -77,7 +77,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: servicemesh-k8ssandra-resource
     version: 1.6.0
     origin: https://helm.k8ssandra.io/stable
@@ -94,23 +94,23 @@ spec:
           enabled: true
       jmxInitContainerImage:
         name: busybox
-        registry: harbor-cicd.taco-cat.xyz/tks
+        registry: harbor.taco-cat.xyz/tks
         tag: 1.34.1
       datacenters:
         name: dc
         size: 2
-        perNodeConfigInitContainerImage: harbor-cicd.taco-cat.xyz/tks/yq:4
+        perNodeConfigInitContainerImage: harbor.taco-cat.xyz/tks/yq:4
         initContainers:
-          serverConfigInitImage: harbor-cicd.taco-cat.xyz/tks/cass-config-builder:1.0-ubi7
+          serverConfigInitImage: harbor.taco-cat.xyz/tks/cass-config-builder:1.0-ubi7
         jmxInitContainerImage:
           name: busybox
-          registry: harbor-cicd.taco-cat.xyz/tks
+          registry: harbor.taco-cat.xyz/tks
           tag: 1.34.1
         containers:
         - name: cassandra
-          image: harbor-cicd.taco-cat.xyz/tks/cass-management-api:4.0.6
+          image: harbor.taco-cat.xyz/tks/cass-management-api:4.0.6
         - name: server-system-logger
-          image: harbor-cicd.taco-cat.xyz/tks/system-logger:v1.14.0
+          image: harbor.taco-cat.xyz/tks/system-logger:v1.14.0
         config:
           heapSize: 2048M
         storageConfig:
@@ -138,7 +138,7 @@ spec:
             prometheus:
               enabled: true
           containerImage:
-            registry: harbor-cicd.taco-cat.xyz
+            registry: harbor.taco-cat.xyz
             repository: tks
             tag: v1.0.67
           nodeSelector:
@@ -155,7 +155,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: istio-base
     version: 1.17.2
     origin: https://istio-release.storage.googleapis.com/charts
@@ -176,7 +176,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: istio-base
     version: 1.17.2
     origin: https://istio-release.storage.googleapis.com/charts
@@ -197,7 +197,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: istiod
     version: 1.17.2
     origin: https://istio-release.storage.googleapis.com/charts
@@ -205,7 +205,7 @@ spec:
   targetNamespace: tks-msa
   values:
     pilot:
-      image: harbor-cicd.taco-cat.xyz/tks/pilot:1.17.2
+      image: harbor.taco-cat.xyz/tks/pilot:1.17.2
       traceSampling: 1.0
       resources:
         requests:
@@ -223,7 +223,7 @@ spec:
         limits:
           cpu: 2000m
           memory: 1024Mi
-      hub: harbor-cicd.taco-cat.xyz/tks
+      hub: harbor.taco-cat.xyz/tks
       tag: 1.17.2
       proxy:
         image: proxyv2
@@ -252,7 +252,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: istio-gateway
     version: 1.17.2
     origin: https://istio-release.storage.googleapis.com/charts
@@ -261,7 +261,7 @@ spec:
   values:
     revision: ""
     replicaCount: 1
-    image: harbor-cicd.taco-cat.xyz/tks/proxyv2:1.17.2
+    image: harbor.taco-cat.xyz/tks/proxyv2:1.17.2
     service:
       type: LoadBalancer
       ports:
@@ -312,7 +312,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: istio-gateway
     version: 1.17.2
     origin: https://istio-release.storage.googleapis.com/charts
@@ -321,7 +321,7 @@ spec:
   values:
     revision: ""
     replicaCount: 1
-    image: harbor-cicd.taco-cat.xyz/tks/proxyv2:1.17.2
+    image: harbor.taco-cat.xyz/tks/proxyv2:1.17.2
     service:
       type: ClusterIP
       ports:
@@ -372,7 +372,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: jaeger-operator
     version: 2.33.0
     origin: https://jaegertracing.github.io/helm-charts
@@ -391,7 +391,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     version: 2.33.0
     name: jaeger-operator
     origin: https://jaegertracing.github.io/helm-charts
@@ -399,7 +399,7 @@ spec:
   targetNamespace: tks-msa
   values:
     image:
-      repository: harbor-cicd.taco-cat.xyz/tks/jaeger-operator
+      repository: harbor.taco-cat.xyz/tks/jaeger-operator
       tag: 1.35.0
     jaeger:
       create: false
@@ -421,7 +421,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: servicemesh-jaeger-resource
     version: 2.33.0
     origin: https://openinfradev.github.io/helm-repo
@@ -435,7 +435,7 @@ spec:
     ingress:
       enabled: false
     collector:
-      image: harbor-cicd.taco-cat.xyz/tks/jaeger-collector:1.35.0
+      image: harbor.taco-cat.xyz/tks/jaeger-collector:1.35.0
       maxReplicas: 5
       resources:
         requests:
@@ -465,7 +465,7 @@ spec:
           timeout: "3m"
         dependencies:
           enabled: true
-          image: harbor-cicd.taco-cat.xyz/tks/spark-dependencies:1.35.0
+          image: harbor.taco-cat.xyz/tks/spark-dependencies:1.35.0
       elastic:
         esIndexCleaner:
           enabled: true
@@ -480,7 +480,7 @@ spec:
           serverUrls: https://eck-elasticsearch-es-http.istio-system.svc:9200
           secretName: eck-elasticsearch-es-http-certs-public
     query:
-      image: harbor-cicd.taco-cat.xyz/tks/jaeger-query:1.35.0
+      image: harbor.taco-cat.xyz/tks/jaeger-query:1.35.0
       basePath: /
       affinity:
         nodeAffinity:
@@ -492,20 +492,20 @@ spec:
                 values:
                 - enabled
     agent:
-      image: harbor-cicd.taco-cat.xyz/tks/jaeger-agent:1.35.0
+      image: harbor.taco-cat.xyz/tks/jaeger-agent:1.35.0
     cassandra:
       user:
         enabled: true
         username: tks
         password: tksword
-      image: harbor-cicd.taco-cat.xyz/tks/shyaml_jq_kubectl_python:3.11
+      image: harbor.taco-cat.xyz/tks/shyaml_jq_kubectl_python:3.11
       imagePullPolicy: IfNotPresent
       passwordSecret: cassandra-superuser
       nodeSelector:
         tks-msa: enabled
     elasticsearch:
       image:
-        repository: harbor-cicd.taco-cat.xyz/tks/nginx-unprivileged
+        repository: harbor.taco-cat.xyz/tks/nginx-unprivileged
         tag: 1.19-alpine
         pullPolicy: IfNotPresent
       host: eck-elasticsearch-es-http.lma.svc.cluster.local
@@ -529,7 +529,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: kiali-operator
     version: 1.63.0
     origin: https://kiali.org/helm-charts
@@ -548,7 +548,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: kiali-operator
     version: 1.63.0
     origin: https://kiali.org/helm-charts
@@ -556,7 +556,7 @@ spec:
   targetNamespace: tks-msa
   values:
     image:
-      repo: harbor-cicd.taco-cat.xyz/tks/kiali-operator
+      repo: harbor.taco-cat.xyz/tks/kiali-operator
       tag: v1.63.0
     allowAdHocKialiImage: true
     nodeSelector:
@@ -582,7 +582,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: servicemesh-kiali-resource
     version: 1.63.0
     origin: https://openinfradev.github.io/helm-repo
@@ -595,7 +595,7 @@ spec:
       ingress:
         enabled: false
       namespace: tks-msa
-      image_name: harbor-cicd.taco-cat.xyz/tks/kiali
+      image_name: harbor.taco-cat.xyz/tks/kiali
       image_version: v1.63.0
       replicas: 1
       resources:
@@ -658,7 +658,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: servicemesh-grafana-dashboard
     version: 1.13.1
     origin: https://openinfradev.github.io/helm-repo
@@ -680,7 +680,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: servicemesh-prometheusmonitor
     version: 1.7.0
     origin: https://openinfradev.github.io/helm-repo
@@ -704,7 +704,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: servicemesh-prometheusrule
     version: 1.7.0
     origin: https://openinfradev.github.io/helm-repo

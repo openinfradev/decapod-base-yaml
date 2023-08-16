@@ -9,7 +9,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cluster-api-aws
     version: 0.8.3
   releaseName: cluster-api-aws
@@ -49,33 +49,33 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: aws-ebs-csi-driver
     version: 2.6.4-skt
   releaseName: aws-ebs-csi-driver
   targetNamespace: kube-system
   values:
     image:
-      repository: harbor-cicd.taco-cat.xyz/tks/aws-ebs-csi-driver
+      repository: harbor.taco-cat.xyz/tks/aws-ebs-csi-driver
     sidecars:
       provisioner:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/csi-provisioner
+          repository: harbor.taco-cat.xyz/tks/csi-provisioner
       attacher:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/csi-attacher
+          repository: harbor.taco-cat.xyz/tks/csi-attacher
       snapshotter:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/csi-snapshotter
+          repository: harbor.taco-cat.xyz/tks/csi-snapshotter
       livenessProbe:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/livenessprobe
+          repository: harbor.taco-cat.xyz/tks/livenessprobe
       resizer:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/csi-resizer
+          repository: harbor.taco-cat.xyz/tks/csi-resizer
       nodeDriverRegistrar:
         image:
-          repository: harbor-cicd.taco-cat.xyz/tks/csi-node-driver-registrar
+          repository: harbor.taco-cat.xyz/tks/csi-node-driver-registrar
     snapshotterSidecarEnabled: true
     storageClasses: 
     - name: taco-storage
@@ -104,7 +104,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: s3-chart
     version: v1.0.3
   releaseName: s3-chart-crds
@@ -121,14 +121,14 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: s3-chart 
     version: v1.0.3
   releaseName: s3-chart 
   targetNamespace: taco-system
   values:
     image:
-      repository: harbor-cicd.taco-cat.xyz/tks/s3-controller  #public.ecr.aws/aws-controllers-k8s/s3-controller
+      repository: harbor.taco-cat.xyz/tks/s3-controller  #public.ecr.aws/aws-controllers-k8s/s3-controller
       tag: v1.0.3
     aws:
       region: ap-northeast-2
