@@ -8,7 +8,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: tigera-operator
     version: v3.25.0
   releaseName: tigera-operator-crds
@@ -26,7 +26,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: tigera-operator
     version: v3.25.0
     origin: https://docs.tigera.io/calico/charts
@@ -35,11 +35,11 @@ spec:
   values:
     tigeraOperator:
       image: tks/calico-operator
-      registry: harbor-cicd.taco-cat.xyz
+      registry: harbor.taco-cat.xyz
     calicoctl:
-      image: harbor-cicd.taco-cat.xyz/tks/calico-ctl
+      image: harbor.taco-cat.xyz/tks/calico-ctl
     installation:
-      registry: harbor-cicd.taco-cat.xyz/
+      registry: harbor.taco-cat.xyz/
       imagePath: tks
       imagePrefix: calico-
   wait: true
@@ -54,7 +54,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: local-path-provisioner
     version: 0.0.22
     origin: https://openinfradev.github.io/helm-repo
@@ -62,7 +62,7 @@ spec:
   targetNamespace: taco-system
   values:
     image:
-      repository: harbor-cicd.taco-cat.xyz/tks/local-path-provisioner
+      repository: harbor.taco-cat.xyz/tks/local-path-provisioner
     storageClass:
       name: taco-storage
   wait: true
@@ -77,7 +77,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: ingress-nginx
     version: 4.0.17
     origin: https://kubernetes.github.io/ingress-nginx
@@ -86,13 +86,13 @@ spec:
   values:
     controller:
       image:
-        registry: harbor-cicd.taco-cat.xyz
+        registry: harbor.taco-cat.xyz
         image: tks/controller
         digest: ""
       admissionWebhooks:
         patch:
           image:
-            registry: harbor-cicd.taco-cat.xyz
+            registry: harbor.taco-cat.xyz
             image: tks/kube-webhook-certgen
             digest: ""
       replicaCount: 2
@@ -150,7 +150,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: kubed
     version: v0.12.0
     origin: https://charts.appscode.com/stable
@@ -170,7 +170,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cluster-autoscaler
     version: 9.28.0
     origin: https://kubernetes.github.io/autoscaler
@@ -206,7 +206,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cluster-autoscaler
     version: 0.2.0
     origin: https://openinfradev.github.io/helm-repo
@@ -229,7 +229,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cluster-autoscaler
     version: 0.2.0
     origin: https://openinfradev.github.io/helm-repo
@@ -251,7 +251,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: metrics-server
     version: 3.8.2
     origin: https://kubernetes-sigs.github.io/metrics-server/
@@ -259,7 +259,7 @@ spec:
   targetNamespace: kube-system
   values:
     image:
-      repository: harbor-cicd.taco-cat.xyz/tks/metrics-server
+      repository: harbor.taco-cat.xyz/tks/metrics-server
       # a value 'tag' is guided in https://artifacthub.io/packages/helm/metrics-server/metrics-server but not applied on any template
       # tag: ""
       pullPolicy: IfNotPresent
@@ -276,7 +276,7 @@ spec:
   helmVersion: v3
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: argo-rollouts
     version: 2.22.3
     origin: https://argoproj.github.io/argo-helm
@@ -288,7 +288,7 @@ spec:
         taco-lma: enabled
       replicas: 2
       image:
-        registry: harbor-cicd.taco-cat.xyz
+        registry: harbor.taco-cat.xyz
         repository: tks/argo-rollouts
         tag: v1.4.1
     dashboard:
@@ -297,7 +297,7 @@ spec:
         taco-lma: enabled
       replicas: 1
       image:
-        registry: harbor-cicd.taco-cat.xyz
+        registry: harbor.taco-cat.xyz
         repository: tks/kubectl-argo-rollouts
         tag: v1.4.1
   wait: true

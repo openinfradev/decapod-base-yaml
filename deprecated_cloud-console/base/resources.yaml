@@ -8,7 +8,7 @@ metadata:
 spec:
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: keycloak
     version: 8.2.2
     origin: https://codecentric.github.io/helm-charts
@@ -58,7 +58,7 @@ metadata:
 spec:
   chart:
     type: helmrepo
-    repository: https://harbor-cicd.taco-cat.xyz/chartrepo/tks
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cloud-console
     version: 1.0.0
     origin: https://openinfradev.github.io/helm-repo
