@@ -54,16 +54,16 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: tks-api
-  name: tks-api
+    name: tks-apis
+  name: tks-apis
 spec:
   chart:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: tks-api
+    name: tks-apis
     version: 0.1.2
     origin: https://openinfradev.github.io/helm-repo
-  releaseName: tks-api
+  releaseName: tks-apis
   targetNamespace: tks
   values:
     gitBaseUrl: https://github.com
