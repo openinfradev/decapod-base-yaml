@@ -168,7 +168,7 @@ spec:
         # "verify-full" - Always SSL (verify that the certification presented by the
         # server was signed by a trusted CA and the server host name matches the one
         # in the certificate)
-        sslmode: "require"
+        sslmode: "require" # tunable
     notary:
       enabled: false
     cache:
