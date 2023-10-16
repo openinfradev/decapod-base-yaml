@@ -14,7 +14,7 @@ spec:
     origin: https://open-policy-agent.github.io/gatekeeper/charts
   helmVersion: v3
   releaseName: opa-gatekeeper
-  targetNamespace: taco-system
+  targetNamespace: gatekeeper-system
   values: 
     enableDeleteOperations: true
 ---
@@ -33,5 +33,5 @@ spec:
     origin: https://openinfradev.github.io/helm-charts/policy-resources
   helmVersion: v3
   releaseName: policy-resources
-  targetNamespace: taco-system
+  targetNamespace: gatekeeper-system
   values: {}

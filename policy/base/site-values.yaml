@@ -15,6 +15,13 @@ global:
 charts:
 - name: opa-gatekeeper
   override:
-    prometheusOperator.nodeSelector: $(nodeSelector)
+    postUpgrade.nodeSelector: $(nodeSelector)
+    postInstall.nodeSelector: $(nodeSelector)
+    preUninstall.nodeSelector: $(nodeSelector)
+    controllerManager.nodeSelector: $(nodeSelector)
+    audit.nodeSelector: $(nodeSelector)
+    crds.nodeSelector: $(nodeSelector)
+    
+    enableDeleteOperations: true
 
 - name: policy-resources
