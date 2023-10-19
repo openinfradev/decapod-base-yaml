@@ -19,7 +19,7 @@ charts:
     externalDatabase.host: $(dbHost)
     externalDatabase.password: $(commonPassword)
 
-- name: tks-api
+- name: tks-apis
   override:
     gitBaseUrl: https://github.com
     gitAccount: decapod10
