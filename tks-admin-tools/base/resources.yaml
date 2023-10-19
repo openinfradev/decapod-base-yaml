@@ -168,7 +168,7 @@ spec:
         # "verify-full" - Always SSL (verify that the certification presented by the
         # server was signed by a trusted CA and the server host name matches the one
         # in the certificate)
-        sslmode: "require"
+        sslmode: "require" # tunable
     notary:
       enabled: false
     cache:
@@ -186,3 +186,61 @@ spec:
     portal:
       replicas: 1  # tunable
     harborAdminPassword: password  # tunable
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: ingress-nginx
+  name: ingress-nginx
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: ingress-nginx
+    version: 4.0.17
+    origin: https://kubernetes.github.io/ingress-nginx
+  releaseName: ingress-nginx
+  targetNamespace: ingress-nginx
+  values:
+    controller:
+      image:
+        registry: harbor.taco-cat.xyz
+        image: tks/controller
+        digest: ""
+      admissionWebhooks:
+        patch:
+          image:
+            registry: harbor.taco-cat.xyz
+            image: tks/kube-webhook-certgen
+            digest: ""
+      replicaCount: 1
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - ingress-nginx
+              topologyKey: "kubernetes.io/hostname"
+      service:
+        externalTrafficPolicy: Local
+        annotations: {}
+        type: TO_BE_FIXED
+      config:
+        enable-underscores-in-headers: "true"
+        use-proxy-protocol: "false"
+        enable-real-ip: "true"
+        proxy-body-size: "10m"
+      hostPort:
+        enabled: true
+      resources:
+        requests:
+          cpu: 100m
+          memory: 4Gi
+  wait: true
