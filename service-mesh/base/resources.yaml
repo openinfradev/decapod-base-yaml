@@ -455,8 +455,8 @@ spec:
                 - enabled
     storage:
       type: cassandra
-      options:
-        cassandra:
+      cassandra:
+        options:
           servers: cassandra-dc-service.tks-msa.svc
           keyspace: jaeger_v1_datacenter
         cassandraCreateSchema:
