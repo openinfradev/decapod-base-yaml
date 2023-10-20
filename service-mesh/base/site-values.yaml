@@ -158,10 +158,15 @@ charts:
                 - enabled
     storage:
       type: cassandra
-      cassandra:
-        options:
+      options:
+        cassandra:
           servers: cassandra-dc-service.tks-msa.svc
           keyspace: jaeger_v1_datacenter
+        cassandraCreateSchema:
+          image: harbor.taco-cat.xyz/tks/jaeger-cassandra-schema:1.35.0
+          datacenter: "dc"
+          mode: "prod"
+          timeout: "3m"
         dependencies:
           enabled: true
           image: harbor.taco-cat.xyz/tks/spark-dependencies:1.35.0
