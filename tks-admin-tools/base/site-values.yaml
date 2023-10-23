@@ -1,0 +1,91 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+global:
+  dbHost: ${DATABASE_HOST}
+  commonPassword: ${COMMON_PASSWORD}
+  storageClass: ${STORAGE_CLASS}
+  storageClassHa: ${STORAGE_CLASS_HA}
+
+charts:
+- name: keycloak
+  override:
+    global.storageClass: $(storageClass)
+    auth.adminPassword: $(commonPassword)
+    ingress.enabled: true
+    ingress.hostname: TO_BE_FIXED
+    externalDatabase.host: $(dbHost)
+    externalDatabase.password: $(commonPassword)
+
+- name: tks-apis
+  override:
+    gitBaseUrl: https://github.com
+    gitAccount: decapod10
+    db:
+      dbHost: $(dbHost)
+      adminPassword: $(commonPassword)
+      dbUser: tksuser
+      dbPassword: $(commonPassword)
+    tksapi:
+      replicaCount: 1
+      tksAccount:
+        password: $(commonPassword)
+      args:
+        imageRegistryUrl: "harbor.taco-cat.xyz/appserving"
+        gitRepositoryUrl: "github.com/openinfradev"
+        keycloakAddress: http://keycloak.keycloak.svc:80/auth
+    tksbatch:
+      replicaCount: 1
+    tksconsole:
+      replicaCount: 1
+
+- name: harbor
+  override:
+    expose:
+      ingress:
+        hosts:
+          core: TO_BE_FIXED
+        className: "nginx"  
+    externalURL: TO_BE_FIXED
+    persistence:
+      persistentVolumeClaim:
+        registry:
+          storageClass: $(storageClassHa)
+          accessMode: ReadWriteMany
+          size: 200Gi
+        chartmuseum:
+          storageClass: $(storageClassHa)
+          accessMode: ReadWriteMany
+          size: 20Gi
+        jobservice:
+          jobLog:
+            storageClass: $(storageClassHa)
+            accessMode: ReadWriteMany
+          scanDataExports:
+            storageClass: $(storageClassHa)
+            accessMode: ReadWriteMany
+        redis:
+          storageClass: $(storageClass)
+          accessMode: ReadWriteOnce
+        trivy:
+          storageClass: $(storageClass)
+    database:
+      type: external
+      external:
+        host: $(dbHost)  
+        password: $(commonPassword)
+    core:
+      replicas: 2  
+    jobservice:
+      replicas: 2  
+    registry:
+      replicas: 2  
+    chartmuseum:
+      replicas: 2  
+    trivy:
+      replicas: 2  
+    portal:
+      replicas: 2  
+    harborAdminPassword: $(commonPassword)

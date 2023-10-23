@@ -95,7 +95,7 @@ spec:
             registry: harbor.taco-cat.xyz
             image: tks/kube-webhook-certgen
             digest: ""
-      replicaCount: 2
+      replicaCount: 1
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -119,6 +119,10 @@ spec:
         proxy-body-size: "10m"
       hostPort:
         enabled: true
+      resources:
+        requests:
+          cpu: 100m
+          memory: 4Gi
   wait: true
 # ---
 # apiVersion: helm.fluxcd.io/v1
