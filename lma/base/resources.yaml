@@ -1193,7 +1193,7 @@ spec:
           shared_store: s3
         aws:
           s3: TO_BE_FIXED
-          bucketnames: loki
+          bucketnames: tks-loki
           s3forcepathstyle: true
       structuredConfig:
         limits_config:
