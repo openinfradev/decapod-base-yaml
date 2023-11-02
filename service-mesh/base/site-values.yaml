@@ -15,6 +15,9 @@ global:
     tks-egressgateway: enabled
   ingressGatewayLabel: istio-ingressgateway
   egressGatewayLabel: istio-egressgateway
+  keycloakIssuerUri: https://keycloak.com/auth/realms/oraganization
+  keycloakClientPrefix: client-prefix
+  gatekeeperSecret: gatekeeper-secret
 
 charts:
 - name: cert-manager
@@ -96,7 +99,7 @@ charts:
     global.hub: $(imageRepo)
     global.proxy.clusterDomain: $(clusterName)
     global.tracer.zipkin.address: jaeger-operator-jaeger-collector.$(namespace):9411
-    
+
 - name: istio-ingressgateway
   override:
     revision: ""
@@ -242,3 +245,11 @@ charts:
     namespace: tks-msa
     aggregation.interval: "15s"
     optimization.interval: "15s"
+
+- name: keycloak-gatekeeper
+  override:
+    config:
+      discovery-url: $(keycloakIssuerUri)
+      client-id: $(keycloakClientPrefix)-gatekeeper-jaeger
+      client-secret: $(gatekeeperSecret)
+
