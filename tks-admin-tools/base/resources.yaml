@@ -28,10 +28,6 @@ spec:
       enabled: true
       ingressClassName: nginx  # tunable
       hostname: TO_BE_FIXED
-      annotations:
-        nginx.ingress.kubernetes.io/proxy-buffer-size: 20k
-        acme.cert-manager.io/http01-edit-in-place: "true"
-        cert-manager.io/cluster-issuer: http0issuer
       tls: true
       selfSigned: false
     cache:
