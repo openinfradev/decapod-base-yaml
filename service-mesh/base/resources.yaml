@@ -723,14 +723,14 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: keycloak-gatekeeper
-  name: keycloak-gatekeeper
+    name: gatekeeper
+  name: gatekeeper
 spec:
   helmVersion: v3
   chart:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: keycloak-gatekeeper
+    name: gatekeeper
     version: 0.1.39
     origin: https://gogatekeeper.github.io/helm-gogatekeeper
   releaseName: gatekeeper
