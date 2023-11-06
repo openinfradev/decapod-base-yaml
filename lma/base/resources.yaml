@@ -919,8 +919,8 @@ spec:
       limits:
         memory: 2Gi # tunable
     mode: standalone
-    deployment.updateStrategy: Recreate
-    # replicas: 3
+    DeploymentUpdate:
+      type: Recreate
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -958,9 +958,8 @@ spec:
       nodeSelector: {}
       service:
         type: TO_BE_FIXED
-        http:
-          port: 9090
-          nodePort: TO_BE_FIXED
+        nodePorts:
+          http: TO_BE_FIXED
       config: |-
         type: IN-MEMORY
         config:
