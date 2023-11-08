@@ -1,0 +1,27 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+global:
+  # Specify nodes to install workload
+  nodeSelector:
+    taco-lma: enabled
+  # Specify cluster name. It is useful in multi-cluster env.
+  clusterName: cluster.local
+  # Storageclass to install persistant
+  storageClassName: taco-storage
+
+charts:
+- name: opa-gatekeeper
+  override:
+    postUpgrade.nodeSelector: $(nodeSelector)
+    postInstall.nodeSelector: $(nodeSelector)
+    preUninstall.nodeSelector: $(nodeSelector)
+    controllerManager.nodeSelector: $(nodeSelector)
+    audit.nodeSelector: $(nodeSelector)
+    crds.nodeSelector: $(nodeSelector)
+    
+    enableDeleteOperations: true
+
+- name: policy-resources

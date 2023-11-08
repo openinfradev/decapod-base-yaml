@@ -1,0 +1,37 @@
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: opa-gatekeeper
+  name: opa-gatekeeper
+spec:
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: gatekeeper
+    version: 3.13.0
+    origin: https://open-policy-agent.github.io/gatekeeper/charts
+  helmVersion: v3
+  releaseName: opa-gatekeeper
+  targetNamespace: gatekeeper-system
+  values: 
+    enableDeleteOperations: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: policy-resources
+  name: policy-resources
+spec:
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: policy-resources
+    version: 1.0.0
+    origin: https://openinfradev.github.io/helm-charts/policy-resources
+  helmVersion: v3
+  releaseName: policy-resources
+  targetNamespace: gatekeeper-system
+  values: {}

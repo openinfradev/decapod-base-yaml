@@ -1,0 +1,242 @@
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: keycloak
+  name: keycloak
+spec:
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: keycloak
+    version: 15.1.6
+    origin: https://github.com/bitnami/charts/tree/main/bitnami/keycloak
+  releaseName: keycloak
+  targetNamespace: keycloak
+  values:
+    global:
+      storageClass: "taco-storage"
+    auth:
+      adminUser: "admin"
+      adminPassword: password
+    proxy: edge
+    httpRelativePath: "/auth/"
+    production: true
+    replicaCount: 1  # tunable
+    ingress:
+      enabled: true
+      ingressClassName: nginx  # tunable
+      hostname: TO_BE_FIXED
+      tls: true
+      selfSigned: false
+    cache:
+      enabled: true
+      stackName: kubernetes
+    postgresql:
+      enabled: false
+    externalDatabase:
+      host: "postgresql.tks-db.svc"  # tunable
+      port: 5432
+      password: password
+    readinessProbe:
+      failureThreshold: 10
+    extraEnvVars:
+      - name: QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY
+        value: "true"
+
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: tks-apis
+  name: tks-apis
+spec:
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: tks-apis
+    version: 0.1.2
+    origin: https://openinfradev.github.io/helm-repo
+  releaseName: tks-apis
+  targetNamespace: tks
+  values:
+    gitBaseUrl: https://github.com
+    gitAccount: decapod10
+    db:
+      dbHost: postgresql.tks-db.svc
+      adminUser: postgres
+      adminPassword: password  # tunable
+      dbUser: tksuser
+      dbPassword: password  # tunable
+    tksapi:
+      replicaCount: 1
+      image:
+        repository: harbor.taco-cat.xyz/tks/tks-api
+        tag: v3.0.1
+      # Master org's admin password
+      tksAccount:
+        password: admin  # tunable
+      args:
+        imageRegistryUrl: "harbor.taco-cat.xyz/appserving"  # tunable
+        harborPwSecret: "harbor-core"
+        gitRepositoryUrl: "github.com/openinfradev"  # tunable
+        keycloakAddress: http://keycloak.keycloak.svc:80/auth
+    tksbatch:
+      replicaCount: 1
+      image:
+        repository: harbor.taco-cat.xyz/tks/tks-batch
+        tag: v3.0.0
+    tksconsole:
+      replicaCount: 1
+      image:
+        repository: harbor.taco-cat.xyz/tks/tks-console
+        tag: v3.0.1
+
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: harbor
+  name: harbor
+spec:
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: harbor
+    version: 1.11.0
+    origin: https://github.com/goharbor/harbor-helm
+  releaseName: harbor
+  targetNamespace: harbor
+  values:
+    expose:
+      tls:
+        certSource: secret
+        secret:
+          secretName: "harbor.taco-cat-tls"  # tunable
+      ingress:
+        hosts:
+          core: TO_BE_FIXED
+        className: "nginx"  # tunable
+        annotations:
+          cert-manager.io/cluster-issuer: http0issuer
+          acme.cert-manager.io/http01-edit-in-place: "true"
+    externalURL: TO_BE_FIXED
+    #######################################################
+    ## all values under persistence are tunable (for HA) ##
+    #######################################################
+    persistence:
+      persistentVolumeClaim:
+        registry:
+          storageClass: taco-storage
+          accessMode: ReadWriteOnce
+          size: 200Gi
+        chartmuseum:
+          storageClass: taco-storage
+          accessMode: ReadWriteOnce
+          size: 20Gi
+        jobservice:
+          jobLog:
+            storageClass: taco-storage
+            accessMode: ReadWriteOnce
+          scanDataExports:
+            storageClass: taco-storage
+            accessMode: ReadWriteOnce
+        redis:
+          storageClass: taco-storage
+          accessMode: ReadWriteOnce
+        trivy:
+          storageClass: taco-storage
+    database:
+      type: external
+      external:
+        host: "postgresql.tks-db.svc"  # tunable
+        port: "5432"
+        username: "harbor"
+        password: password  # tunable
+        existingSecret: ""
+        # "disable" - No SSL
+        # "require" - Always SSL (skip verification)
+        # "verify-ca" - Always SSL (verify that the certificate presented by the
+        # server was signed by a trusted CA)
+        # "verify-full" - Always SSL (verify that the certification presented by the
+        # server was signed by a trusted CA and the server host name matches the one
+        # in the certificate)
+        sslmode: "require" # tunable
+    notary:
+      enabled: false
+    cache:
+      enabled: true
+    core:
+      replicas: 1  # tunable
+    jobservice:
+      replicas: 1  # tunable
+    registry:
+      replicas: 1  # tunable
+    chartmuseum:
+      replicas: 1  # tunable
+    trivy:
+      replicas: 1  # tunable
+    portal:
+      replicas: 1  # tunable
+    harborAdminPassword: password  # tunable
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: ingress-nginx
+  name: ingress-nginx
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: ingress-nginx
+    version: 4.0.17
+    origin: https://kubernetes.github.io/ingress-nginx
+  releaseName: ingress-nginx
+  targetNamespace: ingress-nginx
+  values:
+    controller:
+      image:
+        registry: harbor.taco-cat.xyz
+        image: tks/controller
+        digest: ""
+      admissionWebhooks:
+        patch:
+          image:
+            registry: harbor.taco-cat.xyz
+            image: tks/kube-webhook-certgen
+            digest: ""
+      replicaCount: 1
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - ingress-nginx
+              topologyKey: "kubernetes.io/hostname"
+      service:
+        externalTrafficPolicy: Local
+        annotations: {}
+        type: TO_BE_FIXED
+      config:
+        enable-underscores-in-headers: "true"
+        use-proxy-protocol: "false"
+        enable-real-ip: "true"
+        proxy-body-size: "10m"
+      hostPort:
+        enabled: true
+      resources:
+        requests:
+          cpu: 100m
+          memory: 4Gi
+  wait: true

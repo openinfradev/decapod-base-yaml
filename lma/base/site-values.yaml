@@ -173,10 +173,10 @@ charts:
       versioning: true
       objectlocking: false
     customCommands:
-    - command: ilm rule add --expire-days 90 myminio/thanos
-    - command: ilm rule add --expire-days 15 myminio/loki
-    - command: ilm ls myminio/thanos
-    - command: ilm ls myminio/loki
+    - command: ilm rule add --expire-days 90 myminio/tks-thanos
+    - command: ilm rule add --expire-days 15 myminio/tks-loki
+    - command: ilm ls myminio/tks-thanos
+    - command: ilm ls myminio/tks-loki
     persistence.storageClass: $(storageClassName)
     persistence.accessMode: ReadWriteOnce
     persistence.size: 20Gi
@@ -196,7 +196,8 @@ charts:
     query.dnsDiscovery.sidecarsService: null
     queryFrontend.nodeSelector: $(nodeSelector)
     queryFrontend.service.type: NodePort
-    queryFrontend.service.http.nodePort: 30007
+    queryFrontend.service.nodePorts.http: 30005
+
     bucketweb.nodeSelector: $(nodeSelector)
     compactor.nodeSelector: $(nodeSelector)
     storegateway.nodeSelector: $(nodeSelector)

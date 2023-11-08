@@ -1,0 +1,78 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: image
+
+global:
+  registry: harbor.taco-cat.xyz
+
+charts:
+- name: keycloak
+  override:
+    image:
+      registry: $(registry)
+      repository: bitnami/keycloak
+      tag: 21.1.2-debian-11-r0
+- name: tks-api
+  override:
+    tks-api:
+      image:
+        repository: $(registry)/tks/tks-api
+        tag: v3.0.1
+    tksbatch:
+      image:
+        repository: $(registry)/tks/tks-batch
+        tag: v3.0.0
+    tksconsole:
+      image:
+        repository: $(registry)/tks/tks-console
+        tag: v3.0.1
+- name: harbor
+  override:
+    portal:
+      image:
+        repository: $(registry)/goharbor/harbor-portal
+        tag: v2.7.0
+    core:
+      image:
+        repository: $(registry)/goharbor/harbor-core
+        tag: v2.7.0
+    jobservice:
+      image:
+        repository: $(registry)/goharbor/harbor-jobservice
+        tag: v2.7.0
+    registry:
+      registry:
+        image:
+          repository: $(registry)/goharbor/registry-photon
+          tag: v2.7.0
+      controller:
+        image:
+          repository: $(registry)/goharbor/harbor-registryctl
+          tag: v2.7.0
+    chartmuseum:
+      image:
+        repository: $(registry)/goharbor/chartmuseum-photon
+        tag: v2.7.0
+    trivy:
+      image:
+        repository: $(registry)/goharbor/trivy-adapter-photon
+        tag: v2.7.0
+    notary:
+      server:
+        image:
+          repository: $(registry)/goharbor/notary-server-photon
+          tag: v2.7.0
+      signer:
+        image:
+          repository: $(registry)/goharbor/notary-signer-photon
+          tag: v2.7.0
+    redis:
+      internal:
+        image:
+          repository: $(registry)/goharbor/redis-photon
+          tag: v2.7.0
+    exporter:
+      image:
+        repository: $(registry)/goharbor/harbor-exporter
+        tag: v2.7.0

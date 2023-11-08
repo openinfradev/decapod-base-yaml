@@ -95,7 +95,7 @@ spec:
             registry: harbor.taco-cat.xyz
             image: tks/kube-webhook-certgen
             digest: ""
-      replicaCount: 2
+      replicaCount: 1
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -119,6 +119,10 @@ spec:
         proxy-body-size: "10m"
       hostPort:
         enabled: true
+      resources:
+        requests:
+          cpu: 100m
+          memory: 4Gi
   wait: true
 # ---
 # apiVersion: helm.fluxcd.io/v1
@@ -164,42 +168,6 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: k8s-cluster-autoscaler
-  name: k8s-cluster-autoscaler
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: cluster-autoscaler
-    version: 9.28.0
-    origin: https://kubernetes.github.io/autoscaler
-  releaseName: cluster-autoscaler
-  targetNamespace: kube-system
-  values:
-    image:
-      tag: TO_BE_FIXED
-    awsRegion: TO_BE_FIXED
-    autoDiscovery:
-      clusterName: TO_BE_FIXED
-    cloudProvider: aws
-    rbac:
-     serviceAccount:
-       create: false
-       name: "cluster-autoscaler"
-    extraArgs:
-      expander: priority
-    expanderPriorities:
-      "10":
-        - .*-taco
-      "50":
-        - .*-normal
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
     name: cluster-autoscaler
   name: cluster-autoscaler
 spec:
@@ -208,15 +176,14 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cluster-autoscaler
-    version: 0.2.0
-    origin: https://openinfradev.github.io/helm-repo
+    version: 9.29.4
+    origin: https://kubernetes.github.io/autoscaler
   releaseName: cluster-autoscaler
   targetNamespace: kube-system
   values:
-    separateMgmtClusterEnabled: true
-    discoveryNamespace: TO_BE_FIXED
-    discoveryClusterName: TO_BE_FIXED
-    mgmtKubeconfigSecretName: mgmt-kubeconfig
+    image:
+      tag: TO_BE_FIXED
+    cloudProvider: TO_BE_FIXED
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1

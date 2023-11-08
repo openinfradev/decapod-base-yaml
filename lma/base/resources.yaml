@@ -10,7 +10,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: kube-prometheus-stack
-    version: 44.3.1
+    version: 48.3.1
     origin: https://prometheus-community.github.io/helm-charts
   helmVersion: v3
   releaseName: prometheus-operator-crds
@@ -29,7 +29,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: kube-prometheus-stack
-    version: 44.3.1
+    version: 48.3.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-operator
   targetNamespace: lma
@@ -71,29 +71,25 @@ spec:
       enabled: true
       image:
         repository: tks/prometheus-operator
-        tag: v0.52.0
+        tag: v0.66.0
       admissionWebhooks:
         patch:
           image:
             repository: tks/kube-webhook-certgen
-            tag: v1.0
+            tag: v20221220-controller-v1.5.1-58-g787ea74b6
       prometheusConfigReloader:
         image:
           repository: tks/prometheus-config-reloader
-          tag: v0.52.0
+          tag: v0.66.0
       thanosImage:
         repository: tks/thanos
-        tag: v0.30.2
+        tag: v0.31.0
       nodeSelector: {}  # TO_BE_FIXED
       createCustomResource: true
       cleanupCustomResource: true
       cleanupCustomResourceBeforeInstall: true
     prometheus:
       enabled: false
-      prometheusSpec:
-        image:
-          repository: tks/prometheus
-          tag: v2.31.1
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -108,7 +104,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: kube-prometheus-stack
-    version: 44.3.1
+    version: 48.3.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus
   targetNamespace: lma
@@ -123,7 +119,7 @@ spec:
       alertmanagerSpec:
         image:
           repository: tks/alertmanager
-          tag: v0.23.0
+          tag: v0.25.0
         nodeSelector: {} # TO_BE_FIXED
         retention: TO_BE_FIXED
 
@@ -238,7 +234,7 @@ spec:
       prometheusSpec:
         image:
           repository: tks/prometheus
-          tag: v2.31.1
+          tag: v2.45.0
         retention: TO_BE_FIXED
         storageSpec:
           volumeClaimTemplate:
@@ -757,7 +753,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: lma-addons
-    version: 1.8.4
+    version: 1.8.6
     origin: https://openinfradev.github.io/helm-repo
   releaseName: addons
   targetNamespace: lma
@@ -923,8 +919,8 @@ spec:
       limits:
         memory: 2Gi # tunable
     mode: standalone
-    DeploymentUpdate.type: Recreate
-    # replicas: 3
+    DeploymentUpdate:
+      type: Recreate
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -962,9 +958,8 @@ spec:
       nodeSelector: {}
       service:
         type: TO_BE_FIXED
-        http:
-          port: 9090
-          nodePort: TO_BE_FIXED
+        nodePorts:
+          http: TO_BE_FIXED
       config: |-
         type: IN-MEMORY
         config:
@@ -1193,7 +1188,7 @@ spec:
           shared_store: s3
         aws:
           s3: TO_BE_FIXED
-          bucketnames: loki
+          bucketnames: tks-loki
           s3forcepathstyle: true
       structuredConfig:
         limits_config:
