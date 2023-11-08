@@ -51,7 +51,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: aws-ebs-csi-driver
-    version: 2.6.4-skt
+    version: 2.24.0
   releaseName: aws-ebs-csi-driver
   targetNamespace: kube-system
   values:
