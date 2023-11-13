@@ -196,7 +196,8 @@ charts:
     query.dnsDiscovery.sidecarsService: null
     queryFrontend.nodeSelector: $(nodeSelector)
     queryFrontend.service.type: NodePort
-    queryFrontend.service.http.nodePort: 30007
+    queryFrontend.service.nodePorts.http: 30005
+
     bucketweb.nodeSelector: $(nodeSelector)
     compactor.nodeSelector: $(nodeSelector)
     storegateway.nodeSelector: $(nodeSelector)

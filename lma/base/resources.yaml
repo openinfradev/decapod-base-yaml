@@ -753,7 +753,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: lma-addons
-    version: 1.8.5
+    version: 1.8.6
     origin: https://openinfradev.github.io/helm-repo
   releaseName: addons
   targetNamespace: lma
@@ -919,8 +919,8 @@ spec:
       limits:
         memory: 2Gi # tunable
     mode: standalone
-    DeploymentUpdate.type: Recreate
-    # replicas: 3
+    DeploymentUpdate:
+      type: Recreate
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -958,9 +958,8 @@ spec:
       nodeSelector: {}
       service:
         type: TO_BE_FIXED
-        http:
-          port: 9090
-          nodePort: TO_BE_FIXED
+        nodePorts:
+          http: TO_BE_FIXED
       config: |-
         type: IN-MEMORY
         config:
