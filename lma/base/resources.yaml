@@ -809,7 +809,7 @@ spec:
       kubeStateMetrics:
         enabled: true
       nodeExporter:
-        enabled: true
+        enabled: false
       pushgateway:
         enabled: true
       kubelet:
