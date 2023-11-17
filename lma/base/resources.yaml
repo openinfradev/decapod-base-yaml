@@ -371,6 +371,11 @@ spec:
     prometheus:
       monitor:
         enabled: true
+        relabelings:
+        - action: replace
+          sourceLabels:
+          - __meta_kubernetes_endpoint_node_name
+          targetLabel: hostname
     extraArgs:
     - --no-collector.hwmon
     tolerations:
@@ -809,7 +814,7 @@ spec:
       kubeStateMetrics:
         enabled: true
       nodeExporter:
-        enabled: true
+        enabled: false
       pushgateway:
         enabled: true
       kubelet:
