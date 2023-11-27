@@ -209,12 +209,7 @@ spec:
       endpoints: []
       serviceMonitor:
         interval: TO_BE_FIXED
-        caFile: /etc/prometheus/secrets/etcd-client-cert/etcd-ca
-        certFile: /etc/prometheus/secrets/etcd-client-cert/etcd-client
-        insecureSkipVerify: false
-        keyFile: /etc/prometheus/secrets/etcd-client-cert/etcd-client-key
-        scheme: https
-        serverName: localhost
+        scheme: http
     kubeScheduler:
       enabled: false
     kubeProxy:
