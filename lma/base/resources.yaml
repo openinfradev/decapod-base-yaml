@@ -195,13 +195,13 @@ spec:
     kubelet:
       enabled: false
     kubeControllerManager:
-      enabled: false
+      enabled: true
     coreDns:
       enabled: true
       serviceMonitor:
         interval: TO_BE_FIXED
     kubeDns:
-      enabled: false
+      enabled: true
       serviceMonitor:
         interval: TO_BE_FIXED
     kubeEtcd:
@@ -211,7 +211,7 @@ spec:
         interval: TO_BE_FIXED
         scheme: http
     kubeScheduler:
-      enabled: false
+      enabled: true
     kubeProxy:
       enabled: true
       serviceMonitor:
