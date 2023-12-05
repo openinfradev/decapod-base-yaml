@@ -261,7 +261,7 @@ spec:
       metrics:
         enabled: true
         serviceMonitor:
-          enabled: true
+          enabled: false
     podAnnotations:
       prometheus.io/scrape: "true"
       prometheus.io/path: /metrics
