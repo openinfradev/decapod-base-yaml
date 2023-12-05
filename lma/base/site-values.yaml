@@ -135,6 +135,7 @@ charts:
     serviceMonitor.grafana.interval: $(serviceScrapeInterval)
     serviceMonitor.argocd.interval: $(serviceScrapeInterval)
     serviceMonitor.argowf.interval: $(serviceScrapeInterval)
+    serviceMonitor.argoRollout.interval: $(serviceScrapeInterval)
     serviceMonitor.processExporter.interval: $(serviceScrapeInterval)
     serviceMonitor.ceph.interval: $(serviceScrapeInterval)
     serviceMonitor.calico.interval: $(serviceScrapeInterval)
