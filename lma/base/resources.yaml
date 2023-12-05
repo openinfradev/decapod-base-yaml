@@ -753,7 +753,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: lma-addons
-    version: 1.8.6
+    version: 1.8.7
     origin: https://openinfradev.github.io/helm-repo
   releaseName: addons
   targetNamespace: lma
@@ -797,6 +797,9 @@ spec:
         enabled: true
         interval: TO_BE_FIXED
       argocd:
+        enabled: true
+        interval: TO_BE_FIXED
+      argoRollout:
         enabled: true
         interval: TO_BE_FIXED
       argowf:
