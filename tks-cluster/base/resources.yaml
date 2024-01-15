@@ -258,6 +258,14 @@ spec:
         registry: harbor.taco-cat.xyz
         repository: tks/argo-rollouts
         tag: v1.4.1
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: false
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/path: /metrics
+      prometheus.io/port: "8090"
     dashboard:
       enabled: false
       nodeSelector:
