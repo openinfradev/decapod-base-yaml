@@ -232,12 +232,6 @@ charts:
     storegateway.persistence.size: 8Gi
     ruler.alertmanagers:
     - http://alertmanager-operated:9093
-    ruler.config:
-        groups:
-          - name: "metamonitoring"
-            rules:
-              - alert: "PrometheusDown"
-                expr: absent(up{prometheus="monitoring/prometheus-operator"})
     ruler.persistence.size: 8Gi
 
 - name: thanos-config
