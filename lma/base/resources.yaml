@@ -722,13 +722,7 @@ spec:
       outputs: { }
       targetLogs: [ ]
       alerts:
-        enabled: true
-        namespace: taco-system
-        message: |-
-          {{ $labels.container }} in {{ $labels.pod }} ({{ $labels.taco_cluster }}/{{ $labels.namespace }} ) generate a error due to log = {{ $labels.log }}
-        summary: |-
-          {{ $labels.container }} in {{ $labels.pod }} ({{ $labels.taco_cluster }}/{{ $labels.namespace }} ) generate a error
-        rules: [ ]
+        enabled: false
       clusterName: TO_BE_FIXED
       exclude:
       - key: $kubernetes['container_name']
