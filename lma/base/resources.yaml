@@ -1245,3 +1245,26 @@ spec:
     s3:
       enabled: true
       buckets: [ ]
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: opa-exporter
+  name: opa-exporter
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: tks/opa-scorecard
+    version: 0.1.0
+  releaseName: opa-exporter
+  targetNamespace: taco-system
+  values:
+    gatekeeper:
+      namespace: gatekeeper-system
+    metrics:
+      podmonitor: true
+      servicemonitor:
+        enabled: true
