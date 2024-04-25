@@ -1257,7 +1257,7 @@ spec:
   chart:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: tks/opa-scorecard
+    name: opa-scorecard
     version: 0.1.0
   releaseName: opa-exporter
   targetNamespace: taco-system
