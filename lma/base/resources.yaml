@@ -63,10 +63,10 @@ spec:
       enabled: false
     kubeStateMetrics:
       enabled: false
-#   kube-state-metrics: # subchart configuration
+    #   kube-state-metrics: # subchart configuration
     nodeExporter:
       enabled: false
-#   prometheus-node-exporter: # subchart configuration
+    #   prometheus-node-exporter: # subchart configuration
     prometheusOperator:
       enabled: true
       image:
@@ -84,7 +84,7 @@ spec:
       thanosImage:
         repository: tks/thanos
         tag: v0.31.0
-      nodeSelector: {}  # TO_BE_FIXED
+      nodeSelector: {} # TO_BE_FIXED
       createCustomResource: true
       cleanupCustomResource: true
       cleanupCustomResourceBeforeInstall: true
@@ -131,51 +131,51 @@ spec:
           smtp_from: null
           smtp_smarthost: null
         receivers:
-        - name: default-alert
-          slack_configs:
-          - channel: '#default-alerts-ep'
-            send_resolved: true
-            text: |-
-              {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
-                {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
-              {{ else }}
-              {{ if gt (len .Alerts.Firing) 0 }}
-              *Alerts Firing:*
-                {{ range .Alerts.Firing }}- {{ .Labels.alertname  }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ if gt (len .Alerts.Resolved) 0 }}
-              *Alerts Resolved:*
-                {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ end }}
-            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
-            username: Prometheus
-        - name: slack-alert
-          slack_configs:
-          - channel: '#default-alerts-ep' #FIXME
-            send_resolved: true
-            text: |-
-              {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
-                {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
-              {{ else }}
-              {{ if gt (len .Alerts.Firing) 0 }}
-              *Alerts Firing:*
-                {{ range .Alerts.Firing }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ if gt (len .Alerts.Resolved) 0 }}
-              *Alerts Resolved:*
-                {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ end }}
-            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
-            username: Prometheus
-        - name: telegram-alert
-          webhook_configs:
-          - send_resolved: true
-            url: http://prometheus-bot:9087/alert/-GROUP_ID
+          - name: default-alert
+            slack_configs:
+              - channel: "#default-alerts-ep"
+                send_resolved: true
+                text: |-
+                  {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
+                    {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
+                  {{ else }}
+                  {{ if gt (len .Alerts.Firing) 0 }}
+                  *Alerts Firing:*
+                    {{ range .Alerts.Firing }}- {{ .Labels.alertname  }}: {{ .Annotations.message }}
+                  {{ end }}{{ end }}
+                  {{ if gt (len .Alerts.Resolved) 0 }}
+                  *Alerts Resolved:*
+                    {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
+                  {{ end }}{{ end }}
+                  {{ end }}
+                title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
+                username: Prometheus
+          - name: slack-alert
+            slack_configs:
+              - channel: "#default-alerts-ep" #FIXME
+                send_resolved: true
+                text: |-
+                  {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
+                    {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
+                  {{ else }}
+                  {{ if gt (len .Alerts.Firing) 0 }}
+                  *Alerts Firing:*
+                    {{ range .Alerts.Firing }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
+                  {{ end }}{{ end }}
+                  {{ if gt (len .Alerts.Resolved) 0 }}
+                  *Alerts Resolved:*
+                    {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
+                  {{ end }}{{ end }}
+                  {{ end }}
+                title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
+                username: Prometheus
+          - name: telegram-alert
+            webhook_configs:
+              - send_resolved: true
+                url: http://prometheus-bot:9087/alert/-GROUP_ID
         route:
           group_by:
-          - alertname
+            - alertname
           group_wait: 10s
           receiver: default-alert
           repeat_interval: 1h
@@ -218,10 +218,10 @@ spec:
         interval: TO_BE_FIXED
     kubeStateMetrics:
       enabled: false
-#   kube-state-metrics: # subchart configuration
+    #   kube-state-metrics: # subchart configuration
     nodeExporter:
       enabled: false
-#   prometheus-node-exporter: # subchart configuration
+    #   prometheus-node-exporter: # subchart configuration
     fullnameOverride: lma
     prometheusOperator:
       enabled: false
@@ -249,7 +249,7 @@ spec:
             name: lma
         ruleSelectorNilUsesHelmValues: false
         secrets:
-        - etcd-client-cert
+          - etcd-client-cert
         serviceMonitorNamespaceSelector:
           matchLabels:
             name: lma
@@ -367,17 +367,17 @@ spec:
       monitor:
         enabled: true
         relabelings:
-        - action: replace
-          sourceLabels:
-          - __meta_kubernetes_endpoint_node_name
-          targetLabel: hostname
+          - action: replace
+            sourceLabels:
+              - __meta_kubernetes_endpoint_node_name
+            targetLabel: hostname
     extraArgs:
-    - --no-collector.hwmon
+      - --no-collector.hwmon
     tolerations:
-    - key: node-role.kubernetes.io/control-plane
-      operator: Exists
-    - key: node-role.kubernetes.io/master
-      operator: Exists
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -444,12 +444,12 @@ spec:
         process_exporter:
           enabled: true
           tolerations:
-          - key: node-role.kubernetes.io/control-plane
-            operator: Exists
-          - key: node-role.kubernetes.io/master
-            operator: Exists
-          - key: node-role.kubernetes.io/node
-            operator: Exists
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+            - key: node-role.kubernetes.io/master
+              operator: Exists
+            - key: node-role.kubernetes.io/node
+              operator: Exists
       # Expose the service to the host network
       hostNetwork: true
     conf:
@@ -479,16 +479,16 @@ spec:
         tag: 7.5.1
       adminPassword: TO_BE_FIXED
       enabled: true
-      count: 3        # FIXME
+      count: 3 # FIXME
       http:
         service:
           spec:
             type: NodePort
             ports:
-            - name: https
-              nodePort: 30011
-              targetPort: 9200
-              port: 9200
+              - name: https
+                nodePort: 30011
+                targetPort: 9200
+                port: 9200
       nodeSets:
         master:
           enabled: true
@@ -543,10 +543,10 @@ spec:
           spec:
             type: NodePort
             ports:
-            - name: http
-              nodePort: 30001
-              targetPort: 5601
-              port: 5601
+              - name: http
+                nodePort: 30001
+                targetPort: 5601
+                port: 5601
       limitCpu: TO_BE_FIXED
       limitMem: TO_BE_FIXED
       nodeSelector: {} # TO_BE_FIXED
@@ -605,8 +605,8 @@ spec:
         vonage-status-panel: true
         grafana-piechart-panel: true
     plugins:
-    - vonage-status-panel
-    - grafana-piechart-panel
+      - vonage-status-panel
+      - grafana-piechart-panel
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -702,31 +702,31 @@ spec:
       daemonset:
         spec:
           tolerations:
-          - key: node-role.kubernetes.io/control-plane
-            operator: Exists
-          - key: node-role.kubernetes.io/master
-            operator: Exists
-          - key: node-role.kubernetes.io/node
-            operator: Exists
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+            - key: node-role.kubernetes.io/master
+              operator: Exists
+            - key: node-role.kubernetes.io/node
+              operator: Exists
       job:
         spec:
           nodeSelector:
             taco-lma: enabled
       parsers:
-      - name: taco-syslog-parser-for-ubuntu # modified from syslog-rfc3164
-        regex:
-          regex: '^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$'
-          timeFormat: '%b %d %H:%M:%S'
-          timeKeep: false
-          timeKey: 'time'
-      outputs: { }
-      targetLogs: [ ]
+        - name: taco-syslog-parser-for-ubuntu # modified from syslog-rfc3164
+          regex:
+            regex: '^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$'
+            timeFormat: "%b %d %H:%M:%S"
+            timeKeep: false
+            timeKey: "time"
+      outputs: {}
+      targetLogs: []
       alerts:
         enabled: false
       clusterName: TO_BE_FIXED
       exclude:
-      - key: $kubernetes['container_name']
-        value: kibana|elasticsearch|fluent-bit
+        - key: $kubernetes['container_name']
+          value: kibana|elasticsearch|fluent-bit
     logExporter:
       enabled: false
       serviceMonitor:
@@ -764,11 +764,11 @@ spec:
         url: "loki-loki-distributed-gateway.lma"
     grafanaDashboard:
       include:
-      - kubernetes
-      - node
-      - loki
-      - calico
-      - etcd
+        - kubernetes
+        - node
+        - loki
+        - calico
+        - etcd
       namespace: lma
     serviceMonitor:
       calico:
@@ -801,7 +801,7 @@ spec:
         enabled: true
         interval: TO_BE_FIXED
       ceph:
-        enabled: false  #FIXME
+        enabled: false #FIXME
         interval: TO_BE_FIXED
         mon_hosts: []
       kubeStateMetrics:
@@ -878,9 +878,9 @@ spec:
 
     clustername: TO_BE_FIXED
     conf:
-      logLevel: error     # possible level: error, debug,
+      logLevel: error # possible level: error, debug,
       logFormat: json
-      recievers: [ ]
+      recievers: []
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -964,7 +964,8 @@ spec:
           max_size: TO_BE_FIXED
           max_size_items: TO_BE_FIXED
           validity: TO_BE_FIXED
-      extraFlags: []
+      extraFlags:
+        []
         # query-range.split-interval: TO_BE_FIXED
         # query-range.max-retries-per-request: TO_BE_FIXED
         # query-frontend.log-queries-longer-than: TO_BE_FIXED
@@ -999,7 +1000,8 @@ spec:
         accessModes:
           - ReadWriteOnce
         size: TO_BE_FIXED
-      extraFlags: []
+      extraFlags:
+        []
         # Compaction 수행 관련 커맨트
         # 아래와 같은 block stream들이 있을때
         # external_labels: {cluster="eu1", replica="1", receive="true", environment="production"}
@@ -1171,18 +1173,18 @@ spec:
         tag: null
       schemaConfig:
         configs:
-        - from: "2020-09-07"
-          store: boltdb-shipper
-          object_store: s3
-          schema: v11
-          index:
-            prefix: loki_index_
-            period: 24h
+          - from: "2020-09-07"
+            store: boltdb-shipper
+            object_store: s3
+            schema: v11
+            index:
+              prefix: loki_index_
+              period: 24h
       storageConfig:
         boltdb_shipper:
           active_index_directory: /var/loki/index
           cache_location: /var/loki/cache
-          cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
+          cache_ttl: 24h # Can be increased for faster performance over longer query periods, uses more disk space
           shared_store: s3
         aws:
           s3: TO_BE_FIXED
@@ -1202,7 +1204,7 @@ spec:
     ingester:
       resources:
         limits:
-          cpu: '4'
+          cpu: "4"
           memory: 4Gi
         requests:
           cpu: 100m
@@ -1244,7 +1246,7 @@ spec:
 
     s3:
       enabled: true
-      buckets: [ ]
+      buckets: []
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -1258,7 +1260,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: tks/opa-scorecard
-    version: 0.1.0
+    version: v0.1.0
   releaseName: opa-exporter
   targetNamespace: taco-system
   values:
