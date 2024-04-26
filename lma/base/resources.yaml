@@ -1237,7 +1237,7 @@ spec:
     name: ack-resources
     version: v1.0.2
   releaseName: lma-bucket
-  targetNamespace: taco-system
+  targetNamespace: lma
   values:
     tks:
       iamRoles: [] #arn:aws:iam::482246953094:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
