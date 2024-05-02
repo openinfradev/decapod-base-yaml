@@ -1237,7 +1237,7 @@ spec:
     name: ack-resources
     version: v1.0.2
   releaseName: lma-bucket
-  targetNamespace: lma
+  targetNamespace: taco-system
   values:
     tks:
       iamRoles: [] #arn:aws:iam::482246953094:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
@@ -1260,7 +1260,7 @@ spec:
     name: opa-scorecard
     version: 0.1.0
   releaseName: opa-exporter
-  targetNamespace: taco-system
+  targetNamespace: lma
   values:
     gatekeeper:
       namespace: gatekeeper-system
