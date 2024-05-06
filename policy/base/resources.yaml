@@ -16,6 +16,7 @@ spec:
   releaseName: opa-gatekeeper
   targetNamespace: gatekeeper-system
   values: 
+    logDenies: true
     enableDeleteOperations: true
 ---
 apiVersion: helm.fluxcd.io/v1
