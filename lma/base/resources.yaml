@@ -621,7 +621,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: fluent-operator
-    version: 1.7.0
+    version: 2.7.0
     skipDepUpdate: true
     origin: https://openinfradev.github.io/helm-repo
   releaseName: fluent-operator-crds
@@ -641,7 +641,7 @@ spec:
     origin: https://openinfradev.github.io/helm-repo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: fluent-operator
-    version: 1.7.0
+    version: 2.7.0
     skipDepUpdate: true
   releaseName: fluent-operator
   targetNamespace: lma
@@ -649,10 +649,10 @@ spec:
     operator:
       initcontainer:
         repository: harbor.taco-cat.xyz/tks/docker
-        tag: 19.03
+        tag: "20.10"
       container:
         repository: harbor.taco-cat.xyz/tks/fluent-operator
-        tag: v1.5.0
+        tag: "v2.7.0"
       # FluentBit operator resources. Usually user needn't to adjust these.
       resources:
         limits:
@@ -662,9 +662,10 @@ spec:
           cpu: 100m
           memory: 20Mi
     fluentbit:
+      enable: false
       image:
         repository: harbor.taco-cat.xyz/tks/fluent-bit
-        tag: v1.9.7-debug
+        tag: v2.2.0
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -692,7 +693,7 @@ spec:
         tag: v0.1.1
       fluentbit:
         repository: harbor.taco-cat.xyz/tks/fluent-bit
-        tag: v2.1.4
+        tag: v2.2.0
       elasticsearchTemplates:
         repository: harbor.taco-cat.xyz/tks/curl
         tag: latest
@@ -721,13 +722,7 @@ spec:
       outputs: { }
       targetLogs: [ ]
       alerts:
-        enabled: true
-        namespace: taco-system
-        message: |-
-          {{ $labels.container }} in {{ $labels.pod }} ({{ $labels.taco_cluster }}/{{ $labels.namespace }} ) generate a error due to log = {{ $labels.log }}
-        summary: |-
-          {{ $labels.container }} in {{ $labels.pod }} ({{ $labels.taco_cluster }}/{{ $labels.namespace }} ) generate a error
-        rules: [ ]
+        enabled: false
       clusterName: TO_BE_FIXED
       exclude:
       - key: $kubernetes['container_name']
@@ -1250,3 +1245,26 @@ spec:
     s3:
       enabled: true
       buckets: [ ]
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: opa-exporter
+  name: opa-exporter
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: opa-scorecard
+    version: 0.1.0
+  releaseName: opa-exporter
+  targetNamespace: lma
+  values:
+    gatekeeper:
+      namespace: gatekeeper-system
+    metrics:
+      podmonitor: true
+      servicemonitor:
+        enabled: true
