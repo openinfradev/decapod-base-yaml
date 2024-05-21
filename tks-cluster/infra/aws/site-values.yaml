@@ -26,7 +26,7 @@ charts:
       maxSize: 16
       rootVolume:
         size: 200
-        type: gp2
+        type: gp3
       labels:
         taco-lma: enabled
         servicemesh: enabled

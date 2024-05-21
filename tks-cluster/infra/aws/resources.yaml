@@ -34,7 +34,7 @@ spec:
       controlPlaneMachineType: TO_BE_FIXED
       rootVolume:
         size: 20 # GB
-        type: gp2
+        type: gp3
     machinePool: []
     machineDeployment: []
   wait: true
