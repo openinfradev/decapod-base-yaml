@@ -11,7 +11,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cluster-api-aws
-    version: 0.10.1
+    version: 0.11.1
   releaseName: cluster-api-aws
   targetNamespace: argo
   values:
@@ -21,12 +21,12 @@ spec:
       region: TO_BE_FIXED
       kubernetesVersion: v1.25.9
       podCidrBlocks:
-      - 192.168.0.0/16
+        - 192.168.0.0/16
       bastion:
         enabled: true
         instanceType: t3.micro
         allowedCIDRBlocks:
-        - 127.0.0.1/32
+          - 127.0.0.1/32
         useSpotInstance:
           enabled: true
     kubeadmControlPlane:
@@ -38,6 +38,26 @@ spec:
     machinePool: []
     machineDeployment: []
   wait: true
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: aws-cloud-controller-manager
+  name: aws-cloud-controller-manager
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: aws-cloud-controller-manager
+    version: 0.0.8
+    origin: https://kubernetes.github.io/cloud-provider-aws
+  releaseName: aws-cloud-controller-manager
+  targetNamespace: kube-system
+  values:
+    image:
+      repository: harbor.taco-cat.xyz/tks/cloud-controller-manager
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
