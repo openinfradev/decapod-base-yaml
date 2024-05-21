@@ -72,6 +72,7 @@ spec:
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: aws-ebs-csi-driver
     version: 2.24.0
+    origin: https://kubernetes-sigs.github.io/aws-ebs-csi-driver
   releaseName: aws-ebs-csi-driver
   targetNamespace: kube-system
   values:
@@ -97,20 +98,20 @@ spec:
         image:
           repository: harbor.taco-cat.xyz/tks/csi-node-driver-registrar
     snapshotterSidecarEnabled: true
-    storageClasses: 
-    - name: taco-storage
-      # annotation metadata
-      annotations:
-        storageclass.kubernetes.io/is-default-class: "true"
-      # label metadata
-      labels:
-        support: taco-apps
-      # defaults to WaitForFirstConsumer
-      volumeBindingMode: WaitForFirstConsumer
-      # defaults to Delete
-      reclaimPolicy: Delete
-      parameters:
-        encrypted: "true"
+    storageClasses:
+      - name: taco-storage
+        # annotation metadata
+        annotations:
+          storageclass.kubernetes.io/is-default-class: "true"
+        # label metadata
+        labels:
+          support: taco-apps
+        # defaults to WaitForFirstConsumer
+        volumeBindingMode: WaitForFirstConsumer
+        # defaults to Delete
+        reclaimPolicy: Delete
+        parameters:
+          encrypted: "true"
 
   wait: true
 ---
@@ -142,13 +143,13 @@ spec:
   chart:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: s3-chart 
+    name: s3-chart
     version: v1.0.3
-  releaseName: s3-chart 
+  releaseName: s3-chart
   targetNamespace: taco-system
   values:
     image:
-      repository: harbor.taco-cat.xyz/tks/s3-controller  #public.ecr.aws/aws-controllers-k8s/s3-controller
+      repository: harbor.taco-cat.xyz/tks/s3-controller #public.ecr.aws/aws-controllers-k8s/s3-controller
       tag: v1.0.3
     aws:
       region: ap-northeast-2
