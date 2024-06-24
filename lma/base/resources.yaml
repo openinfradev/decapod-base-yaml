@@ -748,7 +748,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: lma-addons
-    version: 1.8.7
+    version: 1.9.0
     origin: https://openinfradev.github.io/helm-repo
   releaseName: addons
   targetNamespace: lma
@@ -760,6 +760,9 @@ spec:
         enabled: true
         url: "lma-prometheus.lma:9090"
       loki:
+        enabled: true
+        url: "loki-loki-distributed-gateway.lma"
+      lokiuser:
         enabled: true
         url: "loki-loki-distributed-gateway.lma"
     grafanaDashboard:
@@ -1187,6 +1190,85 @@ spec:
         aws:
           s3: TO_BE_FIXED
           bucketnames: tks-loki
+          s3forcepathstyle: true
+      structuredConfig:
+        limits_config:
+          ingestion_rate_mb: 25
+          ingestion_burst_size_mb: 50
+          max_streams_per_user: 0
+          max_global_streams_per_user: 0
+        table_manager:
+          retention_deletes_enabled: true
+          retention_period: TO_BE_FIXED
+    serviceMonitor.enabled: true
+    prometheusRule.enabled: true
+    ingester:
+      resources:
+        limits:
+          cpu: '4'
+          memory: 4Gi
+        requests:
+          cpu: 100m
+          memory: 250Mi
+      persistence:
+        enabled: true
+        inMemory: false
+        size: 100Gi
+    memcachedExporter.enabled: true
+    gateway:
+      image:
+        registry: harbor.taco-cat.xyz
+        repository: tks/nginx-unprivileged
+
+      nginxConfig:
+        httpSnippet: |-
+          client_max_body_size 50M;
+        serverSnippet: |-
+          client_max_body_size 50M;
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: loki-user
+  name: loki-user
+spec:
+  helmVersion: v3
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: loki-distributed
+    version: 0.58.0
+    origin: https://grafana.github.io/helm-charts
+  releaseName: loki-user
+  targetNamespace: lma
+  values:
+    global:
+      clusterDomain: cluster.local # TO_BE_FIXED
+      dnsService: coredns
+    loki:
+      image:
+        registry: harbor.taco-cat.xyz
+        repository: tks/loki
+        tag: null
+      schemaConfig:
+        configs:
+        - from: "2020-09-07"
+          store: boltdb-shipper
+          object_store: s3
+          schema: v11
+          index:
+            prefix: loki_index_
+            period: 24h
+      storageConfig:
+        boltdb_shipper:
+          active_index_directory: /var/loki/index
+          cache_location: /var/loki/cache
+          cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
+          shared_store: s3
+        aws:
+          s3: TO_BE_FIXED
+          bucketnames: tks-loki-user
           s3forcepathstyle: true
       structuredConfig:
         limits_config:

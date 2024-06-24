@@ -22,6 +22,8 @@ global:
 
   lokiHost: loki-loki-distributed-gateway
   lokiPort: 80
+  lokiuserHost: loki-user-loki-distributed-gateway
+  lokiuserPort: 80
   grafanaDatasourceMetric: lma-prometheus.lma:9090
 
 charts:
@@ -147,6 +149,7 @@ charts:
     grafanaDatasource.prometheus.url: $(grafanaDatasourceMetric)
     # grafanaDatasource.prometheus.url: "thanos-query.lma:9090"
     grafanaDatasource.loki.url: $(lokiHost):$(lokiPort)
+    grafanaDatasource.lokiuser.url: $(lokiuserHost):$(lokiuserPort)
 
 - name: prometheus-adapter
   override:
@@ -173,11 +176,18 @@ charts:
       purge: false
       versioning: true
       objectlocking: false
+    - name: loki-user
+      policy: public
+      purge: false
+      versioning: true
+      objectlocking: false
     customCommands:
     - command: ilm rule add --expire-days 90 myminio/tks-thanos
     - command: ilm rule add --expire-days 15 myminio/tks-loki
+    - command: ilm rule add --expire-days 15 myminio/tks-loki-user
     - command: ilm ls myminio/tks-thanos
     - command: ilm ls myminio/tks-loki
+    - command: ilm ls myminio/tks-loki-user
     persistence.storageClass: $(storageClassName)
     persistence.accessMode: ReadWriteOnce
     persistence.size: 20Gi
@@ -260,10 +270,16 @@ charts:
     loki.storageConfig.aws.s3: http://$(defaultUser):$(defaultPassword)@minio.lma.svc:9000/minio
     loki.structuredConfig.table_manager.retention_period: 672h    # delete logs after 672h = 28 days
 
+- name: loki-user
+  override:
+    loki.storageConfig.aws.s3: http://$(defaultUser):$(defaultPassword)@minio.lma.svc:9000/minio
+    loki.structuredConfig.table_manager.retention_period: 672h    # delete logs after 672h = 28 days
+
 - name: lma-bucket
   override:
     s3.enabled: true
     s3.buckets:
     - name: $(clusterName)-tks-thanos
     - name: $(clusterName)-tks-loki
+    - name: $(clusterName)-tks-loki-user
     # tks.iamRoles: arn:aws:iam::12345678:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
