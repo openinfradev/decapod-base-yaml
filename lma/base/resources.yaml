@@ -16,49 +16,56 @@ spec:
   releaseName: prometheus-operator
   targetNamespace: taco-system
   values:
-    fullnameOverride: prometheus-operator
-    defaultRules:
-      create: false
-    global:
-      rbac:
-        create: true
-      imageRegistry: harbor.taco-cat.xyz
     alertmanager:
       enabled: false
+    coreDns:
+      enabled: false
+    defaultRules:
+      create: false
+    fullnameOverride: prometheus-operator
+    global:
+      imageRegistry: harbor.taco-cat.xyz
+      rbac:
+        create: true
     grafana:
       enabled: false
     kubeApiServer:
       enabled: false
-    kubelet:
-      enabled: false
     kubeControllerManager:
-      enabled: false
-    coreDns:
       enabled: false
     kubeDns:
       enabled: false
     kubeEtcd:
       enabled: false
-    kubeScheduler:
-      enabled: false
     kubeProxy:
+      enabled: false
+    kubeScheduler:
       enabled: false
     kubeStateMetrics:
       enabled: false
-#   kube-state-metrics: # subchart configuration
+    kubelet:
+      enabled: false
     nodeExporter:
       enabled: false
-#   prometheus-node-exporter: # subchart configuration
+    prometheus:
+      enabled: false
     prometheusOperator:
-      enabled: true
-      image:
-        repository: tks/prometheus-operator
-        tag: v0.66.0
       admissionWebhooks:
         patch:
           image:
             repository: tks/kube-webhook-certgen
+            sha: ''
             tag: v20221220-controller-v1.5.1-58-g787ea74b6
+      cleanupCustomResource: true
+      cleanupCustomResourceBeforeInstall: true
+      createCustomResource: true
+      enabled: true
+      image:
+        repository: tks/prometheus-operator
+        tag: v0.66.0
+      # nodeSelector: 
+      #   taco-lma: enabled
+      nodeSelector: $(nodeSelector)
       prometheusConfigReloader:
         image:
           repository: tks/prometheus-config-reloader
@@ -66,12 +73,7 @@ spec:
       thanosImage:
         repository: tks/thanos
         tag: v0.31.0
-      nodeSelector: {}  # TO_BE_FIXED
-      createCustomResource: true
-      cleanupCustomResource: true
-      cleanupCustomResourceBeforeInstall: true
-    prometheus:
-      enabled: false
+
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -91,23 +93,19 @@ spec:
   releaseName: prometheus
   targetNamespace: taco-system
   values:
-    defaultRules:
-      create: false
-    global:
-      rbac:
-        create: true
-      imageRegistry: harbor.taco-cat.xyz
     alertmanager:
       alertmanagerSpec:
+        alertmanagerConfigSelector:
+          matchLabels:
+            alertmanagerConfig: example
         image:
           repository: tks/alertmanager
           tag: v0.25.0
         nodeSelector: $(nodeSelector)
-        retention: TO_BE_FIXED
-
+        retention: 2h
       config:
         global:
-          slack_api_url: TO_BE_FIXED
+          slack_api_url: $(SlackUrl)
           smtp_auth_password: null
           smtp_auth_username: null
           smtp_from: null
@@ -115,11 +113,16 @@ spec:
         receivers:
         - name: default-alert
           slack_configs:
-          - channel: '#default-alerts-ep'
-            send_resolved: true
+          - send_resolved: true
+            channel: '#alert'
+            username: Prometheus
+            title: '{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing
+              | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved)
+              0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range
+              .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved
+              }}{{ .Labels.alertname }}{{ end }}{{ end }}'
             text: |-
-              {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
-                {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
+              {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message  }}{{ end }}
               {{ else }}
               {{ if gt (len .Alerts.Firing) 0 }}
               *Alerts Firing:*
@@ -130,55 +133,35 @@ spec:
                 {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
               {{ end }}{{ end }}
               {{ end }}
-            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
-            username: Prometheus
-        - name: slack-alert
-          slack_configs:
-          - channel: '#default-alerts-ep' #FIXME
-            send_resolved: true
-            text: |-
-              {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }}
-                {{ range .Alerts.Firing }}{{ .Annotations.message }}{{ end }}{{ range .Alerts.Resolved }}{{ .Annotations.message }}{{ end }}
-              {{ else }}
-              {{ if gt (len .Alerts.Firing) 0 }}
-              *Alerts Firing:*
-                {{ range .Alerts.Firing }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ if gt (len .Alerts.Resolved) 0 }}
-              *Alerts Resolved:*
-                {{ range .Alerts.Resolved }}- {{ .Labels.alertname }}: {{ .Annotations.message }}
-              {{ end }}{{ end }}
-              {{ end }}
-            title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if or (and (eq (len .Alerts.Firing) 1) (eq (len .Alerts.Resolved) 0)) (and (eq (len .Alerts.Firing) 0) (eq (len .Alerts.Resolved) 1)) }} {{ range .Alerts.Firing }}{{ .Labels.alertname }}{{ end }}{{ range .Alerts.Resolved }}{{ .Labels.alertname }}{{ end }}{{ end }}'
-            username: Prometheus
-        - name: telegram-alert
-          webhook_configs:
-          - send_resolved: true
-            url: http://prometheus-bot:9087/alert/-GROUP_ID
         route:
           group_by:
           - alertname
           group_wait: 10s
           receiver: default-alert
           repeat_interval: 1h
-          # routes:
-          # - group_by:
-          #   - alertname
-          #   match:
-          #     severity: page
-          #   receiver: slack-alert
+          routes: []
       enabled: true
+      service:
+        nodePort: 30111
+        type: NodePort
+    coreDns:
+      enabled: true
+      serviceMonitor:
+        interval: $(serviceScrapeInterval)
+    defaultRules:
+      create: false
+    fullnameOverride: lma
+    global:
+      imageRegistry: harbor.taco-cat.xyz
+      rbac:
+        create: true
     grafana:
       enabled: false
     kubeApiServer:
       enabled: true
       serviceMonitor:
         interval: $(serviceScrapeInterval)
-    kubelet:
-      enabled: false
     kubeControllerManager:
-      enabled: true
-    coreDns:
       enabled: true
       serviceMonitor:
         interval: $(serviceScrapeInterval)
@@ -192,70 +175,73 @@ spec:
       serviceMonitor:
         interval: $(serviceScrapeInterval)
         scheme: http
-    kubeScheduler:
-      enabled: true
     kubeProxy:
+      enabled: true
+      serviceMonitor:
+        interval: $(serviceScrapeInterval)
+    kubeScheduler:
       enabled: true
       serviceMonitor:
         interval: $(serviceScrapeInterval)
     kubeStateMetrics:
       enabled: false
-#   kube-state-metrics: # subchart configuration
-    nodeExporter:
+    kubelet:
       enabled: false
-#   prometheus-node-exporter: # subchart configuration
-    fullnameOverride: lma
-    prometheusOperator:
+    nodeExporter:
       enabled: false
     prometheus:
       prometheusSpec:
+        evaluationInterval: 60s
+        externalLabels:
+          taco_cluster: $(clusterName)
         image:
           repository: tks/prometheus
           tag: v2.45.0
-        retention: TO_BE_FIXED
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: $(storageClassName)
-              accessModes: ["ReadWriteOnce"]
-              resources:
-                requests:
-                  storage: TO_BE_FIXED
-        externalLabels:
-          taco_cluster: $(clusterName)
         nodeSelector: $(nodeSelector)
+        podMonitorNamespaceSelector:
+          matchLabels:
+            name: $(lmaNameSpace)
+        podMonitorSelectorNilUsesHelmValues: false
         replicas: 1
+        retention: 2d
         ruleNamespaceSelector:
           matchLabels:
             name: $(lmaNameSpace)
         ruleSelectorNilUsesHelmValues: false
+        scrapeInterval: 30s
+        scrapeTimeout: 10s
         secrets:
         - etcd-client-cert
         serviceMonitorNamespaceSelector:
           matchLabels:
             name: $(lmaNameSpace)
         serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorNamespaceSelector:
-          matchLabels:
-            name: $(lmaNameSpace)
-        podMonitorSelectorNilUsesHelmValues: false
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 20Gi
+              storageClassName: $(storageClassName)
         thanos:
-          version: v0.18.0
+          minTime: -3h
           objectStorageConfig:
             key: objstore.yml
             name: $(thanosObjstoreSecret)
-          minTime: -3h
-        evaluationInterval: 60s
-        scrapeInterval: 30s
-        scrapeTimeout: 10s
+          version: v0.18.0
       thanosServiceExternal:
+        annotations: $(awsNlbAnnotation)
         enabled: true
-        annotations: {}
         labels: {}
-        portName: grpc
         port: 10901
-        targetPort: "grpc"
-        type: LoadBalancer
+        nodePort: 30901
+        portName: grpc
+        targetPort: grpc
+        type: NodePort
+    prometheusOperator:
+      enabled: false
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -275,17 +261,17 @@ spec:
   releaseName: eck-operator
   targetNamespace: elastic-system
   values:
+    config:
+      containerRegistry: docker.elastic.co
+    global:
+      createOperatorNamespace: false
+      kubeVersion: 1.22.2
+      manifestGen: true
     image:
       repository: harbor.taco-cat.xyz/tks/eck-operator
       tag: 1.8.0
     installCRDs: true
     replicaCount: 1
-    config:
-      containerRegistry: docker.elastic.co
-    global:
-      manifestGen: true
-      kubeVersion: 1.22.2
-      createOperatorNamespace: false
     softMultiTenancy:
       enabled: false
   wait: true
@@ -316,9 +302,12 @@ spec:
   releaseName: kube-state-metrics
   targetNamespace: taco-system
   values:
+    collectors:
+      verticalpodautoscalers: false
     image:
       registry: harbor.taco-cat.xyz
       repository: tks/kube-state-metrics
+    kubeVersion: v1.30.2
     nodeSelector: $(nodeSelector)
   wait: true
 ---
@@ -339,11 +328,13 @@ spec:
   releaseName: prometheus-node-exporter
   targetNamespace: taco-system
   values:
+    extraArgs:
+    - --no-collector.hwmon
+    # Expose the service to the host network
+    hostNetwork: false
     image:
       repository: harbor.taco-cat.xyz/tks/node-exporter
       tag: v1.0.1
-    # Expose the service to the host network
-    hostNetwork: true
     prometheus:
       monitor:
         enabled: true
@@ -352,8 +343,6 @@ spec:
           sourceLabels:
           - __meta_kubernetes_endpoint_node_name
           targetLabel: hostname
-    extraArgs:
-    - --no-collector.hwmon
     tolerations:
     - key: node-role.kubernetes.io/control-plane
       operator: Exists
@@ -381,9 +370,9 @@ spec:
     image:
       repository: harbor.taco-cat.xyz/tks/pushgateway
       tag: v1.3.0
+    nodeSelector: $(nodeSelector)
     service:
       type: ClusterIP
-    nodeSelector: $(nodeSelector)
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -404,6 +393,8 @@ spec:
   releaseName: prometheus-process-exporter
   targetNamespace: taco-system
   values:
+    conf:
+      processes: dockerd,kubelet,kube-proxy,ntpd,node
     images:
       tags:
         dep_check: harbor.taco-cat.xyz/tks/kubernetes-entrypoint:v1.0.0
@@ -414,6 +405,8 @@ spec:
         process_selector_key: process-exporter
         process_selector_value: enabled
     pod:
+      # Expose the service to the host network
+      hostNetwork: false
       lifecycle:
         upgrades:
           daemonsets:
@@ -431,10 +424,6 @@ spec:
             operator: Exists
           - key: node-role.kubernetes.io/node
             operator: Exists
-      # Expose the service to the host network
-      hostNetwork: true
-    conf:
-      processes: dockerd,kubelet,kube-proxy,ntpd
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -455,81 +444,81 @@ spec:
   targetNamespace: taco-system
   values:
     elasticsearch:
-      image:
-        repository: harbor.taco-cat.xyz/tks/elasticsearch
-        tag: 7.5.1
-      adminPassword: TO_BE_FIXED
+      adminPassword: tacoword
+      count: 3
       enabled: true
-      count: 3        # FIXME
       http:
         service:
           spec:
-            type: NodePort
             ports:
             - name: https
               nodePort: 30011
-              targetPort: 9200
               port: 9200
-      nodeSets:
-        master:
-          enabled: true
-          nodeSelector: $(nodeSelector)
-          count: 3
-          javaOpts: TO_BE_FIXED
-          limitCpu: TO_BE_FIXED
-          limitMem: TO_BE_FIXED
-          pvc:
-            storageClassName: $(storageClassName)
-            size: TO_BE_FIXED
-        hotdata:
-          enabled: true
-          nodeSelector: $(nodeSelector)
-          count: 3
-          javaOpts: TO_BE_FIXED
-          limitCpu: TO_BE_FIXED
-          limitMem: TO_BE_FIXED
-          pvc:
-            storageClassName: $(storageClassName)
-            size: TO_BE_FIXED
-        warmdata:
-          enabled: false # TO_BE_FIXED
-          nodeSelector: $(nodeSelector)
-          count: 2
-          javaOpts: TO_BE_FIXED
-          limitCpu: TO_BE_FIXED
-          limitMem: TO_BE_FIXED
-          pvc:
-            storageClassName: $(storageClassName)
-            size: TO_BE_FIXED
-        client:
-          enabled: true # TO_BE_FIXED
-          nodeSelector: $(nodeSelector)
-          count: TO_BE_FIXED
-          javaOpts: TO_BE_FIXED
-          limitCpu: TO_BE_FIXED
-          limitMem: TO_BE_FIXED
-          pvc:
-            storageClassName: $(storageClassName)
-            size: 0.5Gi
-    kibana:
+              targetPort: 9200
+            type: NodePort
       image:
-        repository: harbor.taco-cat.xyz/tks/kibana
+        repository: harbor.taco-cat.xyz/tks/elasticsearch
         tag: 7.5.1
+      nodeSets:
+        client:
+          count: 1
+          enabled: true
+          javaOpts: -Xms2g -Xmx2g
+          limitCpu: 2
+          limitMem: 4Gi
+          nodeSelector: $(nodeSelector)
+          pvc:
+            size: 0.5Gi
+            storageClassName: $(storageClassName)
+        hotdata:
+          count: 3
+          enabled: true
+          javaOpts: -Xms2g -Xmx2g
+          limitCpu: 1
+          limitMem: 4Gi
+          nodeSelector: $(nodeSelector)
+          pvc:
+            size: 100Gi
+            storageClassName: $(storageClassName)
+        master:
+          count: 3
+          enabled: true
+          javaOpts: -Xms2g -Xmx2g
+          limitCpu: 1
+          limitMem: 4Gi
+          nodeSelector: $(nodeSelector)
+          pvc:
+            size: 2Gi
+            storageClassName: $(storageClassName)
+        warmdata:
+          count: 2
+          enabled: false
+          javaOpts: -Xms2g -Xmx2g
+          limitCpu: 1
+          limitMem: 2Gi
+          nodeSelector: $(nodeSelector)
+          pvc:
+            size: 200Gi
+            storageClassName: $(storageClassName)
+    kibana:
       enabled: true
       http:
-        tls:
-          selfSignedCertificate:
-            disabled: true
         service:
           spec:
-            type: NodePort
             ports:
             - name: http
               nodePort: 30001
-              targetPort: 5601
               port: 5601
-      limitCpu: TO_BE_FIXED
-      limitMem: TO_BE_FIXED
+              targetPort: 5601
+            type: NodePort
+        tls:
+          selfSignedCertificate:
+            disabled: true
+      image:
+        repository: harbor.taco-cat.xyz/tks/kibana
+        tag: 7.5.1
+      limitCpu: 1
+      limitMem: 2Gi
       nodeSelector: $(nodeSelector)
   wait: true
 ---
@@ -550,9 +539,14 @@ spec:
   releaseName: grafana
   targetNamespace: taco-system
   values:
+    adminPassword: password
     downloadDashboardsImage:
       repository: harbor.taco-cat.xyz/tks/curl
       tag: latest
+    grafana.ini:
+      plugins:
+        grafana-piechart-panel: true
+        vonage-status-panel: true
     image:
       repository: harbor.taco-cat.xyz/tks/grafana
       tag: 8.3.3
@@ -560,34 +554,32 @@ spec:
       image:
         repository: harbor.taco-cat.xyz/tks/busybox
         tag: latest
-    adminPassword: password
-    sidecar:
-      image:
-        repository: harbor.taco-cat.xyz/tks/k8s-sidecar
-        tag: 1.14.2
-      dashboards:
-        enabled: true
-        label: grafana_dashboard
-      datasources:
-        enabled: true
-        label: grafana_datasource
-    testFramework:
-      image: harbor.taco-cat.xyz/tks/bats
-      tag: v1.4.1
-    service:
-      type: NodePort
-      nodePort: 30009
+    nodeSelector: $(nodeSelector)
     persistence:
       enabled: true
-      size: 10G #FIXME
+      size: 10G
       storageClassName: $(storageClassName)
-    grafana.ini:
-      plugins:
-        vonage-status-panel: true
-        grafana-piechart-panel: true
     plugins:
     - vonage-status-panel
     - grafana-piechart-panel
+    service:
+      annotations: $(awsNlbAnnotation)
+      nodePort: 30000
+      type: NodePort
+    sidecar:
+      dashboards:
+        enabled: true
+        label: grafana_dashboard
+        searchNamespace: ALL
+      datasources:
+        enabled: true
+        label: grafana_datasource
+      image:
+        repository: harbor.taco-cat.xyz/tks/k8s-sidecar
+        tag: 1.14.2
+    testFramework:
+      image: harbor.taco-cat.xyz/tks/bats
+      tag: v1.4.1
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -608,13 +600,18 @@ spec:
   releaseName: fluent-operator
   targetNamespace: taco-system
   values:
+    fluentbit:
+      enable: false
+      image:
+        repository: harbor.taco-cat.xyz/tks/fluent-bit
+        tag: v2.2.0
     operator:
-      initcontainer:
-        repository: harbor.taco-cat.xyz/tks/docker
-        tag: "20.10"
       container:
         repository: harbor.taco-cat.xyz/tks/fluent-operator
-        tag: "v2.7.0"
+        tag: v2.7.0
+      initcontainer:
+        repository: harbor.taco-cat.xyz/tks/docker
+        tag: '20.10'
       # FluentBit operator resources. Usually user needn't to adjust these.
       resources:
         limits:
@@ -623,11 +620,6 @@ spec:
         requests:
           cpu: 100m
           memory: 20Mi
-    fluentbit:
-      enable: false
-      image:
-        repository: harbor.taco-cat.xyz/tks/fluent-bit
-        tag: v2.2.0
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -648,19 +640,10 @@ spec:
   releaseName: fluentbit
   targetNamespace: taco-system
   values:
-    fullnameOverride: fbcr-taco
-    image:
-      exporter:
-        repository: harbor.taco-cat.xyz/tks/logalert-exporter
-        tag: v0.1.1
-      fluentbit:
-        repository: harbor.taco-cat.xyz/tks/fluent-bit
-        tag: v3.0.4
-      elasticsearchTemplates:
-        repository: harbor.taco-cat.xyz/tks/curl
-        tag: latest
     fluentbit:
-      enabled: true
+      alerts:
+        enabled: false
+      clusterName: $(clusterName)
       daemonset:
         spec:
           tolerations:
@@ -670,24 +653,67 @@ spec:
             operator: Exists
           - key: node-role.kubernetes.io/node
             operator: Exists
-      job:
-        spec:
-          nodeSelector: $(nodeSelector)
-      parsers:
-      - name: taco-syslog-parser-for-ubuntu # modified from syslog-rfc3164
-        regex:
-          regex: '^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$'
-          timeFormat: '%b %d %H:%M:%S'
-          timeKeep: false
-          timeKey: 'time'
-      outputs: { }
-      targetLogs: [ ]
-      alerts:
-        enabled: false
-      clusterName: $(clusterName)
+      enabled: true
       exclude:
       - key: $kubernetes['container_name']
         value: kibana|elasticsearch|fluent-bit
+      job:
+        spec:
+          nodeSelector:
+            taco-lma: enabled
+      nodeSelector: $(nodeSelector)
+      outputs:
+        loki:
+        - host: $(lokiHost)
+          name: taco-loki
+          port: $(lokiPort)
+        lokiuser:
+        - host: $(lokiuserHost)
+          name: taco-loki-user
+          port: $(lokiuserPort)
+      parsers:
+      - name: taco-syslog-parser-for-ubuntu
+        regex:
+          regex: ^(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)?
+            *(?<message>.*)$
+          timeFormat: '%b %d %H:%M:%S'
+          timeKeep: false
+          timeKey: time
+      targetLogs:
+      - bufferChunkSize: 2M
+        bufferMaxSize: 5M
+        do_not_store_as_default: false
+        extraArgs:
+          multilineParser: docker, cri
+        index: container
+        loki_name: taco-loki-user
+        memBufLimit: 20MB
+        multi_index:
+        - index: platform
+          key: $kubernetes['namespace_name']
+          loki_name: taco-loki
+          value: kube-system|$(lmaNameSpace)|taco-system|gatekeeper-system|argo
+        parser: docker
+        path: /var/log/containers/*.log
+        tag: kube.*
+        type: kubernates
+      - index: syslog
+        loki_name: taco-loki
+        parser: taco-syslog-parser-for-ubuntu
+        path: /var/log/syslog
+        tag: syslog.*
+        type: syslog
+    fullnameOverride: fbcr-taco
+    image:
+      elasticsearchTemplates:
+        repository: harbor.taco-cat.xyz/tks/curl
+        tag: latest
+      exporter:
+        repository: harbor.taco-cat.xyz/tks/logalert-exporter
+        tag: v0.1.1
+      fluentbit:
+        repository: harbor.taco-cat.xyz/tks/fluent-bit
+        tag: v3.0.4
     logExporter:
       enabled: false
       serviceMonitor:
@@ -713,18 +739,6 @@ spec:
   releaseName: addons
   targetNamespace: taco-system
   values:
-    grafanaDatasource:
-      enabled: true
-      namespace: $(lmaNameSpace)
-      prometheus:
-        enabled: true
-        url: "lma-prometheus.$(lmaNameSpace):9090"
-      loki:
-        enabled: true
-        url: "loki-loki-distributed-gateway.$(lmaNameSpace)"
-      lokiuser:
-        enabled: true
-        url: "loki-user-loki-distributed-gateway.$(lmaNameSpace)"
     grafanaDashboard:
       include:
       - kubernetes
@@ -732,10 +746,71 @@ spec:
       - loki
       - calico
       - etcd
+      istio:
+        enabled: false
+      jaeger:
+        enabled: false
       namespace: $(lmaNameSpace)
+    grafanaDatasource:
+      enabled: true
+      loki:
+        enabled: true
+        url: $(lokiHost):$(lokiPort)
+      lokiuser:
+        enabled: true
+        url: $(lokiuserHost):$(lokiuserPort)
+      namespace: $(lmaNameSpace)
+      prometheus:
+        enabled: true
+        url: $(grafanaDatasourceMetric)
+    kibanaInit:
+      enabled: false
+    prometheusRules:
+      aggregation:
+        enabled: true
+      alert:
+        enabled: false
+      istio:
+        aggregation:
+          enabled: false
+        optimization:
+          enabled: false
     serviceMonitor:
+      additionalScrapeConfigs: null
+      argoRollout:
+        enabled: true
+        interval: $(serviceScrapeInterval)
+      argocd:
+        enabled: false
+        interval: $(serviceScrapeInterval)
+      argowf:
+        enabled: false
+        interval: $(serviceScrapeInterval)
       calico:
         enabled: true
+        interval: $(serviceScrapeInterval)
+      ceph:
+        enabled: false
+        interval: $(serviceScrapeInterval)
+        mon_hosts: []
+      federations: []
+      grafana:
+        enabled: true
+        interval: $(serviceScrapeInterval)
+      istio:
+        enabled: false
+        interval: $(serviceScrapeInterval)
+      jaeger:
+        enabled: false
+        interval: $(serviceScrapeInterval)
+      kubeStateMetrics:
+        enabled: true
+        interval: $(serviceScrapeInterval)
+      kubelet:
+        enabled: true
+        interval: 30s
+      nodeExporter:
+        enabled: false
         interval: $(serviceScrapeInterval)
       processExporter:
         enabled: true
@@ -745,45 +820,11 @@ spec:
             application: process_exporter
             component: metrics
             release_group: prometheus-process-exporter
-      istio:
-        enabled: true
-        interval: $(serviceScrapeInterval)
-      jaeger:
-        enabled: true
-        interval: $(serviceScrapeInterval)
-      grafana:
-        enabled: true
-        interval: $(serviceScrapeInterval)
-      argocd:
-        enabled: true
-        interval: $(serviceScrapeInterval)
-      argoRollout:
-        enabled: true
-        interval: $(serviceScrapeInterval)
-      argowf:
-        enabled: true
-        interval: $(serviceScrapeInterval)
-      ceph:
-        enabled: false  #FIXME
-        interval: $(serviceScrapeInterval)
-        mon_hosts: []
-      kubeStateMetrics:
-        enabled: true
-      nodeExporter:
-        enabled: false
       pushgateway:
         enabled: true
-      kubelet:
-        enabled: true
+      trident:
+        enabled: false
         interval: $(serviceScrapeInterval)
-      federations: [] # TO_BE_FIXED
-    kibanaInit:
-      enabled: false
-    prometheusRules:
-      aggregation:
-        enabled: true
-      alert:
-        enabled: true
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -811,7 +852,7 @@ spec:
       port: 9090
     rules:
       default: false
-    nodeSelector: $(nodeSelector)
+    nodeselector: $(nodeSelector)
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -831,6 +872,24 @@ spec:
   releaseName: kubernetes-event-exporter
   targetNamespace: taco-system
   values:
+    addons:
+      loki:
+        enabled: true
+        host: $(lokiHost)
+        port: $(lokiPort)
+        target_file: /tmp/kubernetes-event.log
+    clustername: $(clusterName)
+    conf:
+      default:
+        hosts:
+        - https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
+      logFormat: json
+      logLevel: error
+      recievers:
+      - config:
+          path: /tmp/kubernetes-event.log
+        name: loki
+        type: file
     image:
       exporter:
         repository: harbor.taco-cat.xyz/tks/kubernetes-event-exporter
@@ -838,12 +897,6 @@ spec:
       sidecar:
         repository: harbor.taco-cat.xyz/tks/fluent-bit
         tag: 1.9.7-debug
-
-    clustername: $(clusterName)
-    conf:
-      logLevel: error     # possible level: error, debug,
-      logFormat: json
-      recievers: [ ]
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -862,26 +915,58 @@ spec:
   releaseName: minio
   targetNamespace: taco-system
   values:
+    DeploymentUpdate:
+      type: Recreate
+    buckets:
+    - name: tks-thanos
+      objectlocking: false
+      policy: public
+      purge: false
+      versioning: true
+    - name: tks-loki
+      objectlocking: false
+      policy: public
+      purge: false
+      versioning: true
+    - name: tks-loki-user
+      objectlocking: false
+      policy: public
+      purge: false
+      versioning: true
+    consoleIngress:
+      nodeSelector: $(nodeSelector)
+    customCommands:
+    - command: ilm rule add --expire-days 90 myminio/tks-thanos
+    - command: ilm rule add --expire-days 15 myminio/tks-loki
+    - command: ilm rule add --expire-days 15 myminio/tks-loki-user
+    - command: ilm ls myminio/tks-thanos
+    - command: ilm ls myminio/tks-loki
+    - command: ilm ls myminio/tks-loki-user
     image:
       repository: harbor.taco-cat.xyz/tks/minio
       tag: RELEASE.2023-01-20T02-05-44Z
     mcImage:
       repository: harbor.taco-cat.xyz/tks/mc
       tag: RELEASE.2023-01-11T03-14-16Z
-    users: [] # MUST_BE_DEFINED
-    buckets: [] # MUST_BE_DEFINED
-    persistence:
-      storageClass: $(storageClassName)
-      accessMode: ReadWriteOnce # tunable
-      size: 20Gi # tunable
-    resources:
-      requests:
-        memory: 1Gi # tunable
-      limits:
-        memory: 2Gi # tunable
     mode: standalone
-    DeploymentUpdate:
-      type: Recreate
+    persistence:
+      accessMode: ReadWriteOnce
+      size: 500Gi
+      storageClass: $(storageClassName)
+    postJob:
+      nodeSelector: $(nodeSelector)
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        memory: 1Gi
+    service:
+      nodePort: 30020
+      type: NodePort
+    users:
+    - accessKey: $(defaultUser)
+      policy: consoleAdmin
+      secretKey: $(defaultPassword)
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -900,67 +985,21 @@ spec:
   releaseName: thanos
   targetNamespace: taco-system
   values:
-    global:
-      storageClass: $(storageClassName)
-    image:
-      registry: harbor.taco-cat.xyz
-      repository: tks/thanos
-      tag: v0.30.2
-    clusterDomain: $(clusterDomain)
-    existingObjstoreSecret: TO_BE_FIXED
-    query:
-      nodeSelector: {}
-      dnsDiscovery:
-        enabled: false
-        sidecarsService: TO_BE_FIXED
-        sidecarsNamespace: $(lmaNameSpace)
-    queryFrontend:
-      enabled: false
-      nodeSelector: {}
-      service:
-        type: TO_BE_FIXED
-      config: |-
-        type: IN-MEMORY
-        config:
-          max_size: TO_BE_FIXED
-          max_size_items: TO_BE_FIXED
-          validity: TO_BE_FIXED
-      extraFlags: []
-        # query-range.split-interval: TO_BE_FIXED
-        # query-range.max-retries-per-request: TO_BE_FIXED
-        # query-frontend.log-queries-longer-than: TO_BE_FIXED
     bucketweb:
       enabled: true
       logLevel: info
+      nodeSelector: $(nodeSelector)
       refresh: 30m
-      timeout: 5m
-      nodeSelector: {}
       service:
-        type: ClusterIP
         http:
           port: 8080
-    compactor:
-      enabled: true
-      logLevel: info
-      retentionResolutionRaw: 30d
-      retentionResolution5m: 200d
-      retentionResolution1h: 1y
-      consistencyDelay: 30m
-      resources:
-        limits:
-          memory: 1Gi
-          cpu: '1'
-      nodeSelector: {}
-      service:
         type: ClusterIP
-        http:
-          port: 9090
-      persistence:
-        enabled: true
-        accessModes:
-          - ReadWriteOnce
-        size: TO_BE_FIXED
-      extraFlags: []
+      timeout: 5m
+    clusterDomain: $(clusterName)
+    compactor:
+      consistencyDelay: 30m
+      enabled: true
+      extraFlags: null
         # Compaction 수행 관련 커맨트
         # 아래와 같은 block stream들이 있을때
         # external_labels: {cluster="eu1", replica="1", receive="true", environment="production"}
@@ -971,61 +1010,109 @@ spec:
         # external_labels: {cluster="eu1", receive="true", environment="production"} (2 streams, resulted in one)
         # external_labels: {cluster="us1", receive="true", environment="production"}
         # external_labels: {cluster="us1", receive="true", environment="staging"}
-    storegateway:
-      enabled: true
       logLevel: info
-      nodeSelector: {}
+      nodeSelector: $(nodeSelector)
+      persistence:
+        accessModes:
+        - ReadWriteOnce
+        enabled: true
+        size: 8Gi
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1024Mi
+      retentionResolution1h: 10y
+      retentionResolution5m: 30d
+      retentionResolutionRaw: 30d
       service:
-        type: ClusterIP
         http:
           port: 9090
-        grpc:
-          port: 10901
-      config: |-
-        type: IN-MEMORY
-        config:
-          max_size: TO_BE_FIXED
-          max_item_size: TO_BE_FIXED
-      persistence:
-        enabled: true
-        accessModes:
-          - ReadWriteOnce
-        size: TO_BE_FIXED
-      replicaCount: 1
-      autoscaling:
-        enabled: false
-        #  minReplicas: 1
-        #  maxReplicas: 11
-        #  targetCPU: 50
-        #  targetMemory: 50
-    ruler:
-      enabled: true
-      logLevel: info
-      alertmanagers: [] # TO_BE_FIXED
-      evalInterval: 1m
-      config: {} #TO_BE_FIXED
-      replicaCount: 1
-      updateStrategyType: RollingUpdate
-      podManagementPolicy: OrderedReady
-      nodeSelector: {}
-      service:
         type: ClusterIP
-        http:
-          port: 9090
-        grpc:
-          port: 10901
-      persistence:
-        enabled: true
-        accessModes:
-          - ReadWriteOnce
-        size: TO_BE_FIXED
+    existingObjstoreSecret: $(thanosObjstoreSecret)
+    global:
+      storageClass: $(storageClassName)
+    image:
+      registry: harbor.taco-cat.xyz
+      repository: tks/thanos
+      tag: v0.30.2
     metrics:
       enabled: false
       serviceMonitor:
         enabled: false
-    volumePermissions:
-      enabled: false
     minio:
+      enabled: false
+    querier:
+      stores: $(thanosQueryStores)
+    query:
+      dnsDiscovery:
+        enabled: false
+        sidecarsNamespace: lma
+        sidecarsService: null
+      nodeSelector: $(nodeSelector)
+      service:
+        type: ClusterIP
+    queryFrontend:
+      config: |-
+        type: IN-MEMORY
+        config:
+          max_size: 512MB
+          max_size_items: 100
+          validity: 100s
+      enabled: true
+      extraFlags: []
+      nodeSelector: $(nodeSelector)
+      service:
+        nodePorts:
+          http: 30005
+        type: ClusterIP
+    ruler:
+      alertmanagers:
+      - http://alertmanager-operated:9093
+      config:
+        groups:
+        - name: tks
+          rules:
+          - alert: PrometheusDown
+            expr: absent(up{prometheus="lma/lma-prometheus"})
+      enabled: true
+      evalInterval: 1m
+      logLevel: info
+      nodeSelector: $(nodeSelector)
+      persistence:
+        accessModes:
+        - ReadWriteOnce
+        enabled: true
+        size: 8Gi
+      podManagementPolicy: OrderedReady
+      replicaCount: 1
+      service:
+        grpc:
+          port: 10901
+        http:
+          port: 9090
+          nodePort: 300010
+        type: NodePort
+      updateStrategyType: RollingUpdate
+    storegateway:
+      autoscaling:
+        enabled: false
+      config: "type: IN-MEMORY\nconfig:\n  max_size: 250MB\n  max_item_size: 125MB"
+      enabled: true
+      logLevel: info
+      nodeSelector: $(nodeSelector)
+      persistence:
+        accessModes:
+        - ReadWriteOnce
+        enabled: true
+        size: 8Gi
+      replicaCount: 1
+      service:
+        grpc:
+          port: 10901
+        http:
+          port: 9090
+        type: ClusterIP
+    volumePermissions:
       enabled: false
   wait: true
 ---
@@ -1048,21 +1135,22 @@ spec:
   values:
     objectStorage:
       enabled: true
-      secretName: $(thanosObjstoreSecret)
       rawConfig:
-        bucket: TO_BE_FIXED
-        endpoint: minio:9000
-        # only for minio
-        # access_key: TO_BE_FIXED
-        # secret_key: TO_BE_FIXED
-        # insecure: TO_BE_FIXED
+        access_key: $(defaultUser)
+        # aws_sdk_auth: true
+        bucket: tks-thanos
+        endpoint: $(s3Service)
+        insecure: true
+        secret_key: $(defaultPassword)
+      secretName: $(thanosObjstoreSecret)
     sidecarsService:
       enabled: false
-      type: NodePort
+      endpoints:
+      - 192.168.97.102 # should not be in the loopback range (127.0.0.0/8)
+      name: thanos-sidecars
       nodePort: 30007
-      name: TO_BE_FIXED
       port: 30901
-      endpoints: [] # TO_BE_FIXED
+      type: NodePort
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -1082,28 +1170,25 @@ spec:
   releaseName: prepare-etcd-secret
   targetNamespace: taco-system
   values:
-    image:
-      repository: harbor.taco-cat.xyz/tks/hyperkube
-      tag: v1.18.8
+    deployer: tks
     etcd:
       certdir: /etc/kubernetes/pki/etcd
       certfile: ca.crt
       client_certfile: peer.crt
       client_keyfile: peer.key
-    # master node의 label을 환경에 맞게 적어야함
-    # ex) 1.20< "node-role.kubernetes.io/master": ""
-    #     >1.20 "node-role.kubernetes.io/control-plane": ""
-    # ref. https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#urgent-upgrade-notes
+    image:
+      repository: harbor.taco-cat.xyz/tks/hyperkube
+      tag: v1.18.8
     nodeSelector:
-      "node-role.kubernetes.io/control-plane": ""
+      node-role.kubernetes.io/control-plane: ''
+      # master node의 label을 환경에 맞게 적어야함
+      # ex) 1.20< "node-role.kubernetes.io/master": ""
+      #     >1.20 "node-role.kubernetes.io/control-plane": ""
+      # ref. https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md#urgent-upgrade-notes
     tolerations:
-      - key: "node-role.kubernetes.io/control-plane"
-        effect: "NoSchedule"
-        operator: "Exists"
-      - key: "node-role.kubernetes.io/master"
-        effect: "NoSchedule"
-        operator: "Exists"
-    deployer: "tks"
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
+      operator: Exists
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -1122,9 +1207,44 @@ spec:
   releaseName: loki
   targetNamespace: taco-system
   values:
+    compactor:
+      nodeSelector: $(nodeSelector)
+    distributor:
+      nodeSelector: $(nodeSelector)
+      persistence:
+        storageClass: $(storageClassName)
+    gateway:
+      image:
+        registry: harbor.taco-cat.xyz
+        repository: tks/nginx-unprivileged
+      nginxConfig:
+        httpSnippet: client_max_body_size 50M;
+        serverSnippet: client_max_body_size 50M;
+      nodeSelector: $(nodeSelector)
+      service:
+        annotations: $(awsNlbAnnotation)
+        type: ClusterIP
     global:
       clusterDomain: $(clusterDomain)
       dnsService: coredns
+    indexGateway:
+      nodeSelector: $(nodeSelector)
+      persistence:
+        storageClass: $(storageClassName)
+    ingester:
+      nodeSelector: $(nodeSelector)
+      persistence:
+        enabled: true
+        inMemory: false
+        size: 100Gi
+        storageClass: $(storageClassName)
+      resources:
+        limits:
+          cpu: '4'
+          memory: 4Gi
+        requests:
+          cpu: 100m
+          memory: 250Mi
     loki:
       image:
         registry: harbor.taco-cat.xyz
@@ -1132,136 +1252,57 @@ spec:
         tag: null
       schemaConfig:
         configs:
-        - from: "2020-09-07"
-          store: boltdb-shipper
+        - from: '2020-09-07'
+          index:
+            period: 24h
+            prefix: loki_index_
           object_store: s3
           schema: v11
-          index:
-            prefix: loki_index_
-            period: 24h
+          store: boltdb-shipper
       storageConfig:
-        boltdb_shipper:
-          active_index_directory: /var/loki/index
-          cache_location: /var/loki/cache
-          cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
-          shared_store: s3
         aws:
-          s3: TO_BE_FIXED
           bucketnames: tks-loki
+          s3: http://$(defaultUser):$(defaultPassword)@$(s3Service)/minio
           s3forcepathstyle: true
-      structuredConfig:
-        limits_config:
-          ingestion_rate_mb: 25
-          ingestion_burst_size_mb: 50
-          max_streams_per_user: 0
-          max_global_streams_per_user: 0
-        table_manager:
-          retention_deletes_enabled: true
-          retention_period: TO_BE_FIXED
-    serviceMonitor.enabled: true
-    prometheusRule.enabled: true
-    ingester:
-      resources:
-        limits:
-          cpu: '4'
-          memory: 4Gi
-        requests:
-          cpu: 100m
-          memory: 250Mi
-      persistence:
-        enabled: true
-        inMemory: false
-        size: 100Gi
-    memcachedExporter.enabled: true
-    gateway:
-      image:
-        registry: harbor.taco-cat.xyz
-        repository: tks/nginx-unprivileged
-
-      nginxConfig:
-        httpSnippet: |-
-          client_max_body_size 50M;
-        serverSnippet: |-
-          client_max_body_size 50M;
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: loki-user
-  name: loki-user
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: loki-distributed
-    version: 0.58.0
-    origin: https://grafana.github.io/helm-charts
-  releaseName: loki-user
-  targetNamespace: taco-system
-  values:
-    global:
-      clusterDomain: $(clusterDomain)
-      dnsService: coredns
-    loki:
-      image:
-        registry: harbor.taco-cat.xyz
-        repository: tks/loki
-        tag: null
-      schemaConfig:
-        configs:
-        - from: "2020-09-07"
-          store: boltdb-shipper
-          object_store: s3
-          schema: v11
-          index:
-            prefix: loki_index_
-            period: 24h
-      storageConfig:
         boltdb_shipper:
           active_index_directory: /var/loki/index
           cache_location: /var/loki/cache
           cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
           shared_store: s3
-        aws:
-          s3: TO_BE_FIXED
-          bucketnames: tks-loki-user
-          s3forcepathstyle: true
       structuredConfig:
         limits_config:
-          ingestion_rate_mb: 25
           ingestion_burst_size_mb: 50
-          max_streams_per_user: 0
+          ingestion_rate_mb: 25
           max_global_streams_per_user: 0
+          max_streams_per_user: 0
         table_manager:
           retention_deletes_enabled: true
-          retention_period: TO_BE_FIXED
-    serviceMonitor.enabled: true
-    prometheusRule.enabled: true
-    ingester:
-      resources:
-        limits:
-          cpu: '4'
-          memory: 4Gi
-        requests:
-          cpu: 100m
-          memory: 250Mi
-      persistence:
-        enabled: true
-        inMemory: false
-        size: 100Gi
+          retention_period: 672h
+    memcachedChunks:
+      nodeSelector: $(nodeSelector)
     memcachedExporter.enabled: true
-    gateway:
-      image:
-        registry: harbor.taco-cat.xyz
-        repository: tks/nginx-unprivileged
-
-      nginxConfig:
-        httpSnippet: |-
-          client_max_body_size 50M;
-        serverSnippet: |-
-          client_max_body_size 50M;
+    memcachedFrontend:
+      nodeSelector: $(nodeSelector)
+    memcachedIndexQueries:
+      nodeSelector: $(nodeSelector)
+    memcachedIndexWrites:
+      nodeSelector: $(nodeSelector)
+    prometheusRule.enabled: true
+    querier:
+      nodeSelector: $(nodeSelector)
+    queryFrontend:
+      nodeSelector: $(nodeSelector)
+      persistence:
+        storageClass: $(storageClassName)
+    queryScheduler:
+      nodeSelector: $(nodeSelector)
+    ruler:
+      nodeSelector: $(nodeSelector)
+      persistence:
+        storageClass: $(storageClassName)
+    serviceMonitor.enabled: true
+    tableManager:
+      nodeSelector: $(nodeSelector)
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -1279,12 +1320,14 @@ spec:
   releaseName: lma-bucket
   targetNamespace: taco-system
   values:
-    tks:
-      iamRoles: [] #arn:aws:iam::482246953094:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
-
     s3:
+      buckets:
+      - name: $(clusterName)-tks-thanos
+      - name: $(clusterName)-tks-loki
       enabled: true
-      buckets: [ ]
+    tks:
+      iamRoles: $(tksIamRoles)
+      # [] #arn:aws:iam::482246953094:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
