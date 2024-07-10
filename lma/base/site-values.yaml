@@ -1,0 +1,284 @@
+apiVersion: openinfradev.github.com/v1
+kind: HelmValuesTransformer
+metadata:
+  name: site
+
+global:
+  # Specify nodes to install workload
+  nodeSelector: 'taco-lma=enabled'
+  # Specify cluster name. It is useful in multi-cluster env.
+  clusterName: cluster.local
+  # Storageclass to install persistant
+  storageClassName: taco-storage
+  # Intervals to scrap the metrics in prometheuses
+  serviceScrapeInterval: 10s
+  federateScrapeInterval: 10s
+  # Default user/password to use the object storage
+  defaultPassword: password
+  defaultUser: taco
+  # Secret name to connect the object storage
+  thanosObjstoreSecret: taco-objstore-secret
+
+  lokiHost: loki-loki-distributed-gateway
+  lokiPort: 80
+  lokiuserHost: loki-user-loki-distributed-gateway
+  lokiuserPort: 80
+  grafanaDatasourceMetric: lma-prometheus.lma:9090
+
+charts:
+- name: prometheus-operator
+  override:
+    prometheusOperator.nodeSelector: $(nodeSelector)
+
+- name: prometheus
+  override:
+    kubeEtcd.endpoints: [] # If your etcd is not deployed as a pod, specify IPs it can be found on
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName: $(storageClassName)
+    # Define specifications for storing metrics
+    prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage: 200Gi
+    prometheus.prometheusSpec.retention: 10d
+
+    prometheus.prometheusSpec.externalLabels.taco_cluster: $(clusterName)
+    prometheus.prometheusSpec.nodeSelector: $(nodeSelector)
+    prometheus.prometheusSpec.thanos.objectStorageConfig.name: $(thanosObjstoreSecret)
+    coreDns.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeApiServer.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeControllerManager.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeDns.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeEtcd.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeProxy.serviceMonitor.interval: $(serviceScrapeInterval)
+    kubeScheduler.serviceMonitor.interval: $(serviceScrapeInterval)
+
+    alertmanager.service.type: NodePort
+    alertmanager.service.nodePort: 30111
+    alertmanager.alertmanagerSpec.alertmanagerConfigSelector.matchLabels.alertmanagerConfig: example
+    alertmanager.alertmanagerSpec.nodeSelector: $(nodeSelector)
+    # Define the slack target to send alerts
+    alertmanager.config.global.slack_api_url: https://hooks.slack.com/services/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 # default slack channel: openinfradev.slack.com #default-alerts-ep
+
+    # Define for storing alert
+    alertmanager.alertmanagerSpec.retention: 120h
+    alertmanager.config.route.routes: []
+
+- name: kube-state-metrics
+  override:
+    nodeSelector: $(nodeSelector)
+    collectors.verticalpodautoscalers: false
+
+- name: prometheus-pushgateway
+  override:
+    nodeSelector: $(nodeSelector)
+
+- name: prometheus-node-exporter
+
+- name: prometheus-process-exporter
+
+- name: eck-resource
+  override:
+    kibana.nodeSelector: $(nodeSelector)
+    kibana.limitCpu: 1
+    kibana.limitMem: 2Gi
+
+    elasticsearch.adminPassword: tacoword
+
+    # ElasticSearch Deployment Architecture
+    # Master nodes
+    elasticsearch.nodeSets.master.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.master.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.master.limitCpu: 1
+    elasticsearch.nodeSets.master.limitMem: 4Gi
+    elasticsearch.nodeSets.master.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.master.pvc.size: 2Gi
+
+    # Hot nodes
+    elasticsearch.nodeSets.hotdata.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.hotdata.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.hotdata.limitCpu: 1
+    elasticsearch.nodeSets.hotdata.limitMem: 4Gi
+    elasticsearch.nodeSets.hotdata.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.hotdata.pvc.size: 100Gi
+
+    # Warm nodes
+    elasticsearch.nodeSets.warmdata.enabled: false
+    elasticsearch.nodeSets.warmdata.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.warmdata.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.warmdata.limitCpu: 1
+    elasticsearch.nodeSets.warmdata.limitMem: 2Gi
+    elasticsearch.nodeSets.warmdata.pvc.storageClassName: $(storageClassName)
+    elasticsearch.nodeSets.warmdata.pvc.size: 200Gi
+
+    # Client nodes
+    elasticsearch.nodeSets.client.enabled: true
+    elasticsearch.nodeSets.client.count: 1
+    elasticsearch.nodeSets.client.nodeSelector: $(nodeSelector)
+    elasticsearch.nodeSets.client.javaOpts: "-Xms2g -Xmx2g"
+    elasticsearch.nodeSets.client.limitCpu: 2
+    elasticsearch.nodeSets.client.limitMem: 4Gi
+    elasticsearch.nodeSets.client.pvc.storageClassName: $(storageClassName)
+
+- name: grafana
+  override:
+    adminPassword: password
+    persistence.storageClassName: $(storageClassName)
+    nodeSelector: $(nodeSelector)
+
+- name: fluent-operator
+  override:
+
+- name: fluentbit
+  override:
+    fluentbit.clusterName: $(clusterName)
+    fluentbit.nodeSelector: $(nodeSelector)
+
+- name: addons
+  override:
+    # Initialize the kibana index
+    serviceMonitor.grafana.interval: $(serviceScrapeInterval)
+    serviceMonitor.argocd.interval: $(serviceScrapeInterval)
+    serviceMonitor.argowf.interval: $(serviceScrapeInterval)
+    serviceMonitor.argoRollout.interval: $(serviceScrapeInterval)
+    serviceMonitor.processExporter.interval: $(serviceScrapeInterval)
+    serviceMonitor.ceph.interval: $(serviceScrapeInterval)
+    serviceMonitor.calico.interval: $(serviceScrapeInterval)
+    serviceMonitor.kubeStateMetrics.interval: $(serviceScrapeInterval)
+    serviceMonitor.nodeExporter.interval: $(serviceScrapeInterval)
+    serviceMonitor.kubelet.interval: $(serviceScrapeInterval)
+    serviceMonitor.istio.interval: $(serviceScrapeInterval)
+    serviceMonitor.jaeger.interval: $(serviceScrapeInterval)
+    grafanaDatasource.prometheus.url: $(grafanaDatasourceMetric)
+    # grafanaDatasource.prometheus.url: "thanos-query.lma:9090"
+    grafanaDatasource.loki.url: $(lokiHost):$(lokiPort)
+    grafanaDatasource.lokiuser.url: $(lokiuserHost):$(lokiuserPort)
+
+- name: prometheus-adapter
+  override:
+    nodeSelector: $(nodeSelector)
+
+- name: kubernetes-event-exporter
+  override:
+    clustername: $(clusterName)
+
+- name: minio
+  override:
+    users:
+    - accessKey: $(defaultUser)
+      secretKey: $(defaultPassword)
+      policy: consoleAdmin
+    buckets:
+    - name: thanos
+      policy: public
+      purge: false
+      versioning: true
+      objectlocking: false
+    - name: loki
+      policy: public
+      purge: false
+      versioning: true
+      objectlocking: false
+    - name: loki-user
+      policy: public
+      purge: false
+      versioning: true
+      objectlocking: false
+    customCommands:
+    - command: ilm rule add --expire-days 90 myminio/tks-thanos
+    - command: ilm rule add --expire-days 15 myminio/tks-loki
+    - command: ilm rule add --expire-days 15 myminio/tks-loki-user
+    - command: ilm ls myminio/tks-thanos
+    - command: ilm ls myminio/tks-loki
+    - command: ilm ls myminio/tks-loki-user
+    persistence.storageClass: $(storageClassName)
+    persistence.accessMode: ReadWriteOnce
+    persistence.size: 20Gi
+    resources.requests.memory: 1Gi
+    resources.limits.memory: 2Gi
+
+- name: thanos
+  override:
+    global.storageClass: $(storageClassName)
+    clusterDomain: $(clusterName)
+    existingObjstoreSecret: $(thanosObjstoreSecret)
+    query.nodeSelector: $(nodeSelector)
+    # Example of dns discovery for thanos sidecar service:
+    # query.stores:
+    #   - lma-thanos-discovery.lma.svc.$(clusterName)
+    query.dnsDiscovery.enabled: false
+    query.dnsDiscovery.sidecarsService: null
+    queryFrontend.nodeSelector: $(nodeSelector)
+    queryFrontend.service.type: NodePort
+    queryFrontend.service.nodePorts.http: 30005
+
+    bucketweb.nodeSelector: $(nodeSelector)
+    compactor.nodeSelector: $(nodeSelector)
+    storegateway.nodeSelector: $(nodeSelector)
+    ruler.nodeSelector: $(nodeSelector)
+
+    queryFrontend.config: |-
+        type: IN-MEMORY
+        config:
+          max_size: 512MB
+          max_size_items: 100
+          validity: 100s
+
+    queryFrontend.extraFlags:
+      - --query-range.split-interval=24h
+      - --query-range.max-retries-per-request=3
+      - --query-frontend.log-queries-longer-than=60s
+
+    compactor.retentionResolutionRaw: 30d
+    compactor.retentionResolution5m: 30d
+    compactor.retentionResolution1h: 10y
+    compactor.consistencyDelay: 30m
+    compactor.resources.limits.memory: 1024Mi
+    compactor.resources.limits.cpu: 1000m
+    compactor.persistence.size: 8Gi
+    compactor.extraFlags:
+    storegateway.config: |-
+        type: IN-MEMORY
+        config:
+          max_size: 250MB
+          max_item_size: 125MB
+    storegateway.persistence.size: 8Gi
+    ruler.alertmanagers:
+    - http://alertmanager-operated:9093
+    ruler.config:
+        groups:
+          - name: "metamonitoring"
+            rules:
+              - alert: "PrometheusDown"
+                expr: absent(up{prometheus="monitoring/prometheus-operator"})
+    ruler.persistence.size: 8Gi
+
+- name: thanos-config
+  override:
+    objectStorage:
+      secretName: $(thanosObjstoreSecret)
+      rawConfig:
+        bucket: thanos
+        endpoint: minio.lma.svc.$(clusterName):9000
+        # only for minio
+        # access_key: $(defaultUser)
+        # secret_key: $(defaultPassword)
+        # insecure: true
+    sidecarsService.name: thanos-sidecars
+    sidecarsService.endpoints:
+      - 127.0.0.1
+
+- name: loki
+  override:
+    loki.storageConfig.aws.s3: http://$(defaultUser):$(defaultPassword)@minio.lma.svc:9000/minio
+    loki.structuredConfig.table_manager.retention_period: 672h    # delete logs after 672h = 28 days
+
+- name: loki-user
+  override:
+    loki.storageConfig.aws.s3: http://$(defaultUser):$(defaultPassword)@minio.lma.svc:9000/minio
+    loki.structuredConfig.table_manager.retention_period: 72h    # delete logs after 72h = 3 days
+
+- name: lma-bucket
+  override:
+    s3.enabled: true
+    s3.buckets:
+    - name: $(clusterName)-tks-thanos
+    - name: $(clusterName)-tks-loki
+    - name: $(clusterName)-tks-loki-user
+    # tks.iamRoles: arn:aws:iam::12345678:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
