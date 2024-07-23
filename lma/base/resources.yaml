@@ -69,7 +69,7 @@ spec:
       image:
         repository: tks/prometheus-operator
         tag: v0.75.0
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       prometheusConfigReloader:
         image:
           repository: tks/prometheus-config-reloader
@@ -104,7 +104,7 @@ spec:
         image:
           repository: tks/alertmanager
           tag: v0.27.0
-        nodeSelector: $(nodeSelector)
+        nodeSelector: {} # $(nodeSelector)
         retention: 2h
       config:
         global:
@@ -142,7 +142,7 @@ spec:
           group_wait: 10s
           receiver: default-alert
           repeat_interval: 1h
-          routes: []
+          routes: # # []
       enabled: true
       service:
         nodePort: 30111
@@ -174,7 +174,7 @@ spec:
         interval: $(serviceScrapeInterval)
     kubeEtcd:
       enabled: true
-      endpoints: []
+      endpoints: # # []
       serviceMonitor:
         interval: $(serviceScrapeInterval)
         scheme: http
@@ -200,7 +200,7 @@ spec:
         image:
           repository: tks/prometheus
           tag: v2.45.0
-        nodeSelector: $(nodeSelector)
+        nodeSelector: {} # $(nodeSelector)
         podMonitorNamespaceSelector:
           matchLabels:
             name: $(lmaNameSpace)
@@ -235,7 +235,7 @@ spec:
             name: $(thanosObjstoreSecret)
           version: v0.18.0
       thanosServiceExternal:
-        annotations: $(awsNlbAnnotation)
+        annotations: {} # $(awsNlbAnnotation)
         enabled: true
         labels: {}
         port: 10901
@@ -314,7 +314,7 @@ spec:
       registry: harbor.taco-cat.xyz
       repository: tks/kube-state-metrics
     kubeVersion: v1.30.2
-    nodeSelector: $(nodeSelector)
+    nodeSelector: {} # $(nodeSelector)
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -377,7 +377,7 @@ spec:
     image:
       repository: harbor.taco-cat.xyz/tks/pushgateway
       tag: v1.9.0
-    nodeSelector: $(nodeSelector)
+    nodeSelector: {} # $(nodeSelector)
     service:
       type: ClusterIP
   wait: true
@@ -569,7 +569,7 @@ spec:
         registry: harbor.taco-cat.xyz
         repository: tks/busybox
         tag: 1.31.1
-    nodeSelector: $(nodeSelector)
+    nodeSelector: {} # $(nodeSelector)
     persistence:
       enabled: true
       size: 10G
@@ -675,7 +675,7 @@ spec:
         spec:
           nodeSelector:
             taco-lma: enabled
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       outputs:
         loki:
         - host: $(lokiHost)
@@ -806,8 +806,8 @@ spec:
       ceph:
         enabled: false
         interval: $(serviceScrapeInterval)
-        mon_hosts: []
-      federations: []
+        mon_hosts: # # []
+      federations: # # []
       grafana:
         enabled: true
         interval: $(serviceScrapeInterval)
@@ -866,7 +866,7 @@ spec:
       port: 9090
     rules:
       default: false
-    nodeselector: $(nodeSelector)
+    nodeselector: {} # $(nodeSelector)
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -948,7 +948,7 @@ spec:
       purge: false
       versioning: true
     consoleIngress:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     consoleService:
       type: NodePort
       nodePort: 32001
@@ -971,7 +971,7 @@ spec:
       size: 500Gi
       storageClass: $(storageClassName)
     postJob:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     resources:
       limits:
         memory: 2Gi
@@ -1005,7 +1005,7 @@ spec:
     bucketweb:
       enabled: true
       logLevel: info
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       refresh: 30m
       service:
         http:
@@ -1028,7 +1028,7 @@ spec:
         # external_labels: {cluster="us1", receive="true", environment="production"}
         # external_labels: {cluster="us1", receive="true", environment="staging"}
       logLevel: info
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         accessModes:
         - ReadWriteOnce
@@ -1063,7 +1063,7 @@ spec:
         enabled: false
         sidecarsNamespace: lma
         sidecarsService: null
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       service:
         type: ClusterIP
       stores: $(thanosQueryStores)
@@ -1075,8 +1075,8 @@ spec:
           max_size_items: 100
           validity: 100s
       enabled: true
-      extraFlags: []
-      nodeSelector: $(nodeSelector)
+      extraFlags: # # []
+      nodeSelector: {} # $(nodeSelector)
       service:
         nodePorts:
           http: 30005
@@ -1093,7 +1093,7 @@ spec:
       enabled: true
       evalInterval: 1m
       logLevel: info
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         accessModes:
         - ReadWriteOnce
@@ -1117,7 +1117,7 @@ spec:
       config: "type: IN-MEMORY\nconfig:\n  max_size: 250MB\n  max_item_size: 125MB"
       enabled: true
       logLevel: info
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         accessModes:
         - ReadWriteOnce
@@ -1234,9 +1234,9 @@ spec:
   targetNamespace: taco-system
   values:
     compactor:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     distributor:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         storageClass: $(storageClassName)
     gateway:
@@ -1247,19 +1247,19 @@ spec:
       nginxConfig:
         httpSnippet: client_max_body_size 50M;
         serverSnippet: client_max_body_size 50M;
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       service:
-        annotations: $(awsNlbAnnotation)
+        annotations: {} # $(awsNlbAnnotation)
         type: ClusterIP
     global:
       clusterDomain: $(clusterDomain)
       dnsService: coredns
     indexGateway:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         storageClass: $(storageClassName)
     ingester:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         enabled: true
         inMemory: false
@@ -1311,7 +1311,7 @@ spec:
         repository: tks/memcached
         tag: 1.6.21-alpine
     memcachedChunks:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     memcachedExporter:
       enabled: true
       image:
@@ -1319,27 +1319,27 @@ spec:
         repository: tks/memcached-exporter
         tag: v0.13.0
     memcachedFrontend:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     memcachedIndexQueries:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     memcachedIndexWrites:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     prometheusRule.enabled: true
     querier:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     queryFrontend:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         storageClass: $(storageClassName)
     queryScheduler:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     ruler:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         storageClass: $(storageClassName)
     serviceMonitor.enabled: true
     tableManager:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -1359,9 +1359,9 @@ spec:
   targetNamespace: lma
   values:
     compactor:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     distributor:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         storageClass: $(storageClassName)
     gateway:
@@ -1372,20 +1372,20 @@ spec:
       nginxConfig:
         httpSnippet: client_max_body_size 50M;
         serverSnippet: client_max_body_size 50M;
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       service:
-        annotations: $(awsNlbAnnotation)
+        annotations: {} # $(awsNlbAnnotation)
         type: ClusterIP
     global:
       clusterDomain: $(clusterName)
       # -- configures DNS service name
       dnsService: "kube-dns"
     indexGateway:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         storageClass: $(storageClassName)
     ingester:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         enabled: true
         inMemory: false
@@ -1437,7 +1437,7 @@ spec:
         repository: tks/memcached
         tag: 1.6.21-alpine
     memcachedChunks:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     memcachedExporter:
       enabled: true
       image:
@@ -1445,27 +1445,27 @@ spec:
         repository: tks/memcached-exporter
         tag: v0.13.0
     memcachedFrontend:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     memcachedIndexQueries:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     memcachedIndexWrites:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     prometheusRule.enabled: true
     querier:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     queryFrontend:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         storageClass: $(storageClassName)
     queryScheduler:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
     ruler:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
       persistence:
         storageClass: $(storageClassName)
     serviceMonitor.enabled: true
     tableManager:
-      nodeSelector: $(nodeSelector)
+      nodeSelector: {} # $(nodeSelector)
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -1490,7 +1490,7 @@ spec:
       enabled: true
     tks:
       iamRoles: $(tksIamRoles)
-      # [] #arn:aws:iam::482246953094:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
+      # # # [] #arn:aws:iam::482246953094:role/control-plane.cluster-api-provider-aws.sigs.k8s.io
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
