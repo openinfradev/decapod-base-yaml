@@ -11,7 +11,7 @@ spec:
     type: helmrepo
     repository: https://harbor.taco-cat.xyz/chartrepo/tks
     name: cluster-api-aws
-    version: 0.11.1
+    version: 0.11.2
   releaseName: cluster-api-aws
   targetNamespace: argo
   values:
@@ -19,7 +19,7 @@ spec:
     cluster:
       name: TO_BE_FIXED
       region: TO_BE_FIXED
-      kubernetesVersion: v1.25.9
+      kubernetesVersion: v1.28.3
       podCidrBlocks:
         - 192.168.0.0/16
       bastion:
