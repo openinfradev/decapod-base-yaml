@@ -36,3 +36,31 @@ spec:
   releaseName: policy-resources
   targetNamespace: gatekeeper-system
   values: {}
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  labels:
+    name: ratify
+  name: ratify
+spec:
+  chart:
+    type: helmrepo
+    repository: https://harbor.taco-cat.xyz/chartrepo/tks
+    name: ratify
+    version: 1.13.0
+    origin: https://github.com/ratify-project/ratify/tree/v1.2.0/charts/ratify
+  helmVersion: v3
+  releaseName: ratify
+  targetNamespace: gatekeeper-system
+  values: 
+    oras:
+      useHttp: true
+    provider:
+      tls:
+        skipVerify: true
+    featureFlags:
+      RATIFY_CERT_ROTATION: true
+    sbom:
+      enabled: true
+---
