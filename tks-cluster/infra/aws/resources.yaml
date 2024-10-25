@@ -119,8 +119,8 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: aws-ack-s3-crds
-  name: aws-ack-s3-crds
+    name: s3-chart-crds
+  name: s3-chart-crds
 spec:
   helmVersion: v3
   chart:
@@ -136,8 +136,8 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: aws-ack-s3
-  name: aws-ack-s3
+    name: s3-chart
+  name: s3-chart
 spec:
   helmVersion: v3
   chart:
