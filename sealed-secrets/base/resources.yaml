@@ -3,25 +3,6 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: sealed-secrets-operator-crds
-  name: sealed-secrets-operator-crds
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: sealed-secrets
-    version: 1.16.1
-    origin: https://bitnami-labs.github.io/sealed-secrets
-  releaseName: sealed-secrets-operator-crds
-  targetNamespace: kube-system
-  wait: true
-  values: {}
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
     name: sealed-secrets-operator
   name: sealed-secrets-operator
 spec:

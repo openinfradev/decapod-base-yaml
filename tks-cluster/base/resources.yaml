@@ -1,20 +1,3 @@
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: tigera-operator-crds
-  name: tigera-operator-crds
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: tigera-operator
-    version: v3.25.0
-  releaseName: tigera-operator-crds
-  targetNamespace: taco-system
-  values: {}
-  wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease

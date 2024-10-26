@@ -119,23 +119,6 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: s3-chart-crds
-  name: s3-chart-crds
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: s3-chart
-    version: v1.0.3
-  releaseName: s3-chart-crds
-  targetNamespace: taco-system
-  values: {}
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
     name: s3-chart
   name: s3-chart
 spec:
