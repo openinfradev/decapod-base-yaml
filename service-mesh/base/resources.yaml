@@ -23,25 +23,6 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: k8ssandra-operator-crds
-  name: k8ssandra-operator-crds
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: k8ssandra-operator
-    version: 1.6.0
-    origin: https://helm.k8ssandra.io/stable
-  releaseName: k8ssandra-operator-crds
-  targetNamespace: tks-msa
-  values: {}
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
     name: k8ssandra-operator
   name: k8ssandra-operator
 spec:
@@ -160,27 +141,6 @@ spec:
     version: 1.17.2
     origin: https://istio-release.storage.googleapis.com/charts
   releaseName: istio-base
-  targetNamespace: tks-msa
-  values:
-    global:
-      istioNamespace: tks-msa
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: istio-base-crds
-  name: istio-base-crds
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: istio-base
-    version: 1.17.2
-    origin: https://istio-release.storage.googleapis.com/charts
-  releaseName: istio-base-crds
   targetNamespace: tks-msa
   values:
     global:
@@ -366,25 +326,6 @@ apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   labels:
-    name: jaeger-operator-crds
-  name: jaeger-operator-crds
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: jaeger-operator
-    version: 2.33.0
-    origin: https://jaegertracing.github.io/helm-charts
-  releaseName: jaeger-operator-crds
-  targetNamespace: tks-msa
-  values: {}
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
     name: jaeger-operator
   name: jaeger-operator
 spec:
@@ -518,25 +459,6 @@ spec:
         password: tacoword
       nodeSelector:
         tks-msa: enabled
-  wait: true
----
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  labels:
-    name: kiali-operator-crds
-  name: kiali-operator-crds
-spec:
-  helmVersion: v3
-  chart:
-    type: helmrepo
-    repository: https://harbor.taco-cat.xyz/chartrepo/tks
-    name: kiali-operator
-    version: 1.63.0
-    origin: https://kiali.org/helm-charts
-  releaseName: kiali-operator-crds
-  targetNamespace: tks-msa
-  values: {}
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
