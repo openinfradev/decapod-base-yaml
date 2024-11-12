@@ -922,8 +922,6 @@ spec:
       nodeSelector: {}
       service:
         type: TO_BE_FIXED
-        nodePorts:
-          http: TO_BE_FIXED
       config: |-
         type: IN-MEMORY
         config:
@@ -953,8 +951,8 @@ spec:
       consistencyDelay: TO_BE_FIXED
       resources:
         limits:
-          memory: TO_BE_FIXED
-          cpu: TO_BE_FIXED
+          memory: 1Gi
+          cpu: '1'
       nodeSelector: {}
       service:
         type: ClusterIP
