@@ -945,10 +945,10 @@ spec:
     compactor:
       enabled: true
       logLevel: info
-      retentionResolutionRaw: TO_BE_FIXED
-      retentionResolution5m: TO_BE_FIXED
-      retentionResolution1h: TO_BE_FIXED
-      consistencyDelay: TO_BE_FIXED
+      retentionResolutionRaw: 30d
+      retentionResolution5m: 200d
+      retentionResolution1h: 1y
+      consistencyDelay: 30m
       resources:
         limits:
           memory: 1Gi
