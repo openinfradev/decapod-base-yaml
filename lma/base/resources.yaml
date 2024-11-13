@@ -14,7 +14,7 @@ spec:
     version: 48.3.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-operator
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     fullnameOverride: prometheus-operator
     defaultRules:
@@ -89,7 +89,7 @@ spec:
     version: 48.3.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     defaultRules:
       create: false
@@ -314,7 +314,7 @@ spec:
     version: 3.3.4
     origin: https://openinfradev.github.io/helm-repo
   releaseName: kube-state-metrics
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     image:
       registry: harbor.taco-cat.xyz
@@ -337,7 +337,7 @@ spec:
     version: 4.13.0
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-node-exporter
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/node-exporter
@@ -376,7 +376,7 @@ spec:
     version: 2.1.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-pushgateway
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/pushgateway
@@ -402,7 +402,7 @@ spec:
     skipDepUpdate: true
     origin: https://openinfradev.github.io/helm-repo
   releaseName: prometheus-process-exporter
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     images:
       tags:
@@ -452,7 +452,7 @@ spec:
     version: 1.1.1
     origin: https://openinfradev.github.io/helm-repo
   releaseName: eck-resource
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     elasticsearch:
       image:
@@ -548,7 +548,7 @@ spec:
     version: 6.50.7
     origin: https://grafana.github.io/helm-charts
   releaseName: grafana
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     downloadDashboardsImage:
       repository: harbor.taco-cat.xyz/tks/curl
@@ -606,7 +606,7 @@ spec:
     version: 2.7.0
     skipDepUpdate: true
   releaseName: fluent-operator
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     operator:
       initcontainer:
@@ -646,7 +646,7 @@ spec:
     skipDepUpdate: true
     origin: https://openinfradev.github.io/helm-repo
   releaseName: fluentbit
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     fullnameOverride: fbcr-taco
     image:
@@ -711,7 +711,7 @@ spec:
     version: 1.9.0
     origin: https://openinfradev.github.io/helm-repo
   releaseName: addons
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     grafanaDatasource:
       enabled: true
@@ -801,7 +801,7 @@ spec:
     version: 2.5.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-adapter
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/k8s-prometheus-adapter-amd64
@@ -829,7 +829,7 @@ spec:
     version: 2.0.1
     origin: https://openinfradev.github.io/helm-repo
   releaseName: kubernetes-event-exporter
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     image:
       exporter:
@@ -860,7 +860,7 @@ spec:
     version: 5.0.4
     origin: https://charts.min.io
   releaseName: minio
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/minio
@@ -898,7 +898,7 @@ spec:
     version: 12.3.2-skt
     origin: https://openinfradev.github.io/helm-repo
   releaseName: thanos
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     global:
       storageClass: $(storageClassName)
@@ -1044,7 +1044,7 @@ spec:
     version: 0.1.6
     origin: https://openinfradev.github.io/helm-repo
   releaseName: thanos-config
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     objectStorage:
       enabled: true
@@ -1080,7 +1080,7 @@ spec:
     version: 0.2.0
     origin: https://openinfradev.github.io/helm-repo
   releaseName: prepare-etcd-secret
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/hyperkube
@@ -1120,7 +1120,7 @@ spec:
     version: 0.58.0
     origin: https://grafana.github.io/helm-charts
   releaseName: loki
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     global:
       clusterDomain: $(clusterName)
@@ -1199,7 +1199,7 @@ spec:
     version: 0.58.0
     origin: https://grafana.github.io/helm-charts
   releaseName: loki-user
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     global:
       clusterDomain: $(clusterName)
@@ -1300,7 +1300,7 @@ spec:
     name: opa-scorecard
     version: 0.1.0
   releaseName: opa-exporter
-  targetNamespace: $(lmaNameSpace)
+  targetNamespace: taco-system
   values:
     gatekeeper:
       namespace: gatekeeper-system
