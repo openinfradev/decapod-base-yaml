@@ -243,7 +243,7 @@ spec:
           version: v0.18.0
           objectStorageConfig:
             key: objstore.yml
-            name: TO_BE_FIXED # secret name
+            name: $(thanosObjstoreSecret)
           minTime: -3h
         evaluationInterval: 60s
         scrapeInterval: 30s
@@ -1048,7 +1048,7 @@ spec:
   values:
     objectStorage:
       enabled: true
-      secretName: TO_BE_FIXED
+      secretName: $(thanosObjstoreSecret)
       rawConfig:
         bucket: TO_BE_FIXED
         endpoint: minio:9000
