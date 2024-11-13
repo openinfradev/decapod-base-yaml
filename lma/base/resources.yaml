@@ -14,7 +14,7 @@ spec:
     version: 48.3.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-operator
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     fullnameOverride: prometheus-operator
     defaultRules:
@@ -89,7 +89,7 @@ spec:
     version: 48.3.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     defaultRules:
       create: false
@@ -102,7 +102,7 @@ spec:
         image:
           repository: tks/alertmanager
           tag: v0.25.0
-        nodeSelector: {} # TO_BE_FIXED
+        nodeSelector: $(nodeSelector)
         retention: TO_BE_FIXED
 
       config:
@@ -173,7 +173,7 @@ spec:
     kubeApiServer:
       enabled: true
       serviceMonitor:
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
     kubelet:
       enabled: false
     kubeControllerManager:
@@ -181,23 +181,23 @@ spec:
     coreDns:
       enabled: true
       serviceMonitor:
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
     kubeDns:
       enabled: true
       serviceMonitor:
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
     kubeEtcd:
       enabled: true
       endpoints: []
       serviceMonitor:
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
         scheme: http
     kubeScheduler:
       enabled: true
     kubeProxy:
       enabled: true
       serviceMonitor:
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
     kubeStateMetrics:
       enabled: false
 #   kube-state-metrics: # subchart configuration
@@ -216,29 +216,28 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: TO_BE_FIXED
+              storageClassName: $(storageClassName)
               accessModes: ["ReadWriteOnce"]
               resources:
                 requests:
                   storage: TO_BE_FIXED
         externalLabels:
-          taco_cluster: TO_BE_FIXED
-        nodeSelector:
-          taco-lma: TO_BE_FIXED
+          taco_cluster: $(clusterName)
+        nodeSelector: $(nodeSelector)
         replicas: 1
         ruleNamespaceSelector:
           matchLabels:
-            name: lma
+            name: $(lmaNameSpace)
         ruleSelectorNilUsesHelmValues: false
         secrets:
         - etcd-client-cert
         serviceMonitorNamespaceSelector:
           matchLabels:
-            name: lma
+            name: $(lmaNameSpace)
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorNamespaceSelector:
           matchLabels:
-            name: lma
+            name: $(lmaNameSpace)
         podMonitorSelectorNilUsesHelmValues: false
         thanos:
           version: v0.18.0
@@ -315,12 +314,12 @@ spec:
     version: 3.3.4
     origin: https://openinfradev.github.io/helm-repo
   releaseName: kube-state-metrics
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     image:
       registry: harbor.taco-cat.xyz
       repository: tks/kube-state-metrics
-    nodeSelector: {} # TO_BE_FIXED
+    nodeSelector: $(nodeSelector)
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -338,7 +337,7 @@ spec:
     version: 4.13.0
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-node-exporter
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/node-exporter
@@ -377,14 +376,14 @@ spec:
     version: 2.1.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-pushgateway
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/pushgateway
       tag: v1.3.0
     service:
       type: ClusterIP
-    nodeSelector: {} # TO_BE_FIXED
+    nodeSelector: $(nodeSelector)
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -403,7 +402,7 @@ spec:
     skipDepUpdate: true
     origin: https://openinfradev.github.io/helm-repo
   releaseName: prometheus-process-exporter
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     images:
       tags:
@@ -453,7 +452,7 @@ spec:
     version: 1.1.1
     origin: https://openinfradev.github.io/helm-repo
   releaseName: eck-resource
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     elasticsearch:
       image:
@@ -474,43 +473,43 @@ spec:
       nodeSets:
         master:
           enabled: true
-          nodeSelector: {} # TO_BE_FIXED
+          nodeSelector: $(nodeSelector)
           count: 3
           javaOpts: TO_BE_FIXED
           limitCpu: TO_BE_FIXED
           limitMem: TO_BE_FIXED
           pvc:
-            storageClassName: TO_BE_FIXED
+            storageClassName: $(storageClassName)
             size: TO_BE_FIXED
         hotdata:
           enabled: true
-          nodeSelector: {} # TO_BE_FIXED
+          nodeSelector: $(nodeSelector)
           count: 3
           javaOpts: TO_BE_FIXED
           limitCpu: TO_BE_FIXED
           limitMem: TO_BE_FIXED
           pvc:
-            storageClassName: TO_BE_FIXED
+            storageClassName: $(storageClassName)
             size: TO_BE_FIXED
         warmdata:
           enabled: false # TO_BE_FIXED
-          nodeSelector: {} # TO_BE_FIXED
+          nodeSelector: $(nodeSelector)
           count: 2
           javaOpts: TO_BE_FIXED
           limitCpu: TO_BE_FIXED
           limitMem: TO_BE_FIXED
           pvc:
-            storageClassName: TO_BE_FIXED
+            storageClassName: $(storageClassName)
             size: TO_BE_FIXED
         client:
           enabled: true # TO_BE_FIXED
-          nodeSelector: {} # TO_BE_FIXED
+          nodeSelector: $(nodeSelector)
           count: TO_BE_FIXED
           javaOpts: TO_BE_FIXED
           limitCpu: TO_BE_FIXED
           limitMem: TO_BE_FIXED
           pvc:
-            storageClassName: TO_BE_FIXED
+            storageClassName: $(storageClassName)
             size: 0.5Gi
     kibana:
       image:
@@ -531,7 +530,7 @@ spec:
               port: 5601
       limitCpu: TO_BE_FIXED
       limitMem: TO_BE_FIXED
-      nodeSelector: {} # TO_BE_FIXED
+      nodeSelector: $(nodeSelector)
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -549,7 +548,7 @@ spec:
     version: 6.50.7
     origin: https://grafana.github.io/helm-charts
   releaseName: grafana
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     downloadDashboardsImage:
       repository: harbor.taco-cat.xyz/tks/curl
@@ -581,7 +580,7 @@ spec:
     persistence:
       enabled: true
       size: 10G #FIXME
-      storageClassName: TO_BE_FIXED
+      storageClassName: $(storageClassName)
     grafana.ini:
       plugins:
         vonage-status-panel: true
@@ -607,7 +606,7 @@ spec:
     version: 2.7.0
     skipDepUpdate: true
   releaseName: fluent-operator
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     operator:
       initcontainer:
@@ -647,7 +646,7 @@ spec:
     skipDepUpdate: true
     origin: https://openinfradev.github.io/helm-repo
   releaseName: fluentbit
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     fullnameOverride: fbcr-taco
     image:
@@ -673,8 +672,7 @@ spec:
             operator: Exists
       job:
         spec:
-          nodeSelector:
-            taco-lma: enabled
+          nodeSelector: $(nodeSelector)
       parsers:
       - name: taco-syslog-parser-for-ubuntu # modified from syslog-rfc3164
         regex:
@@ -686,7 +684,7 @@ spec:
       targetLogs: [ ]
       alerts:
         enabled: false
-      clusterName: TO_BE_FIXED
+      clusterName: $(clusterName)
       exclude:
       - key: $kubernetes['container_name']
         value: kibana|elasticsearch|fluent-bit
@@ -695,8 +693,7 @@ spec:
       serviceMonitor:
         enabled: false
       spec:
-        nodeSelector:
-          taco-lma: enabled
+        nodeSelector: $(nodeSelector)
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -714,20 +711,20 @@ spec:
     version: 1.9.0
     origin: https://openinfradev.github.io/helm-repo
   releaseName: addons
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     grafanaDatasource:
       enabled: true
-      namespace: lma
+      namespace: $(lmaNameSpace)
       prometheus:
         enabled: true
-        url: "lma-prometheus.lma:9090"
+        url: "lma-prometheus.$(lmaNameSpace):9090"
       loki:
         enabled: true
-        url: "loki-loki-distributed-gateway.lma"
+        url: "loki-loki-distributed-gateway.$(lmaNameSpace)"
       lokiuser:
         enabled: true
-        url: "loki-user-loki-distributed-gateway.lma"
+        url: "loki-user-loki-distributed-gateway.$(lmaNameSpace)"
     grafanaDashboard:
       include:
       - kubernetes
@@ -735,14 +732,14 @@ spec:
       - loki
       - calico
       - etcd
-      namespace: lma
+      namespace: $(lmaNameSpace)
     serviceMonitor:
       calico:
         enabled: true
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
       processExporter:
         enabled: true
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
         selector:
           matchLabels:
             application: process_exporter
@@ -750,25 +747,25 @@ spec:
             release_group: prometheus-process-exporter
       istio:
         enabled: true
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
       jaeger:
         enabled: true
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
       grafana:
         enabled: true
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
       argocd:
         enabled: true
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
       argoRollout:
         enabled: true
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
       argowf:
         enabled: true
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
       ceph:
         enabled: false  #FIXME
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
         mon_hosts: []
       kubeStateMetrics:
         enabled: true
@@ -778,7 +775,7 @@ spec:
         enabled: true
       kubelet:
         enabled: true
-        interval: TO_BE_FIXED
+        interval: $(serviceScrapeInterval)
       federations: [] # TO_BE_FIXED
     kibanaInit:
       enabled: false
@@ -804,7 +801,7 @@ spec:
     version: 2.5.1
     origin: https://prometheus-community.github.io/helm-charts
   releaseName: prometheus-adapter
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/k8s-prometheus-adapter-amd64
@@ -814,7 +811,7 @@ spec:
       port: 9090
     rules:
       default: false
-    nodeSelector: {} # TO_BE_FIXED
+    nodeSelector: $(nodeSelector)
   wait: true
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -832,7 +829,7 @@ spec:
     version: 2.0.1
     origin: https://openinfradev.github.io/helm-repo
   releaseName: kubernetes-event-exporter
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     image:
       exporter:
@@ -842,7 +839,7 @@ spec:
         repository: harbor.taco-cat.xyz/tks/fluent-bit
         tag: 1.9.7-debug
 
-    clustername: TO_BE_FIXED
+    clustername: $(clusterName)
     conf:
       logLevel: error     # possible level: error, debug,
       logFormat: json
@@ -863,7 +860,7 @@ spec:
     version: 5.0.4
     origin: https://charts.min.io
   releaseName: minio
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/minio
@@ -874,7 +871,7 @@ spec:
     users: [] # MUST_BE_DEFINED
     buckets: [] # MUST_BE_DEFINED
     persistence:
-      storageClass: MUST_BE_DEFINED
+      storageClass: $(storageClassName)
       accessMode: ReadWriteOnce # tunable
       size: 20Gi # tunable
     resources:
@@ -901,22 +898,22 @@ spec:
     version: 12.3.2-skt
     origin: https://openinfradev.github.io/helm-repo
   releaseName: thanos
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     global:
-      storageClass: local-path
+      storageClass: $(storageClassName)
     image:
       registry: harbor.taco-cat.xyz
       repository: tks/thanos
       tag: v0.30.2
-    clusterDomain: TO_BE_FIXED
+    clusterDomain: $(clusterName)
     existingObjstoreSecret: TO_BE_FIXED
     query:
       nodeSelector: {}
       dnsDiscovery:
         enabled: false
         sidecarsService: TO_BE_FIXED
-        sidecarsNamespace: lma
+        sidecarsNamespace: $(lmaNameSpace)
     queryFrontend:
       enabled: false
       nodeSelector: {}
@@ -1047,7 +1044,7 @@ spec:
     version: 0.1.6
     origin: https://openinfradev.github.io/helm-repo
   releaseName: thanos-config
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     objectStorage:
       enabled: true
@@ -1083,7 +1080,7 @@ spec:
     version: 0.2.0
     origin: https://openinfradev.github.io/helm-repo
   releaseName: prepare-etcd-secret
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     image:
       repository: harbor.taco-cat.xyz/tks/hyperkube
@@ -1123,10 +1120,10 @@ spec:
     version: 0.58.0
     origin: https://grafana.github.io/helm-charts
   releaseName: loki
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     global:
-      clusterDomain: cluster.local # TO_BE_FIXED
+      clusterDomain: $(clusterName)
       dnsService: coredns
     loki:
       image:
@@ -1202,10 +1199,10 @@ spec:
     version: 0.58.0
     origin: https://grafana.github.io/helm-charts
   releaseName: loki-user
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     global:
-      clusterDomain: cluster.local # TO_BE_FIXED
+      clusterDomain: $(clusterName)
       dnsService: coredns
     loki:
       image:
@@ -1303,7 +1300,7 @@ spec:
     name: opa-scorecard
     version: 0.1.0
   releaseName: opa-exporter
-  targetNamespace: lma
+  targetNamespace: $(lmaNameSpace)
   values:
     gatekeeper:
       namespace: gatekeeper-system
