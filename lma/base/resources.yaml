@@ -906,7 +906,7 @@ spec:
       registry: harbor.taco-cat.xyz
       repository: tks/thanos
       tag: v0.30.2
-    clusterDomain: $(clusterName)
+    clusterDomain: $(clusterDomain)
     existingObjstoreSecret: TO_BE_FIXED
     query:
       nodeSelector: {}
@@ -1123,7 +1123,7 @@ spec:
   targetNamespace: taco-system
   values:
     global:
-      clusterDomain: $(clusterName)
+      clusterDomain: $(clusterDomain)
       dnsService: coredns
     loki:
       image:
@@ -1202,7 +1202,7 @@ spec:
   targetNamespace: taco-system
   values:
     global:
-      clusterDomain: $(clusterName)
+      clusterDomain: $(clusterDomain)
       dnsService: coredns
     loki:
       image:
