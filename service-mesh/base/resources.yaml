@@ -450,7 +450,7 @@ spec:
         repository: harbor.taco-cat.xyz/tks/nginx-unprivileged
         tag: 1.19-alpine
         pullPolicy: IfNotPresent
-      host: eck-elasticsearch-es-http.lma.svc.cluster.local
+      host: eck-elasticsearch-es-http.$(lmaNameSpace).svc.cluster.local
       port: 9200
       elasticPasswordSecret: eck-elasticsearch-es-elastic-user
       user:
@@ -548,7 +548,7 @@ spec:
             ingressGatewayLabel: istio-ingressgateway
             egressGatewayLabel: istio-egressgateway
       prometheus:
-        url: http://lma-prometheus.lma.svc:9090
+        url: http://lma-prometheus.$(lmaNameSpace).svc:9090
       tracing:
         enabled: true
         namespaceSelector: true
@@ -562,7 +562,7 @@ spec:
           useKialiToken: false
           username: admin
         enabled: true
-        inClusterUrl: http://grafana.lma.svc:3000
+        inClusterUrl: http://grafana.$(lmaNameSpace).svc:3000
         url: https://grafana-v2.taco-cat.xyz
     server:
       metricsEnabled: true
