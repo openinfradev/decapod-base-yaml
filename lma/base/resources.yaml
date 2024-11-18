@@ -1356,7 +1356,7 @@ spec:
     version: 0.79.0
     origin: https://grafana.github.io/helm-charts
   releaseName: loki
-  targetNamespace: lma
+  targetNamespace: taco-system
   values:
     compactor:
       nodeSelector: {} # $(nodeSelector)
