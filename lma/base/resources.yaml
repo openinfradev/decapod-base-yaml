@@ -896,7 +896,7 @@ spec:
     conf:
       default:
         hosts:
-        - https://eck-elasticsearch-es-http.lma.svc.$(clusterName):9200
+        - https://eck-elasticsearch-es-http.lma.svc.$(clusterDomain):9200
       logFormat: json
       logLevel: error
       recievers:
@@ -1012,7 +1012,7 @@ spec:
           port: 8080
         type: ClusterIP
       timeout: 5m
-    clusterDomain: $(clusterName)
+    clusterDomain: $(clusterDomain)
     compactor:
       consistencyDelay: 30m
       enabled: true
@@ -1377,7 +1377,7 @@ spec:
         annotations: {} # $(awsNlbAnnotation)
         type: ClusterIP
     global:
-      clusterDomain: $(clusterName)
+      clusterDomain: $(clusterDomain)
       # -- configures DNS service name
       dnsService: "kube-dns"
     indexGateway:
