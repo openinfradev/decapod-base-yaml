@@ -1162,12 +1162,12 @@ spec:
     objectStorage:
       enabled: true
       rawConfig:
-        access_key: $(defaultUser)
-        # aws_sdk_auth: true
         bucket: tks-thanos
         endpoint: $(s3Service)
         insecure: true
-        secret_key: $(defaultPassword)
+        # aws_sdk_auth: true
+        # access_key: $(defaultUser)
+        # secret_key: $(defaultPassword)
       secretName: $(thanosObjstoreSecret)
     sidecarsService:
       enabled: false
